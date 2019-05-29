@@ -1,5 +1,7 @@
 /* eslint-disable */
 const fetch = require("node-fetch");
+const { URL, URLSearchParams } = require("url");
+
 exports.handler = async function(event, context) {
     const { GENIUS_AUTH_TOKEN } = process.env;
 
