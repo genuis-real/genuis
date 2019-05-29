@@ -2,6 +2,7 @@ const fetch = require("node-fetch");
 const cheerio = require("cheerio");
 const faunadb = require("faunadb");
 const { Translate } = require("@google-cloud/translate");
+
 const {
     FAUNADB_SERVER_SECRET,
     GOOGLE_CLIENT_EMAIL,
