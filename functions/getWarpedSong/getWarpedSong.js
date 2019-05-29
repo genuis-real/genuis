@@ -155,7 +155,7 @@ exports.handler = async function(event, context) {
         };
 
         console.log(`scraped song with id ${songId}`);
-        client.query(q.Create(q.Class("song"), { data: songObj }));
+        await client.query(q.Create(q.Class("song"), { data: songObj }));
         console.log(`added song with id ${songId} to the db`);
         return {
             statusCode: 200,
