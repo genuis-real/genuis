@@ -2,12 +2,16 @@ const fetch = require("node-fetch");
 const cheerio = require("cheerio");
 const faunadb = require("faunadb");
 const { Translate } = require("@google-cloud/translate");
-
-const { FAUNADB_SERVER_SECRET } = process.env;
+const {
+    FAUNADB_SERVER_SECRET,
+    GOOGLE_CLIENT_EMAIL,
+    GOOGLE_PRIVATE_KEY
+} = process.env;
 
 const client = new faunadb.Client({
     secret: FAUNADB_SERVER_SECRET
 });
+const q = faunadb.query;
 
 // variable initialization
 const TOO_MANY_SEGMENTS_MESSAGE = "Too many text segments";
@@ -16,14 +20,11 @@ const projectId = "Genuis";
 const firstTarget = "ja";
 const secondTarget = "en";
 
-const { GOOGLE_CLIENT_EMAIL, GOOGLE_PRIVATE_KEY } = process.env;
-const privateKey = GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n");
-
 // Instantiates a translate client
 const translate = new Translate({
     credentials: {
         client_email: GOOGLE_CLIENT_EMAIL,
-        private_key: privateKey
+        private_key: GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n")
     },
     projectId
 });
@@ -105,19 +106,25 @@ async function translateSongLyrics(lyricsData) {
 exports.handler = async function(event, context) {
     const { songId } = event.queryStringParameters;
     const { GENIUS_AUTH_TOKEN } = process.env;
-    console.log("GET WARPED SONG");
 
     try {
         // Try to get from fauna
+        const { data } = await client.query(
+            q.Paginate(q.Match(q.Index("song_by_id"), songId))
+        );
 
-        // If exists
-        // if warped exists
-        // return warped
-        // else
-        // warp it
-        // return warped
+        if (data.length > 0) {
+            const dbSong = await client.query(q.Get(data[0]));
+            console.log(`fetched song with id ${songId} from DB`);
+            return {
+                statusCode: 200,
+                body: JSON.stringify({
+                    artistName: dbSong.data.artistName,
+                    warped: dbSong.data.lyrics.warped
+                })
+            };
+        }
 
-        // get song lyrics
         const response = await fetch(`https://api.genius.com/songs/${songId}`, {
             headers: {
                 Accept: "application/json",
@@ -132,17 +139,29 @@ exports.handler = async function(event, context) {
             };
         }
 
-        const data = await response.json();
-        const song = data.response.song;
+        const json = await response.json();
+        const song = json.response.song;
 
         const originalLyrics = await scrapeContent(song.path);
-        const warped = await translateSongLyrics(originalLyrics);
+        const warpedLyrics = await translateSongLyrics(originalLyrics);
 
+        const songObj = {
+            id: songId,
+            artistName: song.primary_artist.name,
+            lyrics: {
+                original: originalLyrics,
+                warped: warpedLyrics
+            }
+        };
+
+        console.log(`scraped song with id ${songId}`);
+        client.query(q.Create(q.Class("song"), { data: songObj }));
+        console.log(`added song with id ${songId} to the db`);
         return {
             statusCode: 200,
             body: JSON.stringify({
-                name: song.primary_artist.name,
-                warped
+                artistName: songObj.artistName,
+                warped: warpedLyrics
             })
         };
     } catch (err) {
