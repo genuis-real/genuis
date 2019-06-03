@@ -63,7 +63,8 @@ async function scrapeContent(path) {
 
 async function translateSongLyrics(lyricsData) {
     // Spread into a new object to avoid mutating original data.
-    let lyricsDataCopy = { ...lyricsData };
+    let lyricsDataCopy = JSON.parse(JSON.stringify(lyricsData));
+
     let retry = false;
 
     do {
@@ -144,7 +145,10 @@ exports.handler = async function(event, context) {
         const song = json.response.song;
 
         const originalLyrics = await scrapeContent(song.path);
+        console.log(originalLyrics[0]);
+
         const warpedLyrics = await translateSongLyrics(originalLyrics);
+        console.log(originalLyrics[0]);
 
         const songObj = {
             id: songId,
