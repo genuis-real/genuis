@@ -145,10 +145,7 @@ exports.handler = async function(event, context) {
         const song = json.response.song;
 
         const originalLyrics = await scrapeContent(song.path);
-        console.log(originalLyrics[0]);
-
         const warpedLyrics = await translateSongLyrics(originalLyrics);
-        console.log(originalLyrics[0]);
 
         const songObj = {
             id: songId,
