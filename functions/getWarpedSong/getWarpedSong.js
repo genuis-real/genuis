@@ -62,7 +62,8 @@ async function scrapeContent(path) {
 }
 
 async function translateSongLyrics(lyricsData) {
-    let lyricsDataCopy = lyricsData;
+    // Spread into a new object to avoid mutating original data.
+    let lyricsDataCopy = { ...lyricsData };
     let retry = false;
 
     do {
