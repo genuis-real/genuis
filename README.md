@@ -4,7 +4,7 @@ Run a `yarn install` in the root directory.
 
 ## Get your Env right
 
-You'll need to add the environment vars listed in `.envrc.sample`. If you install [direnv](You'll need https://direnv.net/). You can duplicate the `.envrc.sample` file and rename it to `.envrc` then fill in the variables appropriately.
+You'll need to add the environment vars listed in `.envrc.sample`. If you install [direnv](https://direnv.net/) you can duplicate the `.envrc.sample` file and rename it to `.envrc` then fill in the variables appropriately.
 
 ## Running
 
