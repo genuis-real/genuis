@@ -5,7 +5,7 @@ import ResultsScrollView from "components/ResultsScrollView";
 import ResultsItem from "components/ResultsItem";
 import Wrapper from "components/Wrapper";
 
-import { BASE_URL } from 'constants.js';
+import { BASE_URL } from "constants.js";
 
 class Home extends Component {
     constructor(props) {
@@ -14,83 +14,87 @@ class Home extends Component {
         this.getResultsDebounced = debounce(this.getResults, 100);
 
         this.state = {
-            searchTerm: '',
+            searchTerm: "",
             searching: false,
             viewingItem: false,
             searchDisabled: false,
-            searchResults: [],
+            searchResults: []
         };
     }
 
-    handleChange = (event) => {
+    handleChange = event => {
         const searchTerm = event.target.value;
         this.setState({
             searchTerm,
-            searching: true,
+            searching: true
         });
-        this.getResultsDebounced(searchTerm)
+        this.getResultsDebounced(searchTerm);
     };
 
-    resultItemClicked = (event) => {
+    resultItemClicked = event => {
         event.preventDefault();
         this.setState({
             viewingItem: true,
-            searchDisabled: true,
+            searchDisabled: true
         });
     };
 
-    getResults = (searchTerm) => {
-        axios.get(`${BASE_URL}proxy/search?q=${searchTerm}`)
-            .then((response) => {
+    getResults = searchTerm => {
+        axios
+            .get(`${BASE_URL}proxy/search?q=${searchTerm}`)
+            .then(response => {
                 // handle success
                 this.handleSearchResultData(response);
             })
-            .catch(function (error) {
+            .catch(function(error) {
                 // handle error
             })
-            .then(function () {
+            .then(function() {
                 // always executed
             });
     };
 
-    handleSearchResultData = (searchData) => {
-        const hits = (searchData.data && searchData.data.response) ? searchData.data.response.hits : [];
+    handleSearchResultData = searchData => {
+        console.log(searchData);
 
-        const newResults = hits.map((item) => {
+        const hits =
+            searchData.data && searchData.data.response
+                ? searchData.data.response.hits
+                : [];
+
+        const newResults = hits.map(item => {
             const { result } = item;
             return {
                 name: result.title,
-                artist: result.primary_artist ? result.primary_artist.name : 'unknown',
+                artist: result.primary_artist
+                    ? result.primary_artist.name
+                    : "unknown",
                 thumbnailURL: result.header_image_thumbnail_url,
                 hot: result.stats ? result.stats.hot : false,
-                id: result.id,
+                id: result.id
             };
         });
 
         this.setState({
             searching: false,
-            searchResults: newResults,
+            searchResults: newResults
         });
     };
 
     render() {
-        const {
-            searchTerm,
-            searchResults,
-            viewingItem,
-        } = this.state;
+        const { searchTerm, searchResults, viewingItem } = this.state;
         return (
             <Wrapper>
                 <div
                     style={{
-                        display: 'flex',
-                        flexDirection: 'column',
+                        display: "flex",
+                        flexDirection: "column"
                     }}
                 >
                     <form
                         onSubmit={e => e.preventDefault()}
                         style={{
-                            maxWidth: '320',
+                            maxWidth: "320"
                         }}
                     >
                         <input
@@ -99,23 +103,30 @@ class Home extends Component {
                             onChange={this.handleChange}
                             disabled={this.state.searchDisabled}
                             style={{
-                                borderStyle: 'solid',
-                                borderWidth: '1px',
-                                fontSize: '2rem',
-                                backgroundColor: this.state.searchDisabled ? 'grey' : 'white',
+                                borderStyle: "solid",
+                                borderWidth: "1px",
+                                fontSize: "2rem",
+                                backgroundColor: this.state.searchDisabled
+                                    ? "grey"
+                                    : "white"
                             }}
                         />
                     </form>
-                    {!viewingItem && searchResults.length > 0 && searchTerm.length > 0 &&
-                    <ResultsScrollView>
-                        {searchResults.map((item) => (
-                            <ResultsItem
-                                key={`results-item-${item.name}-${item.artist}`}
-                                onClick={this.resultItemClicked}
-                                {...item}
-                            />
-                        ))}
-                    </ResultsScrollView>}
+                    {!viewingItem &&
+                        searchResults.length > 0 &&
+                        searchTerm.length > 0 && (
+                            <ResultsScrollView>
+                                {searchResults.map(item => (
+                                    <ResultsItem
+                                        key={`results-item-${item.name}-${
+                                            item.artist
+                                        }`}
+                                        onClick={this.resultItemClicked}
+                                        {...item}
+                                    />
+                                ))}
+                            </ResultsScrollView>
+                        )}
                 </div>
             </Wrapper>
         );
@@ -129,7 +140,8 @@ class Home extends Component {
 function debounce(func, wait, immediate) {
     var timeout;
     return function() {
-        var context = this, args = arguments;
+        var context = this,
+            args = arguments;
         var later = function() {
             timeout = null;
             if (!immediate) func.apply(context, args);
@@ -139,6 +151,6 @@ function debounce(func, wait, immediate) {
         timeout = setTimeout(later, wait);
         if (callNow) func.apply(context, args);
     };
-};
+}
 
 export default Home;

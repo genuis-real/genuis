@@ -1,52 +1,36 @@
 ## Getting Started
 
-Make sure to run a `yarn install` in the root directory *and* the functions directory. (basically in every directory with a `package.json`)
+Run a `yarn install` in the root directory.
 
-### Firebase Functions
+## Get your Env right
 
-#### Setting up environment variables
+You'll need to add the environment vars listed in `.envrc.sample`. If you install [direnv](https://direnv.net/) you can duplicate the `.envrc.sample` file and rename it to `.envrc` then fill in the variables appropriately.
 
-To start with you'll need to place the Firebase Functions service account json in the `service-account-json` directory.
+## Running
 
-Then you need to update the `.envrc` file with `export GOOGLE_APPLICATION_CREDENTIALS="path/to/file.json"`
-
-You can get the json file from the [Google Cloud Project Service Accounts page](https://console.cloud.google.com/iam-admin/serviceaccounts?project=genuis-1553116125288)
-
-Then find the App Engine default service account and select `Create Key` from the menu and choose the `JSON` option.
-
-To make Environment Variables available to firebase functions when running them locally, you'll need to run the following command. Replace placeholders with the appropriate values.
+You'll need to install Netlify Cli
 
 ```bash
-firebase functions:config:set genius.auth_token="<INSERT GENIUS AUTH TOKEN>"
+npm i -g netlify-cli
 ```
 
-## Available Scripts
+Then you can start the project by going to the root folder and running
 
-In the project directory, you can run:
+```bash
+netlify dev
+```
 
-### `yarn start`
+### IMPORTANT NOTES
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+There is [currently a bug](https://github.com/netlify/netlify-redirect-parser/issues/1) with the netlify local redirect parser that causes some strange behaviour locally.
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+To get around this you'll need to go to `netlify.toml` and comment out the following lines:
 
-Also starts up Firebase Functions local emulation, these are not compiled so changes to files within the `functions` directory are effective immediately.
+```toml
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+```
 
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-## Functions
+_IMPORTANT_ you need to uncomment them before deploying or the site will not work.
