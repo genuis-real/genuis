@@ -5,6 +5,7 @@ const ResultsScrollView = styled.div`
     flex-direction: column;
     border: 0.5px solid;
     overflow-y: scroll;
+    width: 100%;
 `;
 
 export default ResultsScrollView;

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { Router, Link } from "@reach/router";
-import Wrapper from "components/Wrapper";
+import { Router } from "@reach/router";
+
+import { PageWrapper, NavBar, Logo, Link } from "./App.styles";
 
 import Home from "pages/Home";
 import Result from "pages/Result";
@@ -8,15 +9,19 @@ import Result from "pages/Result";
 class App extends Component {
     render() {
         return (
-            <Wrapper>
-                <div style={{ paddingBottom: 24, }}>
-                    <Link to="/">Home</Link>
-                </div>
+            <PageWrapper>
+                <NavBar>
+                    <Logo>
+                        <Link to="/">
+                                GENUIS
+                        </Link>
+                    </Logo>
+                </NavBar>
                 <Router>
                     <Home path="/" />
                     <Result path="/result/:resultId" />
                 </Router>
-            </Wrapper>
+            </PageWrapper>
         );
     }
 }

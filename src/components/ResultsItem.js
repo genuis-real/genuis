@@ -35,7 +35,7 @@ const ResultsItem = ({name, artist, thumbnailURL, hot, id, onClick}) => (
 );
 
 const Wrapper = styled.div`
-    width: 320px;
+    width: 100%;
     border: 1px solid grey;
     display: flex;
     flex-direction: row;

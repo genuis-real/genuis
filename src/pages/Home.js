@@ -3,7 +3,7 @@ import axios from "axios";
 // components
 import ResultsScrollView from "components/ResultsScrollView";
 import ResultsItem from "components/ResultsItem";
-import Wrapper from "components/Wrapper";
+import { Wrapper, SearchBar, SearchForm } from "./Home.styles";
 
 import { BASE_URL } from "constants.js";
 
@@ -85,33 +85,16 @@ class Home extends Component {
         const { searchTerm, searchResults, viewingItem } = this.state;
         return (
             <Wrapper>
-                <div
-                    style={{
-                        display: "flex",
-                        flexDirection: "column"
-                    }}
-                >
-                    <form
+                    <SearchForm
                         onSubmit={e => e.preventDefault()}
-                        style={{
-                            maxWidth: "320"
-                        }}
                     >
-                        <input
+                        <SearchBar
                             type="text"
                             value={this.state.searchTerm}
                             onChange={this.handleChange}
                             disabled={this.state.searchDisabled}
-                            style={{
-                                borderStyle: "solid",
-                                borderWidth: "1px",
-                                fontSize: "2rem",
-                                backgroundColor: this.state.searchDisabled
-                                    ? "grey"
-                                    : "white"
-                            }}
                         />
-                    </form>
+                    </SearchForm>
                     {!viewingItem &&
                         searchResults.length > 0 &&
                         searchTerm.length > 0 && (
@@ -127,7 +110,6 @@ class Home extends Component {
                                 ))}
                             </ResultsScrollView>
                         )}
-                </div>
             </Wrapper>
         );
     }
