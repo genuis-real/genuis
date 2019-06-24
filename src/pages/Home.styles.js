@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { COLOURS } from 'constants.js';
 
 const Wrapper = styled.div`
     display: flex;
@@ -9,9 +10,16 @@ const Wrapper = styled.div`
 `;
 
 const SearchBar = styled.input`
-    border: 2px solid #CB48B7;
+    border: 2px solid ${COLOURS.accent};
     width: 100%;
     font-size: 2rem;
+    color: ${COLOURS.accent};
+    background-color: ${COLOURS.primary};
+    padding: 0px 12px;
+    
+    &:focus {
+        outline-width: 0px;
+    }
     
     @media only screen and (min-width: 700px){
         font-size: 3rem;

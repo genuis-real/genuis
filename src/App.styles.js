@@ -1,8 +1,9 @@
 import styled from 'styled-components';
-import { Link as RouterLink } from "@reach/router";
+import { Link as RouterLink } from '@reach/router';
+import { COLOURS } from 'constants.js';
 
 const PageWrapper = styled.div`
-    background-color: #FFBFB7;
+    background-color: ${COLOURS.primary};
 `;
 
 const NavBar = styled.nav`
@@ -12,17 +13,24 @@ const NavBar = styled.nav`
 `;
 
 const Logo = styled.h1`
-    color: #CB48B7;
+    color: ${COLOURS.accent};
     font-weight: 200;
     font-size: 4em;
+    margin: 48px 0px 0px 0px;
 `;
 
 const Link = styled(RouterLink)`
     text-decoration: none;
     
     &:visited {
-        color: #CB48B7;
+        color: ${COLOURS.accent};
     }
 `;
 
-export { PageWrapper, NavBar, Logo, Link };
+const SubHeading = styled.h5`
+    color: ${COLOURS.accent};
+    font-weight: 100;
+    margin: 0px 0px 24px 0px;
+`;
+
+export { PageWrapper, NavBar, Logo, Link, SubHeading };

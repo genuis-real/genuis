@@ -1,50 +1,59 @@
 import React from 'react';
 import styled from 'styled-components';
-import {Link} from '@reach/router';
+import { Link } from '@reach/router';
+import { COLOURS } from 'constants.js';
 
 const ResultsItem = ({name, artist, thumbnailURL, hot, id, onClick}) => (
     <StyledLink to={`/result/${id}`}>
         <Wrapper>
-            <div style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-            }}>
+            <ThumbnailWrapper>
                 <img src={thumbnailURL} alt={"Smiley face"} height={"42"} width={"42"}/>
-            </div>
-            <div style={{
-                display: 'flex',
-                flexDirection: 'column',
-                padding: '0 5px'
-            }}>
+            </ThumbnailWrapper>
+            <TitleAndArtist>
                 <span>{name}</span>
-                <span style={{
-                    fontWeight: '300',
-                }}>{artist}</span>
-            </div>
+                <ArtistName>{artist}</ArtistName>
+            </TitleAndArtist>
             {hot &&
-                <div style={{
-                    marginLeft: 'auto',
-                    paddingRight: '8px',
-                }}>
+                <HotIconWrapper>
                     <i className="material-icons">hot_tub</i>
-                </div>
+                </HotIconWrapper>
             }
         </Wrapper>
     </StyledLink>
 );
 
+const StyledLink = styled(Link)`
+    color: ${COLOURS.accent};
+    text-decoration: none;
+`;
+
 const Wrapper = styled.div`
     width: 100%;
-    border: 1px solid grey;
+    border: 1px solid ${COLOURS.accent};
     display: flex;
     flex-direction: row;
     align-items: center;
 `;
 
-const StyledLink = styled(Link)`
-    color: black;
-    text-decoration: none;
+const ThumbnailWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+`;
+
+const TitleAndArtist = styled.div`
+    display: flex;
+    flex-direction: column;
+    padding: 0px 5px;
+`;
+
+const ArtistName = styled.span`
+    font-weight: 300;
+`;
+
+const HotIconWrapper = styled.div`
+    margin-left: auto;
+    padding-right: 8px;
 `;
 
 export default ResultsItem;

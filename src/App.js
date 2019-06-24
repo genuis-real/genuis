@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Router } from "@reach/router";
 
-import { PageWrapper, NavBar, Logo, Link } from "./App.styles";
+import { PageWrapper, NavBar, Logo, Link, SubHeading } from "./App.styles";
 
 import Home from "pages/Home";
 import Result from "pages/Result";
@@ -13,9 +13,14 @@ class App extends Component {
                 <NavBar>
                     <Logo>
                         <Link to="/">
-                                GENUIS
+                            GENUIS
                         </Link>
                     </Logo>
+                    <SubHeading>
+                        Behind the lyrics.
+                        <br/>
+                        ...like, <i>miles</i> behind them.
+                    </SubHeading>
                 </NavBar>
                 <Router>
                     <Home path="/" />
