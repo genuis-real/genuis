@@ -6,23 +6,23 @@ import { COLOURS } from "constants.js";
 const ResultsItem = ({name, artist, thumbnailURL, hot, id, lastItem}) => (
     <StyledLink to={`/result/${id}`}>
         <Wrapper lastItem={lastItem}>
-        <ThumbnailWrapper>
-            <img
-                src={thumbnailURL}
-                alt={"Smiley face"}
-                height={"42"}
-                width={"42"}
-            />
-        </ThumbnailWrapper>
-        <TitleAndArtist>
-            <SongTitle>{name}</SongTitle>
-            <ArtistName>{artist}</ArtistName>
-        </TitleAndArtist>
-        {hot && (
-            <HotIconWrapper>
-                <i className="material-icons">hot_tub</i>
-            </HotIconWrapper>
-        )}
+            <ThumbnailWrapper>
+                <img
+                    src={thumbnailURL}
+                    alt={"Smiley face"}
+                    height={"42"}
+                    width={"42"}
+                />
+            </ThumbnailWrapper>
+            <TitleAndArtist>
+                <SongTitle>{name}</SongTitle>
+                <ArtistName>{artist}</ArtistName>
+            </TitleAndArtist>
+            {hot && (
+                <HotIconWrapper>
+                    <i className="material-icons">hot_tub</i>
+                </HotIconWrapper>
+            )}
         </Wrapper>
     </StyledLink>
 );
