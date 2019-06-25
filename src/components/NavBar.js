@@ -1,12 +1,24 @@
+import React from 'react';
 import styled from 'styled-components';
 import { Link as RouterLink } from '@reach/router';
 import { COLOURS } from 'constants.js';
 
-const PageWrapper = styled.div`
-    background-color: ${COLOURS.primary};
-`;
+const NavBar = () => (
+    <NavWrapper>
+        <Logo>
+            <Link to="/">
+                GENUIS
+            </Link>
+        </Logo>
+        <SubHeading>
+            Behind the lyrics.
+            <br/>
+            ...like, <i>miles</i> behind them.
+        </SubHeading>
+    </NavWrapper>
+);
 
-const NavBar = styled.nav`
+const NavWrapper = styled.nav`
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -33,4 +45,5 @@ const SubHeading = styled.h5`
     margin: 0px 0px 24px 0px;
 `;
 
-export { PageWrapper, NavBar, Logo, Link, SubHeading };
+
+export default NavBar;

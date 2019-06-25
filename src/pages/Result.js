@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { BASE_URL, COLOURS } from "constants.js";
+import NavBar from "components/NavBar";
 import { Referent, ResultsWrapper, SongWrapper, SongTitle, SongLine } from './Results.styles';
 
 const Result = ({ resultId }) => {
@@ -14,6 +15,7 @@ const Result = ({ resultId }) => {
 
     return (
         <ResultsWrapper>
+            <NavBar />
             <div>
                 <SongTitle>Song Title</SongTitle>
             </div>

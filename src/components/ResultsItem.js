@@ -29,7 +29,7 @@ const StyledLink = styled(Link)`
 
 const Wrapper = styled.div`
     width: 100%;
-    border-width: 1px 1px 0px;
+    border-width: 0px 1px 1px;
     border-color: ${COLOURS.accent};
     border-style: solid;
     padding: 4px;

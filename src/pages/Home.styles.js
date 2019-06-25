@@ -5,8 +5,9 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 100vh;
     padding: 0 24px;
+    max-width: 700px;
+    margin: 0 auto;
 `;
 
 const SearchBar = styled.input`
@@ -19,10 +20,6 @@ const SearchBar = styled.input`
     
     &:focus {
         outline-width: 0px;
-    }
-    
-    @media only screen and (min-width: 700px){
-        font-size: 3rem;
     }
 `;
 

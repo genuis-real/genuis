@@ -3,6 +3,7 @@ import axios from "axios";
 // components
 import ResultsScrollView from "components/ResultsScrollView";
 import ResultsItem from "components/ResultsItem";
+import NavBar from "components/NavBar";
 import { Wrapper, SearchBar, SearchForm } from "./Home.styles";
 
 import { BASE_URL } from "constants.js";
@@ -85,6 +86,7 @@ class Home extends Component {
         const { searchTerm, searchResults, viewingItem } = this.state;
         return (
             <Wrapper>
+                <NavBar />
                     <SearchForm
                         onSubmit={e => e.preventDefault()}
                     >
