@@ -3,31 +3,29 @@ import styled from "styled-components/macro";
 import { Link } from "@reach/router";
 import { COLOURS } from "constants.js";
 
-const ResultsItem = ({name, artist, thumbnailURL, hot, id, lastItem}) => {
-    const content = (
-        <StyledLink to={`/result/${id}`}>
-            <Wrapper lastItem={lastItem}>
-            <ThumbnailWrapper>
-                <img
-                    src={thumbnailURL}
-                    alt={"Smiley face"}
-                    height={"42"}
-                    width={"42"}
-                />
-            </ThumbnailWrapper>
-            <TitleAndArtist>
-                <SongTitle>{name}</SongTitle>
-                <ArtistName>{artist}</ArtistName>
-            </TitleAndArtist>
-            {hot && (
-                <HotIconWrapper>
-                    <i className="material-icons">hot_tub</i>
-                </HotIconWrapper>
-            )}
-            </Wrapper>
-        </StyledLink>
-    );
-};
+const ResultsItem = ({name, artist, thumbnailURL, hot, id, lastItem}) => (
+    <StyledLink to={`/result/${id}`}>
+        <Wrapper lastItem={lastItem}>
+        <ThumbnailWrapper>
+            <img
+                src={thumbnailURL}
+                alt={"Smiley face"}
+                height={"42"}
+                width={"42"}
+            />
+        </ThumbnailWrapper>
+        <TitleAndArtist>
+            <SongTitle>{name}</SongTitle>
+            <ArtistName>{artist}</ArtistName>
+        </TitleAndArtist>
+        {hot && (
+            <HotIconWrapper>
+                <i className="material-icons">hot_tub</i>
+            </HotIconWrapper>
+        )}
+        </Wrapper>
+    </StyledLink>
+);
 
 const StyledLink = styled(Link)`
     color: ${COLOURS.accent};
