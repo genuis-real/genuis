@@ -6,7 +6,6 @@ const ResultsScrollView = styled.div`
     flex-direction: column;
     overflow-y: scroll;
     width: 100%;
-    height: 100%;
     border-width: 0px 1px 1px;
     border-color: ${COLOURS.accent};
     border-style: solid;
