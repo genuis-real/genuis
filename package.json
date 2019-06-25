@@ -15,6 +15,7 @@
         "eslint-plugin-react-hooks": "^1.6.0",
         "http-proxy-middleware": "^0.19.1",
         "npm-run-all": "^4.1.5",
+        "pre-commit": "^1.2.2",
         "toml": "^3.0.0"
     },
     "scripts": {
@@ -23,8 +24,12 @@
         "build": "run-p build:**",
         "build:app": "react-scripts build",
         "test": "react-scripts test",
-        "eject": "react-scripts eject"
+        "eject": "react-scripts eject",
+        "test-redirect": "CI=true react-scripts test redirects.test.js"
     },
+    "pre-commit": [
+        "test-redirect"
+    ],
     "browserslist": [
         ">0.2%",
         "not dead",
