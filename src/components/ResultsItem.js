@@ -1,23 +1,28 @@
-import React from 'react';
-import styled from 'styled-components';
-import { Link } from '@reach/router';
-import { COLOURS } from 'constants.js';
+import React from "react";
+import styled from "styled-components/macro";
+import { Link } from "@reach/router";
+import { COLOURS } from "constants.js";
 
-const ResultsItem = ({name, artist, thumbnailURL, hot, id, onClick}) => (
+const ResultsItem = ({ name, artist, thumbnailURL, hot, id, onClick }) => (
     <StyledLink to={`/result/${id}`}>
         <Wrapper>
             <ThumbnailWrapper>
-                <img src={thumbnailURL} alt={"Smiley face"} height={"42"} width={"42"}/>
+                <img
+                    src={thumbnailURL}
+                    alt={"Smiley face"}
+                    height={"42"}
+                    width={"42"}
+                />
             </ThumbnailWrapper>
             <TitleAndArtist>
                 <SongTitle>{name}</SongTitle>
                 <ArtistName>{artist}</ArtistName>
             </TitleAndArtist>
-            {hot &&
+            {hot && (
                 <HotIconWrapper>
                     <i className="material-icons">hot_tub</i>
                 </HotIconWrapper>
-            }
+            )}
         </Wrapper>
     </StyledLink>
 );
