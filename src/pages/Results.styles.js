@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { COLOURS } from 'constants.js';
+import styled from "styled-components/macro";
+import { COLOURS } from "constants.js";
 
 const Referent = styled.a`
     //display: inline;
@@ -28,23 +28,17 @@ const SongTitle = styled.h2`
 `;
 
 const SongLine = styled.p`
-    color: ${COLOURS.accent}
+    color: ${COLOURS.accent};
 `;
 
 const SongWrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-        
-    @media only screen and (min-width: 700px){
+
+    @media only screen and (min-width: 700px) {
         align-item: flex-start;
     }
 `;
 
-export {
-    Referent,
-    ResultsWrapper,
-    SongWrapper,
-    SongTitle,
-    SongLine
-};
+export { Referent, ResultsWrapper, SongWrapper, SongTitle, SongLine };

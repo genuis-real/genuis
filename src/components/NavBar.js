@@ -1,18 +1,16 @@
-import React from 'react';
-import styled from 'styled-components';
-import { Link as RouterLink } from '@reach/router';
-import { COLOURS } from 'constants.js';
+import React from "react";
+import styled from "styled-components/macro";
+import { Link as RouterLink } from "@reach/router";
+import { COLOURS } from "constants.js";
 
 const NavBar = () => (
     <NavWrapper>
         <Logo>
-            <Link to="/">
-                GENUIS
-            </Link>
+            <Link to="/">GENUIS</Link>
         </Logo>
         <SubHeading>
             Behind the lyrics.
-            <br/>
+            <br />
             ...like, <i>miles</i> behind them.
         </SubHeading>
     </NavWrapper>
@@ -33,7 +31,7 @@ const Logo = styled.h1`
 
 const Link = styled(RouterLink)`
     text-decoration: none;
-    
+
     &:visited {
         color: ${COLOURS.accent};
     }
@@ -44,6 +42,5 @@ const SubHeading = styled.h5`
     font-weight: 100;
     margin: 0px 0px 24px 0px;
 `;
-
 
 export default NavBar;

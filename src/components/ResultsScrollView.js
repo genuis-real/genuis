@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { COLOURS } from 'constants.js';
+import styled from "styled-components/macro";
+import { COLOURS } from "constants.js";
 
 const ResultsScrollView = styled.div`
     display: flex;

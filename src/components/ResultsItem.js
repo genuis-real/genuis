@@ -1,43 +1,32 @@
-import React from 'react';
-import styled from 'styled-components';
-import { Link } from '@reach/router';
-import { COLOURS } from 'constants.js';
+import React from "react";
+import styled from "styled-components/macro";
+import { Link } from "@reach/router";
+import { COLOURS } from "constants.js";
 
 const ResultsItem = ({name, artist, thumbnailURL, hot, id, lastItem}) => {
     const content = (
-        <>
+        <StyledLink to={`/result/${id}`}>
+            <Wrapper lastItem={lastItem}>
             <ThumbnailWrapper>
-                <img src={thumbnailURL} alt={"Smiley face"} height={"42"} width={"42"}/>
+                <img
+                    src={thumbnailURL}
+                    alt={"Smiley face"}
+                    height={"42"}
+                    width={"42"}
+                />
             </ThumbnailWrapper>
             <TitleAndArtist>
                 <SongTitle>{name}</SongTitle>
                 <ArtistName>{artist}</ArtistName>
             </TitleAndArtist>
-            {hot &&
-            <HotIconWrapper>
-                <i className="material-icons">hot_tub</i>
-            </HotIconWrapper>
-            }
-        </>
-    );
-    
-    if (!lastItem) {
-        return (
-            <StyledLink to={`/result/${id}`}>
-                <Wrapper lastItem={lastItem}>
-                    {content}
-                </Wrapper>
-            </StyledLink>
-        )
-    }
-
-    return (
-        <StyledLink to={`/result/${id}`}>
-            <LastItemWrapper>
-                {content}
-            </LastItemWrapper>
+            {hot && (
+                <HotIconWrapper>
+                    <i className="material-icons">hot_tub</i>
+                </HotIconWrapper>
+            )}
+            </Wrapper>
         </StyledLink>
-    )
+    );
 };
 
 const StyledLink = styled(Link)`
@@ -50,15 +39,6 @@ const Wrapper = styled.div`
     border-width: ${({ lastItem }) => lastItem ? '0px' : '0px 0px 1px'};
     border-color: ${COLOURS.accent};
     border-style: solid;
-    padding: 4px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    background-color: ${COLOURS.secondary};
-`;
-
-const LastItemWrapper = styled.div`
-    width: 100%;
     padding: 4px;
     display: flex;
     flex-direction: row;
