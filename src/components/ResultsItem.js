@@ -3,9 +3,9 @@ import styled from 'styled-components';
 import { Link } from '@reach/router';
 import { COLOURS } from 'constants.js';
 
-const ResultsItem = ({name, artist, thumbnailURL, hot, id, onClick}) => (
-    <StyledLink to={`/result/${id}`}>
-        <Wrapper>
+const ResultsItem = ({name, artist, thumbnailURL, hot, id, lastItem}) => {
+    const content = (
+        <>
             <ThumbnailWrapper>
                 <img src={thumbnailURL} alt={"Smiley face"} height={"42"} width={"42"}/>
             </ThumbnailWrapper>
@@ -14,13 +14,31 @@ const ResultsItem = ({name, artist, thumbnailURL, hot, id, onClick}) => (
                 <ArtistName>{artist}</ArtistName>
             </TitleAndArtist>
             {hot &&
-                <HotIconWrapper>
-                    <i className="material-icons">hot_tub</i>
-                </HotIconWrapper>
+            <HotIconWrapper>
+                <i className="material-icons">hot_tub</i>
+            </HotIconWrapper>
             }
-        </Wrapper>
-    </StyledLink>
-);
+        </>
+    );
+    
+    if (!lastItem) {
+        return (
+            <StyledLink to={`/result/${id}`}>
+                <Wrapper lastItem={lastItem}>
+                    {content}
+                </Wrapper>
+            </StyledLink>
+        )
+    }
+
+    return (
+        <StyledLink to={`/result/${id}`}>
+            <LastItemWrapper>
+                {content}
+            </LastItemWrapper>
+        </StyledLink>
+    )
+};
 
 const StyledLink = styled(Link)`
     color: ${COLOURS.accent};
@@ -29,9 +47,18 @@ const StyledLink = styled(Link)`
 
 const Wrapper = styled.div`
     width: 100%;
-    border-width: 0px 1px 1px;
+    border-width: ${({ lastItem }) => lastItem ? '0px' : '0px 0px 1px'};
     border-color: ${COLOURS.accent};
     border-style: solid;
+    padding: 4px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: ${COLOURS.secondary};
+`;
+
+const LastItemWrapper = styled.div`
+    width: 100%;
     padding: 4px;
     display: flex;
     flex-direction: row;
