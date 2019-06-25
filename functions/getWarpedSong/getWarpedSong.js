@@ -105,6 +105,26 @@ async function translateSongLyrics(lyricsData) {
     return lyricsDataCopy;
 }
 
+const getSongObj = async geniusJson => {
+    console.log(geniusJson);
+
+    const song = geniusJson.response.song;
+
+    const originalLyrics = await scrapeContent(song.path);
+    const warpedLyrics = await translateSongLyrics(originalLyrics);
+
+    return {
+        id: song.id,
+        artistName: song.primary_artist.name,
+        fullTitle: song.full_title,
+        title: song.title,
+        lyrics: {
+            original: originalLyrics,
+            warped: warpedLyrics
+        }
+    };
+};
+
 exports.handler = async function(event, context) {
     const { songId } = event.queryStringParameters;
     const { GENIUS_AUTH_TOKEN } = process.env;
@@ -115,18 +135,17 @@ exports.handler = async function(event, context) {
             q.Paginate(q.Match(q.Index("song_by_id"), songId))
         );
 
+        // If in fauna then return that immediately
         if (data.length > 0) {
             const dbSong = await client.query(q.Get(data[0]));
             console.log(`fetched song with id ${songId} from DB`);
             return {
                 statusCode: 200,
-                body: JSON.stringify({
-                    artistName: dbSong.data.artistName,
-                    warped: dbSong.data.lyrics.warped
-                })
+                body: JSON.stringify(dbSong.data)
             };
         }
 
+        // else go and get it from genius and construct the object
         const response = await fetch(`https://api.genius.com/songs/${songId}`, {
             headers: {
                 Accept: "application/json",
@@ -142,29 +161,14 @@ exports.handler = async function(event, context) {
         }
 
         const json = await response.json();
-        const song = json.response.song;
-
-        const originalLyrics = await scrapeContent(song.path);
-        const warpedLyrics = await translateSongLyrics(originalLyrics);
-
-        const songObj = {
-            id: songId,
-            artistName: song.primary_artist.name,
-            lyrics: {
-                original: originalLyrics,
-                warped: warpedLyrics
-            }
-        };
+        const songObj = await getSongObj(json);
 
         console.log(`scraped song with id ${songId}`);
         await client.query(q.Create(q.Class("song"), { data: songObj }));
         console.log(`added song with id ${songId} to the db`);
         return {
             statusCode: 200,
-            body: JSON.stringify({
-                artistName: songObj.artistName,
-                warped: warpedLyrics
-            })
+            body: JSON.stringify(songObj)
         };
     } catch (err) {
         console.log(err); // output to netlify function log
