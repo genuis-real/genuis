@@ -3,9 +3,9 @@ import styled from "styled-components/macro";
 import { Link } from "@reach/router";
 import { COLOURS } from "constants.js";
 
-const ResultsItem = ({ name, artist, thumbnailURL, hot, id, onClick }) => (
+const ResultsItem = ({name, artist, thumbnailURL, hot, id, lastItem}) => (
     <StyledLink to={`/result/${id}`}>
-        <Wrapper>
+        <Wrapper lastItem={lastItem}>
             <ThumbnailWrapper>
                 <img
                     src={thumbnailURL}
@@ -34,7 +34,7 @@ const StyledLink = styled(Link)`
 
 const Wrapper = styled.div`
     width: 100%;
-    border-width: 0px 1px 1px;
+    border-width: ${({ lastItem }) => lastItem ? '0px' : '0px 0px 1px'};
     border-color: ${COLOURS.accent};
     border-style: solid;
     padding: 4px;

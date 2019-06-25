@@ -32,14 +32,6 @@ class Home extends Component {
         this.getResultsDebounced(searchTerm);
     };
 
-    resultItemClicked = event => {
-        event.preventDefault();
-        this.setState({
-            viewingItem: true,
-            searchDisabled: true
-        });
-    };
-
     getResults = searchTerm => {
         axios
             .get(`${BASE_URL}proxy/search?q=${searchTerm}`)
@@ -101,12 +93,12 @@ class Home extends Component {
                         searchResults.length > 0 &&
                         searchTerm.length > 0 && (
                             <ResultsScrollView>
-                                {searchResults.map(item => (
+                                {searchResults.map((item, index) => (
                                     <ResultsItem
                                         key={`results-item-${item.name}-${
                                             item.artist
                                         }`}
-                                        onClick={this.resultItemClicked}
+                                        lastItem={index === searchResults.length -1}
                                         {...item}
                                     />
                                 ))}
