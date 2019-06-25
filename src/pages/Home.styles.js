@@ -14,8 +14,8 @@ const SearchBar = styled.input`
     width: 100%;
     font-size: 2rem;
     color: ${COLOURS.accent};
-    background-color: ${COLOURS.primary};
-    padding: 0px 12px;
+    background-color: ${COLOURS.secondary};
+    padding: 4px 12px;
     
     &:focus {
         outline-width: 0px;

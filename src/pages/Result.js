@@ -1,23 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { BASE_URL } from "constants.js";
-import styled from "styled-components";
-
-const Referent = styled.a`
-    display: inline;
-    background-color: #c9d4ff;
-    box-shadow: 0.01em 0 0 #c9d4ff, -0.01em 0 0 #c9d4ff;
-    padding: 3px;
-    line-height: 1.7;
-
-    text-decoration: none;
-    color: #222;
-
-    &:hover {
-        background-color: #acbaef;
-        box-shadow: 0.01em 0 0 #acbaef, -0.01em 0 0 #acbaef;
-    }
-`;
+import { BASE_URL, COLOURS } from "constants.js";
+import { Referent, ResultsWrapper, SongWrapper, SongTitle, SongLine } from './Results.styles';
 
 const Result = ({ resultId }) => {
     const [songData, setSongData] = useState(null);
@@ -29,15 +13,17 @@ const Result = ({ resultId }) => {
     }, [resultId]);
 
     return (
-        <div>
-            <div>id: {resultId}</div>
+        <ResultsWrapper>
+            <div>
+                <SongTitle>Song Title</SongTitle>
+            </div>
             {songData ? (
                 <div>
-                    <div>{songData.name}</div>
+                    <div><SongLine>{songData.artistName}</SongLine></div>
                 </div>
             ) : null}
             {songData ? (
-                <div>
+                <SongWrapper>
                     {songData.warped.map(({ text, referentId }) => {
                         if (referentId) {
                             return (
@@ -58,9 +44,9 @@ const Result = ({ resultId }) => {
                         }
                         return <p>{text}</p>;
                     })}
-                </div>
+                </SongWrapper>
             ) : null}
-        </div>
+        </ResultsWrapper>
     );
 };
 

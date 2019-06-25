@@ -10,7 +10,7 @@ const ResultsItem = ({name, artist, thumbnailURL, hot, id, onClick}) => (
                 <img src={thumbnailURL} alt={"Smiley face"} height={"42"} width={"42"}/>
             </ThumbnailWrapper>
             <TitleAndArtist>
-                <span>{name}</span>
+                <SongTitle>{name}</SongTitle>
                 <ArtistName>{artist}</ArtistName>
             </TitleAndArtist>
             {hot &&
@@ -29,10 +29,14 @@ const StyledLink = styled(Link)`
 
 const Wrapper = styled.div`
     width: 100%;
-    border: 1px solid ${COLOURS.accent};
+    border-width: 1px 1px 0px;
+    border-color: ${COLOURS.accent};
+    border-style: solid;
+    padding: 4px;
     display: flex;
     flex-direction: row;
     align-items: center;
+    background-color: ${COLOURS.secondary};
 `;
 
 const ThumbnailWrapper = styled.div`
@@ -45,6 +49,10 @@ const TitleAndArtist = styled.div`
     display: flex;
     flex-direction: column;
     padding: 0px 5px;
+`;
+
+const SongTitle = styled.span`
+    font-weight: 900;
 `;
 
 const ArtistName = styled.span`
