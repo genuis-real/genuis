@@ -3,7 +3,6 @@ import axios from "axios";
 import { BASE_URL } from "constants.js";
 import NavBar from "components/NavBar";
 import {
-    Referent,
     ResultsWrapper,
     SongWrapper,
     SongTitle,
@@ -32,22 +31,17 @@ const Result = ({ resultId }) => {
                         {songData.lyrics.warped.map(({ text, referentId }) => {
                             if (referentId) {
                                 return (
-                                    <>
-                                        <Referent
-                                            href={`/referent/${referentId}`}
-                                            data-referent-id={referentId}
-                                            dangerouslySetInnerHTML={{
-                                                __html: text.replace(
-                                                    /(?:\r\n|\r|\n)/g,
-                                                    "<br />"
-                                                )
-                                            }}
-                                        />
-                                        <br />
-                                    </>
+                                    <SongLine
+                                        dangerouslySetInnerHTML={{
+                                            __html: text.replace(
+                                                /(?:\r\n|\r|\n)/g,
+                                                "<br />"
+                                            )
+                                        }}
+                                    />
                                 );
                             }
-                            return <p>{text}</p>;
+                            return <SongLine>{text}</SongLine>;
                         })}
                     </SongWrapper>
                 </>

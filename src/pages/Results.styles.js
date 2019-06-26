@@ -1,22 +1,6 @@
 import styled from "styled-components/macro";
 import { COLOURS } from "constants.js";
 
-const Referent = styled.a`
-    //display: inline;
-    //background-color: #c9d4ff;
-    //box-shadow: 0.01em 0 0 #c9d4ff, -0.01em 0 0 #c9d4ff;
-    //padding: 3px;
-    //line-height: 1.7;
-    //
-    //text-decoration: none;
-    //color: #222;
-    //
-    //&:hover {
-    //    background-color: #acbaef;
-    //    box-shadow: 0.01em 0 0 #acbaef, -0.01em 0 0 #acbaef;
-    //}
-`;
-
 const ResultsWrapper = styled.div`
     display: flex;
     flex-direction: column;
@@ -34,11 +18,9 @@ const SongLine = styled.p`
 const SongWrapper = styled.div`
     display: flex;
     flex-direction: column;
-    align-items: center;
-
-    @media only screen and (min-width: 700px) {
-        align-item: flex-start;
-    }
+    margin: 0 auto;
+    padding-left: 16px;
+    padding-right: 16px;
 `;
 
-export { Referent, ResultsWrapper, SongWrapper, SongTitle, SongLine };
+export { ResultsWrapper, SongWrapper, SongTitle, SongLine };
