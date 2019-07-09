@@ -1,5 +1,4 @@
 import styled from "styled-components/macro";
-import { COLOURS } from "constants.js";
 
 const Wrapper = styled.div`
     display: flex;
@@ -12,11 +11,11 @@ const Wrapper = styled.div`
 `;
 
 const SearchBar = styled.input`
-    border: 2px solid ${COLOURS.accent};
+    border: 2px solid ${({theme}) => theme.COLOURS.accent};
     width: 100%;
     font-size: 2rem;
-    color: ${COLOURS.accent};
-    background-color: ${COLOURS.secondary};
+    color: ${({theme}) => theme.COLOURS.accent};
+    background-color: ${({theme}) => theme.COLOURS.secondary};
     padding: 4px 12px;
 
     &:focus {

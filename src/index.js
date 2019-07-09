@@ -2,8 +2,8 @@ import React, { Fragment } from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-import { createGlobalStyle } from "styled-components";
-import { COLOURS } from 'constants.js';
+import { createGlobalStyle, ThemeProvider } from "styled-components";
+import THEME from 'constants.js';
 
 const GlobalStyle = createGlobalStyle`
     body {
@@ -14,7 +14,7 @@ const GlobalStyle = createGlobalStyle`
             sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-        background-color: ${COLOURS.primary};
+        background-color: ${({theme}) => theme.COLOURS.primary};
     }
     html {
         box-sizing: border-box;
@@ -29,10 +29,12 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 ReactDOM.render(
-    <Fragment>
-        <GlobalStyle />
-        <App />
-    </Fragment>,
+    <ThemeProvider theme={THEME}>
+        <>
+            <GlobalStyle />
+            <App />
+        </>
+    </ThemeProvider>,
     document.getElementById("root")
 );
 
