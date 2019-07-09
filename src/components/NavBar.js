@@ -31,6 +31,7 @@ const Logo = styled.h1`
 
 const Link = styled(RouterLink)`
     text-decoration: none;
+    color: ${COLOURS.accent};
 
     &:visited {
         color: ${COLOURS.accent};

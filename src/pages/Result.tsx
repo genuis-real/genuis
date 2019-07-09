@@ -4,9 +4,13 @@ import { BASE_URL } from "constants.js";
 import NavBar from "components/NavBar";
 import {
     ResultsWrapper,
-    SongWrapper,
+    LyricsWrapper,
+    LyricsLine,
     SongTitle,
-    SongLine
+    SongArtist,
+    SongWrapper,
+    GalleryWrapper,
+    HeaderWrapper,
 } from "./Results.styles";
 import { RouteComponentProps } from "@reach/router";
 
@@ -39,32 +43,25 @@ const Result: React.FC<Props> = ({ resultId }) => {
     }, [resultId]);
 
     return (
-        <ResultsWrapper>
+        <>
             <NavBar />
             {songData ? (
                 <>
-                    <SongTitle>{songData.title}</SongTitle>
-                    <SongLine>{songData.artistName}</SongLine>
-                    <SongWrapper>
-                        {songData.lyrics.warped.map(({ text, referentId }) => {
-                            if (referentId) {
-                                return (
-                                    <SongLine
-                                        dangerouslySetInnerHTML={{
-                                            __html: text.replace(
-                                                /(?:\r\n|\r|\n)/g,
-                                                "<br />"
-                                            )
-                                        }}
-                                    />
-                                );
-                            }
-                            return <SongLine>{text}</SongLine>;
-                        })}
-                    </SongWrapper>
+                    <HeaderWrapper>
+                        <SongTitle>{songData.title}</SongTitle>
+                        <SongArtist>{songData.artistName}</SongArtist>
+                    </HeaderWrapper>
+                    <ResultsWrapper>
+                        <SongWrapper>
+                            <LyricsWrapper>
+                                {songData.lyrics.warped.map(({ text }) => <LyricsLine>{text}</LyricsLine> )}
+                            </LyricsWrapper>
+                        </SongWrapper>
+                        <GalleryWrapper/>
+                    </ResultsWrapper>
                 </>
             ) : null}
-        </ResultsWrapper>
+        </>
     );
 };
 
