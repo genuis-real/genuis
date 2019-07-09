@@ -3,7 +3,6 @@ import axios from "axios";
 import { BASE_URL } from "constants.js";
 import NavBar from "components/NavBar";
 import {
-    Referent,
     ResultsWrapper,
     LyricsWrapper,
     LyricsLine,
@@ -13,9 +12,27 @@ import {
     GalleryWrapper,
     HeaderWrapper,
 } from "./Results.styles";
+import { RouteComponentProps } from "@reach/router";
 
-const Result = ({ resultId }) => {
-    const [songData, setSongData] = useState(null);
+type Props = RouteComponentProps & {
+    resultId?: number;
+};
+
+type Lyric = {
+    text: string;
+    referentId: number;
+};
+
+type Lyrics = {
+    warped: Lyric[];
+};
+
+const Result: React.FC<Props> = ({ resultId }) => {
+    const [songData, setSongData] = useState<{
+        title: string;
+        artistName: string;
+        lyrics: Lyrics;
+    } | null>(null);
 
     useEffect(() => {
         axios

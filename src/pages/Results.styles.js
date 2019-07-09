@@ -1,9 +1,6 @@
 import styled from "styled-components/macro";
 import { COLOURS } from "constants.js";
 
-const Referent = styled.a`
-`;
-
 const HeaderWrapper = styled.div`
     display: flex;
     flex-direction: column;
@@ -49,15 +46,18 @@ const LyricsWrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    @media only screen and (min-width: 700px) {
+        padding: 0px 16px 0px 0px;
+    }
 `;
 
 const LyricsLine = styled.p`
     color: ${COLOURS.accent};
     margin: ${({ children }) => {
-        if (children.includes('[')) {
-            return '16px 0px';
-        }
-        return '0px';
+    if (children.includes('[')) {
+        return '16px 0px';
+    }
+    return '0px';
 }}`;
 
 const GalleryWrapper = styled.div`
@@ -69,7 +69,6 @@ const GalleryWrapper = styled.div`
 `;
 
 export {
-    Referent,
     ResultsWrapper,
     LyricsWrapper,
     LyricsLine,
