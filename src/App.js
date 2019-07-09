@@ -1,19 +1,18 @@
-import React, { Component } from "react";
+import React, { Suspense } from "react";
 import { Router } from "@reach/router";
 
-import Home from "pages/Home";
-import Result from "pages/Result";
+const Home = React.lazy(() => import("pages/Home"));
+const Result = React.lazy(() => import("pages/Result"));
 
-class App extends Component {
-    render() {
-        return (<>
-                <Router>
-                    <Home path="/" />
-                    <Result path="/result/:resultId" />
-                </Router>
-            </>
-        );
-    }
-}
+const App = () => {
+    return (
+        <Suspense fallback={() => <p>Loading...</p>}>
+            <Router>
+                <Home path="/" />
+                <Result path="/result/:resultId" />
+            </Router>
+        </Suspense>
+    );
+};
 
 export default App;
