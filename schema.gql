@@ -1,0 +1,13 @@
+type Lyric @embedded {
+    text: String!
+    referentId: Int
+}
+
+type Song {
+    id: Int! @unique
+    artistName: String!
+    title: String!
+    fullTitle: String!
+    warpedLyrics: [Lyric]
+    originalLyrics: [Lyric]
+}

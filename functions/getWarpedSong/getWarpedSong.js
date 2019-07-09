@@ -8,6 +8,7 @@ const {
     GOOGLE_PRIVATE_KEY
 } = process.env;
 
+const graphQlEndpoint = "https://graphql.fauna.com/graphql";
 const client = new faunadb.Client({
     secret: FAUNADB_SERVER_SECRET
 });
@@ -131,12 +132,19 @@ exports.handler = async function(event, context) {
 
     try {
         // Try to get from fauna
+        // TODO: update to use graphql
+        // recieve gql query
+        // forward to fauna
+        // if we get a response then respond
         const { data } = await client.query(
-            q.Paginate(q.Match(q.Index("song_by_id"), songId))
+            q.Paginate(q.Match(q.Index("song_by_id"), Number(songId)))
         );
+
+        console.log("songId", songId);
 
         // If in fauna then return that immediately
         if (data.length > 0) {
+            // TODO: update to use graphql
             const dbSong = await client.query(q.Get(data[0]));
             console.log(`fetched song with id ${songId} from DB`);
             return {
@@ -164,8 +172,39 @@ exports.handler = async function(event, context) {
         const songObj = await getSongObj(json);
 
         console.log(`scraped song with id ${songId}`);
-        await client.query(q.Create(q.Class("song"), { data: songObj }));
-        console.log(`added song with id ${songId} to the db`);
+        // await client.query(q.Create(q.Class("song"), { data: songObj }));
+
+        const createSong = `
+            mutation CreateSong($data: SongInput!) {
+                createSong(data: $data) {
+                    id
+                }
+            }
+        `;
+
+        const gqlRes = await fetch(graphQlEndpoint, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                authorization: `Basic Zm5BRFIxX3MwcUFDQks2UjIyX3VPangzN3Z6UWVxam1vOE9JQ2lQajpnZW51aXM6c2VydmVy`
+            },
+            body: JSON.stringify({
+                query: createSong,
+                variables: {
+                    data: {
+                        originalLyrics: { create: songObj.lyrics.original },
+                        warpedLyrics: { create: songObj.lyrics.warped },
+                        id: songObj.id,
+                        artistName: songObj.artistName,
+                        title: songObj.title,
+                        fullTitle: songObj.fullTitle
+                    }
+                }
+            })
+        });
+        const gqlJson = await gqlRes.json();
+        console.log("Added gql", gqlJson);
         return {
             statusCode: 200,
             body: JSON.stringify(songObj)
