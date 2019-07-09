@@ -5,9 +5,13 @@ import NavBar from "components/NavBar";
 import {
     Referent,
     ResultsWrapper,
-    SongWrapper,
+    LyricsWrapper,
+    LyricsLine,
     SongTitle,
-    SongLine
+    SongArtist,
+    SongWrapper,
+    GalleryWrapper,
+    HeaderWrapper,
 } from "./Results.styles";
 
 const Result = ({ resultId }) => {
@@ -22,37 +26,25 @@ const Result = ({ resultId }) => {
     }, [resultId]);
 
     return (
-        <ResultsWrapper>
+        <>
             <NavBar />
             {songData ? (
                 <>
-                    <SongTitle>{songData.title}</SongTitle>
-                    <SongLine>{songData.artistName}</SongLine>
-                    <SongWrapper>
-                        {songData.lyrics.warped.map(({ text, referentId }) => {
-                            if (referentId) {
-                                return (
-                                    <>
-                                        <Referent
-                                            href={`/referent/${referentId}`}
-                                            data-referent-id={referentId}
-                                            dangerouslySetInnerHTML={{
-                                                __html: text.replace(
-                                                    /(?:\r\n|\r|\n)/g,
-                                                    "<br />"
-                                                )
-                                            }}
-                                        />
-                                        <br />
-                                    </>
-                                );
-                            }
-                            return <p>{text}</p>;
-                        })}
-                    </SongWrapper>
+                    <HeaderWrapper>
+                        <SongTitle>{songData.title}</SongTitle>
+                        <SongArtist>{songData.artistName}</SongArtist>
+                    </HeaderWrapper>
+                    <ResultsWrapper>
+                        <SongWrapper>
+                            <LyricsWrapper>
+                                {songData.lyrics.warped.map(({ text }) => <LyricsLine>{text}</LyricsLine> )}
+                            </LyricsWrapper>
+                        </SongWrapper>
+                        <GalleryWrapper/>
+                    </ResultsWrapper>
                 </>
             ) : null}
-        </ResultsWrapper>
+        </>
     );
 };
 

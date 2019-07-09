@@ -2,43 +2,80 @@ import styled from "styled-components/macro";
 import { COLOURS } from "constants.js";
 
 const Referent = styled.a`
-    //display: inline;
-    //background-color: #c9d4ff;
-    //box-shadow: 0.01em 0 0 #c9d4ff, -0.01em 0 0 #c9d4ff;
-    //padding: 3px;
-    //line-height: 1.7;
-    //
-    //text-decoration: none;
-    //color: #222;
-    //
-    //&:hover {
-    //    background-color: #acbaef;
-    //    box-shadow: 0.01em 0 0 #acbaef, -0.01em 0 0 #acbaef;
-    //}
 `;
 
-const ResultsWrapper = styled.div`
+const HeaderWrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
 `;
 
-const SongTitle = styled.h2`
+const SongTitle = styled.h1`
+    flex: 100%;
+    margin: 0px;
     color: ${COLOURS.accent};
 `;
 
-const SongLine = styled.p`
+const SongArtist = styled.h2`
+    flex: 100%;
+    margin: 0px;
     color: ${COLOURS.accent};
+`;
+
+const ResultsWrapper = styled.div`
+    flex: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 24px;
+    
+    @media only screen and (min-width: 700px) {
+        flex-direction: row;
+    }
 `;
 
 const SongWrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-
+    background-color: ${COLOURS}.accent;
+    
     @media only screen and (min-width: 700px) {
-        align-item: flex-start;
+        flex: 60%;
     }
 `;
 
-export { Referent, ResultsWrapper, SongWrapper, SongTitle, SongLine };
+const LyricsWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+`;
+
+const LyricsLine = styled.p`
+    color: ${COLOURS.accent};
+    margin: ${({ children }) => {
+        if (children.includes('[')) {
+            return '16px 0px';
+        }
+        return '0px';
+}}`;
+
+const GalleryWrapper = styled.div`
+    background-color: bisque;
+    
+    @media only screen and (min-width: 700px) {
+        flex: 40%;
+    }
+`;
+
+export {
+    Referent,
+    ResultsWrapper,
+    LyricsWrapper,
+    LyricsLine,
+    SongWrapper,
+    SongTitle,
+    SongArtist,
+    GalleryWrapper,
+    HeaderWrapper,
+};
