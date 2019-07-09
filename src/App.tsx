@@ -4,7 +4,7 @@ import { Router } from "@reach/router";
 const Home = React.lazy(() => import("pages/Home"));
 const Result = React.lazy(() => import("pages/Result"));
 
-const App = () => {
+const App: React.FC = () => {
     return (
         <Suspense fallback={() => <p>Loading...</p>}>
             <Router>
