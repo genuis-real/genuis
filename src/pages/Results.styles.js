@@ -10,12 +10,14 @@ const SongTitle = styled.h1`
     flex: 100%;
     margin: 0px;
     color: ${({theme}) => theme.COLOURS.accent};
+    text-align: center;
 `;
 
 const SongArtist = styled.h2`
     flex: 100%;
     margin: 0px;
     color: ${({theme}) => theme.COLOURS.accent};
+    text-align: center;
 `;
 
 const ResultsWrapper = styled.div`
