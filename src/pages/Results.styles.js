@@ -25,7 +25,7 @@ const ResultsWrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    padding: 24px;
+    padding-top: 24px;
     
     @media only screen and (min-width: 700px) {
         flex-direction: row;
@@ -36,6 +36,7 @@ const SongWrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 0px 24px;
     
     @media only screen and (min-width: 700px) {
         flex: 60%;
@@ -61,11 +62,47 @@ const LyricsLine = styled.p`
 }}`;
 
 const GalleryWrapper = styled.div`
-    background-color: bisque;
+    background-color: ${({theme}) => theme.COLOURS.secondary};
+    
+    position: fixed;
+    width: 100%;
+    height: 20%;
+    bottom: 0px;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     
     @media only screen and (min-width: 700px) {
+        position: static;
+        height: 100%;
         flex: 40%;
     }
+`;
+
+const MemeToolsPrompt = styled.p`
+    color: ${({theme}) => theme.COLOURS.accent};
+    text-align: center;
+`;
+
+const MemeToolsNextButton = styled.div`
+    background-color: ${({theme}) => theme.COLOURS.primary};
+    height: 48px;
+    width: 96px;
+    border-radius: 8px;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+    opacity: ${({ enabled }) => enabled ? 1.0 : 0.5};
+`;
+
+const MemeToolsNextButtonText = styled.p`
+    color: ${({theme}) => theme.COLOURS.accent};
+    text-align: center;
+    margin: 0px;
 `;
 
 export {
@@ -77,4 +114,7 @@ export {
     SongArtist,
     GalleryWrapper,
     HeaderWrapper,
+    MemeToolsPrompt,
+    MemeToolsNextButton,
+    MemeToolsNextButtonText,
 };
