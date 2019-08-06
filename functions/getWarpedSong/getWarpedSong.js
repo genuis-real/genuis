@@ -132,7 +132,7 @@ exports.handler = async function(event, context) {
     try {
         // Try to get from fauna
         const { data } = await client.query(
-            q.Paginate(q.Match(q.Index("song_by_id"), songId))
+            q.Paginate(q.Match(q.Index("song_by_id"), Number(songId)))
         );
 
         // If in fauna then return that immediately
