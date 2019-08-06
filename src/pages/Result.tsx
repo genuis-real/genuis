@@ -76,9 +76,11 @@ const Result: React.FC<Props> = ({ resultId }) => {
         };
         
         window.addEventListener("mouseup", setSelectionFromMouseUp);
+        window.addEventListener("touchend", setSelectionFromMouseUp);
 
         return () => {
             window.removeEventListener("mouseup", setSelectionFromMouseUp);
+            window.removeEventListener("touchend", setSelectionFromMouseUp);
         };
     }, [resultId]);
 
