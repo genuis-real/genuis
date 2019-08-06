@@ -1,5 +1,4 @@
 import styled from "styled-components/macro";
-import { COLOURS } from "constants.js";
 
 const HeaderWrapper = styled.div`
     display: flex;
@@ -10,13 +9,13 @@ const HeaderWrapper = styled.div`
 const SongTitle = styled.h1`
     flex: 100%;
     margin: 0px;
-    color: ${COLOURS.accent};
+    color: ${({theme}) => theme.COLOURS.accent};
 `;
 
 const SongArtist = styled.h2`
     flex: 100%;
     margin: 0px;
-    color: ${COLOURS.accent};
+    color: ${({theme}) => theme.COLOURS.accent};
 `;
 
 const ResultsWrapper = styled.div`
@@ -35,7 +34,6 @@ const SongWrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: ${COLOURS}.accent;
     
     @media only screen and (min-width: 700px) {
         flex: 60%;
@@ -52,7 +50,7 @@ const LyricsWrapper = styled.div`
 `;
 
 const LyricsLine = styled.p`
-    color: ${COLOURS.accent};
+    color: ${({theme}) => theme.COLOURS.accent};
     margin: ${({ children }) => {
     if (children.includes('[')) {
         return '16px 0px';
