@@ -1,5 +1,4 @@
 import styled from "styled-components/macro";
-import { COLOURS } from "constants.js";
 
 const ResultsScrollView = styled.div`
     display: flex;
@@ -7,7 +6,7 @@ const ResultsScrollView = styled.div`
     overflow-y: scroll;
     width: 100%;
     border-width: 0px 1px 1px;
-    border-color: ${COLOURS.accent};
+    border-color: ${({theme}) => theme.COLOURS.accent};
     border-style: solid;
 `;
 

@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components/macro";
 import { Link as RouterLink } from "@reach/router";
-import { COLOURS } from "constants.js";
 
 const NavBar = () => (
     <NavWrapper>
@@ -23,7 +22,7 @@ const NavWrapper = styled.nav`
 `;
 
 const Logo = styled.h1`
-    color: ${COLOURS.accent};
+    color: ${({theme}) => theme.COLOURS.accent};
     font-weight: 200;
     font-size: 4em;
     margin: 48px 0px 0px 0px;
@@ -31,14 +30,15 @@ const Logo = styled.h1`
 
 const Link = styled(RouterLink)`
     text-decoration: none;
+    color: ${({theme}) => theme.COLOURS.accent};
 
     &:visited {
-        color: ${COLOURS.accent};
+        color: ${({theme}) => theme.COLOURS.accent};
     }
 `;
 
 const SubHeading = styled.h5`
-    color: ${COLOURS.accent};
+    color: ${({theme}) => theme.COLOURS.accent};
     font-weight: 100;
     margin: 0px 0px 24px 0px;
 `;

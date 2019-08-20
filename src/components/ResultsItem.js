@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components/macro";
 import { Link } from "@reach/router";
-import { COLOURS } from "constants.js";
 
 const ResultsItem = ({name, artist, thumbnailURL, hot, id, lastItem}) => (
     <StyledLink to={`/result/${id}`}>
@@ -28,20 +27,20 @@ const ResultsItem = ({name, artist, thumbnailURL, hot, id, lastItem}) => (
 );
 
 const StyledLink = styled(Link)`
-    color: ${COLOURS.accent};
+    color: ${({theme}) => theme.COLOURS.accent};
     text-decoration: none;
 `;
 
 const Wrapper = styled.div`
     width: 100%;
     border-width: ${({ lastItem }) => lastItem ? '0px' : '0px 0px 1px'};
-    border-color: ${COLOURS.accent};
+    border-color: ${({theme}) => theme.COLOURS.accent};
     border-style: solid;
     padding: 4px;
     display: flex;
     flex-direction: row;
     align-items: center;
-    background-color: ${COLOURS.secondary};
+    background-color: ${({theme}) => theme.COLOURS.secondary};
 `;
 
 const ThumbnailWrapper = styled.div`
