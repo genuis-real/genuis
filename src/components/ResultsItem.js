@@ -33,7 +33,7 @@ const StyledLink = styled(Link)`
 
 const Wrapper = styled.div`
     width: 100%;
-    border-width: ${({ lastItem }) => (lastItem ? "0px" : "0px 0px 1px")};
+    border-width: 0px 0px 1px;
     border-color: rgba(255, 255, 255, 0.3);
     border-style: solid;
     padding: 8px 4px;
@@ -41,6 +41,9 @@ const Wrapper = styled.div`
     flex-direction: row;
     align-items: center;
     background-color: ${({ theme }) => theme.COLOURS.secondary};
+    ${StyledLink}:last-of-type > & {
+        border-width: 0;
+    }
 `;
 
 const ThumbnailWrapper = styled.div`
