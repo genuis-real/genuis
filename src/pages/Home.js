@@ -1,10 +1,15 @@
 import React, { Component } from "react";
+import styled from "styled-components";
 import axios from "axios";
 // components
-import ResultsScrollView from "components/ResultsScrollView";
 import ResultsItem from "components/ResultsItem";
 import NavBar from "components/NavBar";
-import { Wrapper, SearchBar, SearchForm } from "./Home.styles";
+import {
+    ResultsScrollView,
+    Wrapper,
+    SearchBar,
+    SearchForm
+} from "./Home.styles";
 
 import { BASE_URL } from "constants.js";
 
@@ -79,9 +84,8 @@ class Home extends Component {
         return (
             <Wrapper>
                 <NavBar />
-                    <SearchForm
-                        onSubmit={e => e.preventDefault()}
-                    >
+                <SearchWrapper>
+                    <SearchForm onSubmit={e => e.preventDefault()}>
                         <SearchBar
                             type="text"
                             value={this.state.searchTerm}
@@ -98,16 +102,26 @@ class Home extends Component {
                                         key={`results-item-${item.name}-${
                                             item.artist
                                         }`}
-                                        lastItem={index === searchResults.length -1}
+                                        lastItem={
+                                            index === searchResults.length - 1
+                                        }
                                         {...item}
                                     />
                                 ))}
                             </ResultsScrollView>
                         )}
+                </SearchWrapper>
             </Wrapper>
         );
     }
 }
+
+const SearchWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    width: 100%;
+`;
 
 // Returns a function, that, as long as it continues to be invoked, will not
 // be triggered. The function will be called after it stops being called for

@@ -1,5 +1,12 @@
 import styled from "styled-components/macro";
 
+const ResultsScrollView = styled.div`
+    border-width: 0px 1px 1px;
+    border-color: ${({ theme }) => theme.COLOURS.accent};
+    border-style: solid;
+    overflow: auto;
+`;
+
 const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
@@ -11,11 +18,11 @@ const Wrapper = styled.div`
 `;
 
 const SearchBar = styled.input`
-    border: 2px solid ${({theme}) => theme.COLOURS.accent};
+    border: 2px solid ${({ theme }) => theme.COLOURS.accent};
     width: 100%;
     font-size: 2rem;
-    color: ${({theme}) => theme.COLOURS.accent};
-    background-color: ${({theme}) => theme.COLOURS.secondary};
+    color: ${({ theme }) => theme.COLOURS.accent};
+    background-color: ${({ theme }) => theme.COLOURS.secondary};
     padding: 4px 12px;
 
     &:focus {
@@ -27,4 +34,4 @@ const SearchForm = styled.form`
     width: 100%;
 `;
 
-export { Wrapper, SearchBar, SearchForm };
+export { ResultsScrollView, Wrapper, SearchBar, SearchForm };
