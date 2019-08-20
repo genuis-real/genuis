@@ -6,7 +6,7 @@ const Result = React.lazy(() => import("pages/Result"));
 
 const App: React.FC = () => {
     return (
-        <Suspense fallback={() => <p>Loading...</p>}>
+        <Suspense fallback={<p data-testid="loading">Loading....</p>}>
             <Router>
                 <Home path="/" />
                 <Result path="/result/:resultId" />
