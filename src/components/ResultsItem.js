@@ -2,9 +2,9 @@ import React from "react";
 import styled from "styled-components/macro";
 import { Link } from "@reach/router";
 
-const ResultsItem = ({ name, artist, thumbnailURL, hot, id, lastItem }) => (
+const ResultsItem = ({ name, artist, thumbnailURL, hot, id }) => (
     <StyledLink to={`/result/${id}`}>
-        <Wrapper lastItem={lastItem}>
+        <Wrapper>
             <ThumbnailWrapper>
                 <img
                     src={thumbnailURL}

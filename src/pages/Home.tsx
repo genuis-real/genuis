@@ -1,4 +1,4 @@
-import React, { useState, useCallback, ChangeEvent, useReducer } from "react";
+import React, { useCallback, ChangeEvent, useReducer } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { debounce } from "lodash-es";
@@ -6,6 +6,7 @@ import { debounce } from "lodash-es";
 import ResultsItem from "components/ResultsItem";
 import NavBar from "components/NavBar";
 import {
+    SearchSpinner,
     ResultsScrollView,
     Wrapper,
     SearchBar,
@@ -144,17 +145,20 @@ const Home: React.FC<RouteComponentProps> = () => {
                         onChange={handleChange}
                     />
                 </SearchForm>
-                {state.searchResults && state.searchResults.length > 0 && (
+                {state.searchTerm.length > 0 && (
                     <ResultsScrollView>
-                        {state.searchResults.map((item, index) => (
-                            <ResultsItem
-                                key={`results-item-${item.name}-${item.artist}`}
-                                lastItem={
-                                    index === state.searchResults.length - 1
-                                }
-                                {...item}
-                            />
-                        ))}
+                        {state.isSearching ? (
+                            <SearchSpinner />
+                        ) : (
+                            state.searchResults.map((item, index) => (
+                                <ResultsItem
+                                    key={`results-item-${item.name}-${
+                                        item.artist
+                                    }`}
+                                    {...item}
+                                />
+                            ))
+                        )}
                     </ResultsScrollView>
                 )}
             </SearchWrapper>

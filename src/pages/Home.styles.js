@@ -1,4 +1,9 @@
 import styled from "styled-components/macro";
+import Spinner from "components/Spinner";
+
+const SearchSpinner = styled(Spinner)`
+    margin: 16px auto;
+`;
 
 const ResultsScrollView = styled.div`
     display: flex;
@@ -37,4 +42,4 @@ const SearchForm = styled.form`
     width: 100%;
 `;
 
-export { ResultsScrollView, Wrapper, SearchBar, SearchForm };
+export { SearchSpinner, ResultsScrollView, Wrapper, SearchBar, SearchForm };
