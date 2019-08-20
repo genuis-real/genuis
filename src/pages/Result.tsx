@@ -1,5 +1,7 @@
+/* global window */
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { isTouchDevice } from "../helpers/device";
 import { BASE_URL } from "constants.js";
 import NavBar from "components/NavBar";
 import {
@@ -50,6 +52,25 @@ const renderMemeCreationTools = (stage: number, windowSelection: string) => {
     }
 };
 
+const monitorEvents = (element: any) => {
+    const log = function(e: any) { console.log(e.type);};
+    const events = [];
+
+    for(let i in element) {
+        if(
+            i.startsWith("on")
+            && i !== 'ondevicemotion'
+            && i !== 'ondeviceorientation'
+            && i !== 'ondeviceorientationabsolute'
+        ) {
+            events.push(i.substr(2));
+        }
+    }
+    events.forEach(function(eventName) {
+        element.addEventListener(eventName, log);
+    });
+};
+
 const Result: React.FC<Props> = ({ resultId }) => {
     const [songData, setSongData] = useState<{
         title: string;
@@ -68,19 +89,32 @@ const Result: React.FC<Props> = ({ resultId }) => {
                 setSongData(result.data);
             });
 
-        const setSelectionFromMouseUp = () => {
+        const setSelectionFromMouseUp = (event: any) => {
+            event.preventDefault();
             console.log('Up');
             const selection = window.getSelection()!.toString();
             console.log(selection);
             setWindowSelection(window.getSelection()!.toString());
         };
         
-        window.addEventListener("mouseup", setSelectionFromMouseUp);
-        window.addEventListener("touchend", setSelectionFromMouseUp);
+        monitorEvents(window);
+        
+        const touchDevice = isTouchDevice();
+        
+        if(touchDevice) {
+            window.addEventListener("contextmenu", setSelectionFromMouseUp);
+        }
+        else {
+            window.addEventListener("mouseup", setSelectionFromMouseUp);
+        }
 
         return () => {
-            window.removeEventListener("mouseup", setSelectionFromMouseUp);
-            window.removeEventListener("touchend", setSelectionFromMouseUp);
+            if(touchDevice) {
+                window.removeEventListener("touchcancel", setSelectionFromMouseUp);
+            }
+            else {
+                window.removeEventListener("mouseup", setSelectionFromMouseUp);
+            }
         };
     }, [resultId]);
 
