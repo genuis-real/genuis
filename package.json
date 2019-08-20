@@ -1,4 +1,5 @@
 {
+<<<<<<< Updated upstream
   "name": "genuis",
   "version": "0.1.0",
   "private": true,
@@ -46,4 +47,55 @@
     "not ie <= 11",
     "not op_mini all"
   ]
+=======
+    "name": "genuis",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+        "@firebase/app-types": "^0.4.3",
+        "@reach/router": "^1.2.1",
+        "@types/jest": "^24.0.18",
+        "@types/lodash-es": "^4.17.3",
+        "@types/node": "^12.7.2",
+        "@types/reach__router": "^1.2.4",
+        "@types/react": "^16.9.2",
+        "@types/react-dom": "^16.9.0",
+        "@types/styled-components": "^4.1.18",
+        "axios": "0.19.0",
+        "lodash-es": "^4.17.15",
+        "react": "^16.9.0",
+        "react-dom": "^16.9.0",
+        "react-scripts": "3.1.1",
+        "styled-components": "^4.3.2",
+        "typescript": "^3.5.3"
+    },
+    "devDependencies": {
+        "babel-plugin-macros": "^2.6.1",
+        "eslint-plugin-react-hooks": "^1.7.0",
+        "faunadb": "^2.7.0",
+        "http-proxy-middleware": "^0.19.1",
+        "npm-run-all": "^4.1.5",
+        "pre-commit": "^1.2.2",
+        "toml": "^3.0.0"
+    },
+    "scripts": {
+        "dev": "netlify dev",
+        "start": "run-p start:**",
+        "start:app": "react-scripts start",
+        "build": "run-p build:**",
+        "build:app": "react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject",
+        "test-redirect": "CI=true react-scripts test redirects.test.js"
+    },
+    "pre-commit": [
+        "test-redirect"
+    ],
+    "browserslist": [
+        ">0.2%",
+        "not dead",
+        "not ie <= 11",
+        "not op_mini all"
+    ]
+>>>>>>> Stashed changes
 }
