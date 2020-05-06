@@ -4,12 +4,8 @@ import axios from "axios";
 // components
 import ResultsItem from "components/ResultsItem";
 import NavBar from "components/NavBar";
-import {
-    ResultsScrollView,
-    Wrapper,
-    SearchBar,
-    SearchForm
-} from "./Home.styles";
+import { Wrapper } from "components/common";
+import { ResultsScrollView, SearchBar, SearchForm } from "./Home.styles";
 
 import { BASE_URL } from "constants.js";
 
@@ -24,35 +20,35 @@ class Home extends Component {
             searching: false,
             viewingItem: false,
             searchDisabled: false,
-            searchResults: []
+            searchResults: [],
         };
     }
 
-    handleChange = event => {
+    handleChange = (event) => {
         const searchTerm = event.target.value;
         this.setState({
             searchTerm,
-            searching: true
+            searching: true,
         });
         this.getResultsDebounced(searchTerm);
     };
 
-    getResults = searchTerm => {
+    getResults = (searchTerm) => {
         axios
             .get(`${BASE_URL}proxy/search?q=${searchTerm}`)
-            .then(response => {
+            .then((response) => {
                 // handle success
                 this.handleSearchResultData(response);
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 // handle error
             })
-            .then(function() {
+            .then(function () {
                 // always executed
             });
     };
 
-    handleSearchResultData = searchData => {
+    handleSearchResultData = (searchData) => {
         console.log(searchData);
 
         const hits =
@@ -60,7 +56,7 @@ class Home extends Component {
                 ? searchData.data.response.hits
                 : [];
 
-        const newResults = hits.map(item => {
+        const newResults = hits.map((item) => {
             const { result } = item;
             return {
                 name: result.title,
@@ -69,13 +65,13 @@ class Home extends Component {
                     : "unknown",
                 thumbnailURL: result.header_image_thumbnail_url,
                 hot: result.stats ? result.stats.hot : false,
-                id: result.id
+                id: result.id,
             };
         });
 
         this.setState({
             searching: false,
-            searchResults: newResults
+            searchResults: newResults,
         });
     };
 
@@ -85,7 +81,7 @@ class Home extends Component {
             <Wrapper>
                 <NavBar />
                 <SearchWrapper>
-                    <SearchForm onSubmit={e => e.preventDefault()}>
+                    <SearchForm onSubmit={(e) => e.preventDefault()}>
                         <SearchBar
                             type="text"
                             value={this.state.searchTerm}
@@ -99,9 +95,7 @@ class Home extends Component {
                             <ResultsScrollView>
                                 {searchResults.map((item, index) => (
                                     <ResultsItem
-                                        key={`results-item-${item.name}-${
-                                            item.artist
-                                        }`}
+                                        key={`results-item-${item.name}-${item.artist}`}
                                         lastItem={
                                             index === searchResults.length - 1
                                         }
@@ -129,10 +123,10 @@ const SearchWrapper = styled.div`
 // leading edge, instead of the trailing.
 function debounce(func, wait, immediate) {
     var timeout;
-    return function() {
+    return function () {
         var context = this,
             args = arguments;
-        var later = function() {
+        var later = function () {
             timeout = null;
             if (!immediate) func.apply(context, args);
         };

@@ -7,16 +7,6 @@ const ResultsScrollView = styled.div`
     overflow: auto;
 `;
 
-const Wrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 0 24px 24px;
-    max-width: 700px;
-    height: 100vh;
-    margin: 0 auto;
-`;
-
 const SearchBar = styled.input`
     border: 2px solid ${({ theme }) => theme.COLOURS.accent};
     width: 100%;
@@ -34,4 +24,4 @@ const SearchForm = styled.form`
     width: 100%;
 `;
 
-export { ResultsScrollView, Wrapper, SearchBar, SearchForm };
+export { ResultsScrollView, SearchBar, SearchForm };
