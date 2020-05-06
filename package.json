@@ -34,10 +34,10 @@
         "build:app": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
-        "test-redirect": "CI=true react-scripts test redirects.test.js"
+        "pre-commit-test": "CI=true react-scripts test"
     },
     "pre-commit": [
-        "test-redirect"
+        "pre-commit-test"
     ],
     "browserslist": [
         ">0.2%",
