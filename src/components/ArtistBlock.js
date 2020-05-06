@@ -28,11 +28,16 @@ const ArtistButton = styled.button`
     padding: 0.5em 1em;
     border: 1px solid ${(props) => (props.isSelected ? "#ddcad9" : "#4B2142")};
     border-radius: 24px;
+    box-shadow: 4px 6px 16px 2px ${({ theme }) => theme.COLOURS.secondary};
+
+    &:focus {
+        outline: 0;
+    }
 
     /* &:hover {
         color: ${({ theme }) => theme.COLOURS.primary};
-        border: 2px solid ${({ theme }) => theme.COLOURS.primary}; */
-    }
+        border: 2px solid ${({ theme }) => theme.COLOURS.primary};
+    } */
 `;
 
 export default ArtistBlock;

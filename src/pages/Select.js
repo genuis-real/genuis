@@ -10,6 +10,7 @@ class Select extends Component {
 
         this.state = {
             artistSelected: "",
+            submitDisabled: false,
         };
     }
 
@@ -23,6 +24,9 @@ class Select extends Component {
     onPageSubmit = (event) => {
         // use artistSelected state to make the genius/translate calls
         // go to next page (for now)
+        this.setState({
+            submitDisabled: true,
+        });
     };
 
     render() {
@@ -50,7 +54,10 @@ class Select extends Component {
                 </SelectorWrapper>
                 <p>Artist Selected state: {artistSelected}</p>
                 <div>
-                    <StartGameCTA onClick={this.onPageSubmit}>
+                    <StartGameCTA
+                        onClick={this.onPageSubmit}
+                        disabled={this.state.submitDisabled}
+                    >
                         Translate that bitchin artist, bruh
                     </StartGameCTA>
                 </div>
@@ -67,12 +74,22 @@ const SelectorWrapper = styled.div`
 const StartGameCTA = styled.button`
     min-width: 85%;
     color: ${({ theme }) => theme.COLOURS.secondary};
-    background-color: #81fa7a;
+    background-color: #fe635e;
     font-size: 1em;
     margin: 1em 0;
     padding: 1em 2em;
-    border: 3px solid #22cc33;
+    border: none;
+    box-shadow: 12px 6px 24px 4px ${({ theme }) => theme.COLOURS.secondary};
     border-radius: 6px;
+
+    &:focus {
+        outline: 0;
+    }
+
+    &:disabled {
+        color: #fe635e;
+        background-color: #590a09;
+    }
 `;
 
 export default Select;
