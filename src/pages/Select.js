@@ -10,23 +10,29 @@ class Select extends Component {
 
         this.state = {
             artistSelected: "",
-            submitDisabled: false,
+            submitDisabled: true,
+            isSubmitting: false,
         };
     }
 
     onArtistSelect = (event) => {
         const artistSelected = event.target.value;
+        if (this.state.isSubmitting) {
+            return;
+        }
         this.setState({
             artistSelected,
+            submitDisabled: false,
         });
     };
 
     onPageSubmit = (event) => {
-        // use artistSelected state to make the genius/translate calls
-        // go to next page (for now)
         this.setState({
             submitDisabled: true,
+            isSubmitting: true,
         });
+        // use artistSelected state to make the genius/translate calls
+        // go to next page (for now)
     };
 
     render() {
@@ -37,9 +43,9 @@ class Select extends Component {
                 <div>Select your artist...</div>
                 <SelectorWrapper>
                     <ArtistBlock
-                        artist={"Kendrick"}
+                        artist={"Kendrick Lamar"}
                         onClick={this.onArtistSelect}
-                        isSelected={artistSelected === "Kendrick"}
+                        isSelected={artistSelected === "Kendrick Lamar"}
                     />
                     <ArtistBlock
                         artist={"Andre 3000"}
@@ -51,16 +57,22 @@ class Select extends Component {
                         onClick={this.onArtistSelect}
                         isSelected={artistSelected === "Vince Staples"}
                     />
+                    <ArtistBlock
+                        artist={"Killer Mike"}
+                        onClick={this.onArtistSelect}
+                        isSelected={artistSelected === "Killer Mike"}
+                    />
                 </SelectorWrapper>
-                <p>Artist Selected state: {artistSelected}</p>
-                <div>
-                    <StartGameCTA
-                        onClick={this.onPageSubmit}
-                        disabled={this.state.submitDisabled}
-                    >
-                        Translate that bitchin artist, bruh
-                    </StartGameCTA>
-                </div>
+                {artistSelected && (
+                    <div>
+                        <StartGameCTA
+                            onClick={this.onPageSubmit}
+                            disabled={this.state.submitDisabled}
+                        >
+                            Translate that bitchin artist, bruh
+                        </StartGameCTA>
+                    </div>
+                )}
             </Wrapper>
         );
     }
@@ -87,8 +99,7 @@ const StartGameCTA = styled.button`
     }
 
     &:disabled {
-        color: #fe635e;
-        background-color: #590a09;
+        opacity: 0.6;
     }
 `;
 
