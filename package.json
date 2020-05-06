@@ -1,49 +1,48 @@
 {
-  "name": "genuis",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@firebase/app-types": "^0.4.0",
-    "@reach/router": "^1.2.1",
-    "@types/jest": "^24.0.15",
-    "@types/node": "^12.6.1",
-    "@types/reach__router": "^1.2.4",
-    "@types/react": "^16.8.23",
-    "@types/react-dom": "^16.8.4",
-    "axios": "0.19.0",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-scripts": "3.0.1",
-    "styled-components": "^4.3.2",
-    "typescript": "^3.5.3"
-  },
-  "devDependencies": {
-    "@testing-library/react": "^8.0.4",
-    "faunadb": "^2.6.1",
-    "babel-plugin-macros": "^2.6.1",
-    "eslint-plugin-react-hooks": "^1.6.1",
-    "http-proxy-middleware": "^0.19.1",
-    "npm-run-all": "^4.1.5",
-    "pre-commit": "^1.2.2",
-    "toml": "^3.0.0"
-  },
-  "scripts": {
-    "dev": "netlify dev",
-    "start": "run-p start:**",
-    "start:app": "react-scripts start",
-    "build": "run-p build:**",
-    "build:app": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "test-redirect": "CI=true react-scripts test redirects.test.js"
-  },
-  "pre-commit": [
-    "test-redirect"
-  ],
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+    "name": "genuis",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+        "@firebase/app-types": "^0.4.0",
+        "@reach/router": "^1.3.3",
+        "axios": "0.19.2",
+        "react": "^16.13.1",
+        "react-dom": "^16.13.1",
+        "react-scripts": "3.4.1",
+        "styled-components": "^5.1.0",
+        "typescript": "^3.8.3"
+    },
+    "devDependencies": {
+        "@types/jest": "^25.2.1",
+        "@types/node": "^13.13.5",
+        "@types/reach__router": "^1.3.5",
+        "@types/react": "^16.9.34",
+        "@types/react-dom": "^16.9.7",
+        "@testing-library/react": "^10.0.4",
+        "faunadb": "^2.13.1",
+        "babel-plugin-macros": "^2.8.0",
+        "eslint-plugin-react-hooks": "^4.0.0",
+        "http-proxy-middleware": "^1.0.3",
+        "npm-run-all": "^4.1.5",
+        "pre-commit": "^1.2.2",
+        "toml": "^3.0.0"
+    },
+    "scripts": {
+        "dev": "netlify dev",
+        "start": "react-scripts start",
+        "build": "run-p build:**",
+        "build:app": "react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject",
+        "test-redirect": "CI=true react-scripts test redirects.test.js"
+    },
+    "pre-commit": [
+        "test-redirect"
+    ],
+    "browserslist": [
+        ">0.2%",
+        "not dead",
+        "not ie <= 11",
+        "not op_mini all"
+    ]
 }
