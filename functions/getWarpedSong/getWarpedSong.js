@@ -1,15 +1,15 @@
 const fetch = require("node-fetch");
 const cheerio = require("cheerio");
 const faunadb = require("faunadb");
-const { Translate } = require("@google-cloud/translate");
+const { Translate } = require("@google-cloud/translate").v2;
 const {
     FAUNADB_SERVER_SECRET,
     GOOGLE_CLIENT_EMAIL,
-    GOOGLE_PRIVATE_KEY
+    GOOGLE_PRIVATE_KEY,
 } = process.env;
 
 const client = new faunadb.Client({
-    secret: FAUNADB_SERVER_SECRET
+    secret: FAUNADB_SERVER_SECRET,
 });
 const q = faunadb.query;
 
@@ -24,15 +24,15 @@ const secondTarget = "en";
 const translate = new Translate({
     credentials: {
         client_email: GOOGLE_CLIENT_EMAIL,
-        private_key: GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n")
+        private_key: GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n"),
     },
-    projectId
+    projectId,
 });
 
 async function scrapeContent(path) {
     const pageHtml = await fetch(`https://genius.com${path}`)
-        .then(response => response.text())
-        .then(body => body);
+        .then((response) => response.text())
+        .then((body) => body);
 
     const $ = cheerio.load(pageHtml);
     const lyrics = $(".lyrics p");
@@ -52,7 +52,7 @@ async function scrapeContent(path) {
 
         const lyric = {
             text: el.text().trim(),
-            referentId: el.data("id") || null
+            referentId: el.data("id") || null,
         };
 
         lyricsData.push(lyric);
@@ -105,7 +105,7 @@ async function translateSongLyrics(lyricsData) {
     return lyricsDataCopy;
 }
 
-const getSongObj = async geniusJson => {
+const getSongObj = async (geniusJson) => {
     console.log(geniusJson);
 
     const song = geniusJson.response.song;
@@ -120,12 +120,12 @@ const getSongObj = async geniusJson => {
         title: song.title,
         lyrics: {
             original: originalLyrics,
-            warped: warpedLyrics
-        }
+            warped: warpedLyrics,
+        },
     };
 };
 
-exports.handler = async function(event, context) {
+exports.handler = async function (event, context) {
     const { songId } = event.queryStringParameters;
     const { GENIUS_AUTH_TOKEN } = process.env;
 
@@ -141,7 +141,7 @@ exports.handler = async function(event, context) {
             console.log(`fetched song with id ${songId} from DB`);
             return {
                 statusCode: 200,
-                body: JSON.stringify(dbSong.data)
+                body: JSON.stringify(dbSong.data),
             };
         }
 
@@ -149,14 +149,14 @@ exports.handler = async function(event, context) {
         const response = await fetch(`https://api.genius.com/songs/${songId}`, {
             headers: {
                 Accept: "application/json",
-                Authorization: `Bearer ${GENIUS_AUTH_TOKEN}`
-            }
+                Authorization: `Bearer ${GENIUS_AUTH_TOKEN}`,
+            },
         });
 
         if (!response.ok) {
             return {
                 statusCode: response.status,
-                body: response.statusText
+                body: response.statusText,
             };
         }
 
@@ -168,13 +168,13 @@ exports.handler = async function(event, context) {
         console.log(`added song with id ${songId} to the db`);
         return {
             statusCode: 200,
-            body: JSON.stringify(songObj)
+            body: JSON.stringify(songObj),
         };
     } catch (err) {
         console.log(err); // output to netlify function log
         return {
             statusCode: 500,
-            body: JSON.stringify({ msg: err.message }) // Could be a custom message or object i.e. JSON.stringify(err)
+            body: JSON.stringify({ msg: err.message }), // Could be a custom message or object i.e. JSON.stringify(err)
         };
     }
 };
