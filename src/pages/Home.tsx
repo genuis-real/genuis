@@ -25,6 +25,11 @@ const ChooseArtist: React.FC<{
             >
                 Pick this artist: Ke$ha
             </button>
+            {state.matches({ chooseArtist: "selectedArtist" }) && (
+                <div>
+                    <h3>{state.context.selectedArtist?.name}</h3>
+                </div>
+            )}
         </div>
     );
 };
