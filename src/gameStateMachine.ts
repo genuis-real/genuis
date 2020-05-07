@@ -5,6 +5,21 @@ interface Artist {
     name: string;
 }
 
+interface Lyric {
+    text: string;
+    referentId: number;
+}
+
+interface Lyrics {
+    warped: Lyric[];
+}
+
+interface Song {
+    title: string;
+    artistName: string;
+    lyrics: Lyrics;
+}
+
 export interface GameContext {
     totalGuesses: number;
     correctGuesses: number;
@@ -29,6 +44,7 @@ export type GameEvent =
       }
     | {
           type: "SELECT_SONG";
+          song: Song;
       }
     | {
           type: "CLEAR_SELECTED_SONG";
