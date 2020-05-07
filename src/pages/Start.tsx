@@ -15,7 +15,7 @@ type Props = RouteComponentProps;
 
 const Start: React.FC<Props> = () => {
     return (
-        <Wrapper>
+        <Wrapper data-testid="start-wrapper">
                 <NavBar />
                 <HypeWrapper>
                     <HypeSubText>Put yourself to the test by guessing the names of your favourite artist's songs, with lyrics like you've never seen them before.</HypeSubText>
