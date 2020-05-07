@@ -63,6 +63,7 @@ export type GameEvent =
           type: "RESTART";
       };
 
+// TODO: add more types for more game states
 export type GameState =
     | {
           value: "idle";
@@ -115,6 +116,8 @@ export const gameMachine = createMachine<GameContext, GameEvent, GameState>(
             artistList,
             selectedArtist: undefined,
             selectedSong: undefined,
+            // TODO: add current song index
+            // TODO: add song list
         },
         states: {
             idle: {
@@ -212,11 +215,13 @@ export const gameMachine = createMachine<GameContext, GameEvent, GameState>(
                             },
                             correct: {
                                 on: {
+                                    // TODO: increment current song by one
                                     NEXT_ROUND: "#playing",
                                 },
                             },
                             incorrect: {
                                 on: {
+                                    // TODO: increment current song by one
                                     NEXT_ROUND: "#playing",
                                 },
                             },
@@ -240,6 +245,9 @@ export const gameMachine = createMachine<GameContext, GameEvent, GameState>(
                 states: {
                     idle: {
                         on: {
+                            // TODO: clear out current song
+                            // clear out song list
+                            // clear out selected artist
                             RESTART: "#chooseArtist",
                         },
                     },
