@@ -1,6 +1,5 @@
 import React, { Suspense } from "react";
 import { Router } from "@reach/router";
-import { Machine } from "xstate";
 
 const Home = React.lazy(() => import("pages/Home"));
 const Result = React.lazy(() => import("pages/Result"));

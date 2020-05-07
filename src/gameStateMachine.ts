@@ -1,13 +1,88 @@
-import { Machine } from "xstate";
+import { createMachine, assign } from "xstate";
 
-export const gameMachine = Machine(
+interface Artist {
+    id: number;
+    name: string;
+}
+
+export interface GameContext {
+    totalGuesses: number;
+    correctGuesses: number;
+    artistList?: Array<Artist>;
+    selectedArtist?: Artist;
+    selectedSongId?: number;
+}
+
+export type GameEvent =
+    | {
+          type: "START";
+      }
+    | {
+          type: "SELECT_ARTIST";
+          artist: Artist;
+      }
+    | {
+          type: "CLEAR_SELECTED_ARTIST";
+      }
+    | {
+          type: "RESOLVE";
+      }
+    | {
+          type: "SELECT_SONG";
+      }
+    | {
+          type: "CLEAR_SELECTED_SONG";
+      }
+    | {
+          type: "SUBMIT";
+      }
+    | {
+          type: "NEXT_ROUND";
+      }
+    | {
+          type: "RESTART";
+      };
+
+export type GameState =
+    | {
+          value: "idle";
+          context: GameContext & {
+              selectedArtist: undefined;
+              selectedSongId: undefined;
+          };
+      }
+    | {
+          value: "chooseArtist";
+          context: GameContext & {
+              selectedArtist: undefined;
+              selectedSongId: undefined;
+          };
+      }
+    | {
+          value: { chooseArtist: "selectingArtist" };
+          context: GameContext & {
+              selectedArtist: undefined;
+              selectedSongId: undefined;
+          };
+      }
+    | {
+          value: { chooseArtist: "selectedArtist" };
+          context: GameContext & {
+              selectedArtist: Artist;
+              selectedSongId: undefined;
+          };
+      };
+
+export const gameMachine = createMachine<GameContext, GameEvent, GameState>(
     {
         id: "game",
         initial: "idle",
         context: {
+            totalGuesses: 0,
             correctGuesses: 0,
-            artistId: null,
-            selectedSong: null,
+            artistList: undefined,
+            selectedArtist: undefined,
+            selectedSongId: undefined,
         },
         states: {
             idle: {
@@ -16,17 +91,32 @@ export const gameMachine = Machine(
                 },
             },
             chooseArtist: {
+                id: "chooseArtist",
                 initial: "selectingArtist",
                 states: {
                     selectingArtist: {
                         on: {
-                            SELECT: "selectedArtist",
+                            SELECT_ARTIST: {
+                                target: "selectedArtist",
+                                // sets context "selectedArtist"
+                                actions: assign({
+                                    selectedArtist: (context, event) =>
+                                        event.artist,
+                                }),
+                            },
                         },
                     },
                     selectedArtist: {
                         on: {
-                            CLEAR: "selectingArtist",
-                            // This is where we set artistId in context
+                            SELECT_ARTIST: {
+                                target: "selectedArtist",
+                                // sets context "selectedArtist"
+                                actions: assign({
+                                    selectedArtist: (context, event) =>
+                                        event.artist,
+                                }),
+                            },
+                            // This is where we set selectedArtist in context
                             START: "#playing",
                         },
                     },
@@ -37,9 +127,12 @@ export const gameMachine = Machine(
                 initial: "loading",
                 states: {
                     loading: {
-                        // Need to fire a side effect action based on the artist id in context
+                        entry: ["loadSongs"],
+                        // Need to fire a side effect action based on the selectedArtist id in context
                         on: {
-                            RESOLVE: "selectingSong",
+                            RESOLVE: {
+                                target: "selectingSong",
+                            },
                         },
                     },
                     selectingSong: {
@@ -50,8 +143,14 @@ export const gameMachine = Machine(
                     },
                     selectedSong: {
                         on: {
-                            CLEAR: "selectingSong",
-                            SUBMIT: "submittingAnswer",
+                            CLEAR_SELECTED_SONG: "selectingSong",
+                            SUBMIT: {
+                                target: "submittingAnswer",
+                                actions: assign({
+                                    totalGuesses: (context, event) =>
+                                        context.totalGuesses + 1,
+                                }),
+                            },
                         },
                     },
                     submittingAnswer: {
@@ -77,17 +176,32 @@ export const gameMachine = Machine(
                                 },
                             ],
                             // set the next song id in context
-                            NEXT: "loading",
+                            NEXT_ROUND: "loading",
                         },
                     },
-                    answerIncorrect: {},
+                    answerIncorrect: {
+                        on: {
+                            "": [
+                                {
+                                    target: "#results",
+                                    cond: "allSongsGuessed",
+                                },
+                            ],
+                            // set the next song id in context
+                            NEXT_ROUND: "loading",
+                        },
+                    },
                 },
             },
             results: {
                 id: "results",
                 initial: "idle",
                 states: {
-                    idle: {},
+                    idle: {
+                        on: {
+                            RESTART: "#chooseArtist",
+                        },
+                    },
                 },
             },
         },
