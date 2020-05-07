@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import styled from "styled-components";
 import axios from "axios";
 // components
+import { Link as RouterLink } from "@reach/router";
 import ResultsItem from "components/ResultsItem";
 import NavBar from "components/NavBar";
 import {
@@ -111,6 +112,16 @@ class Home extends Component {
                             </ResultsScrollView>
                         )}
                 </SearchWrapper>
+                <div
+                    style={{
+                        padding: '24px',
+                        margin: '12px',
+                        backgroundColor: 'white',
+                    }}
+                >
+                    <RouterLink to="/start">Start Screen</RouterLink>
+                </div>
+                
             </Wrapper>
         );
     }
