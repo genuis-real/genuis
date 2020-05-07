@@ -15,6 +15,7 @@ interface Lyrics {
 }
 
 interface Song {
+    id: number;
     title: string;
     artistName: string;
     lyrics: Lyrics;
@@ -23,9 +24,9 @@ interface Song {
 export interface GameContext {
     totalGuesses: number;
     correctGuesses: number;
-    artistList?: Array<Artist>;
+    artistList: Array<Artist>;
     selectedArtist?: Artist;
-    selectedSongId?: number;
+    selectedSong?: Song;
 }
 
 export type GameEvent =
@@ -56,6 +57,9 @@ export type GameEvent =
           type: "NEXT_ROUND";
       }
     | {
+          type: "COMPLETE";
+      }
+    | {
           type: "RESTART";
       };
 
@@ -64,30 +68,42 @@ export type GameState =
           value: "idle";
           context: GameContext & {
               selectedArtist: undefined;
-              selectedSongId: undefined;
+              selectedSong: undefined;
           };
       }
     | {
           value: "chooseArtist";
           context: GameContext & {
               selectedArtist: undefined;
-              selectedSongId: undefined;
+              selectedSong: undefined;
           };
       }
     | {
           value: { chooseArtist: "selectingArtist" };
           context: GameContext & {
               selectedArtist: undefined;
-              selectedSongId: undefined;
+              selectedSong: undefined;
           };
       }
     | {
           value: { chooseArtist: "selectedArtist" };
           context: GameContext & {
               selectedArtist: Artist;
-              selectedSongId: undefined;
+              selectedSong: undefined;
           };
       };
+
+const isLastGuess = (context: GameContext, event: GameEvent) =>
+    context.correctGuesses === artistList.length;
+const isAnswerCorrect = (context: GameContext, event: GameEvent) =>
+    event.type === "SELECT_SONG" && event.song.id === context.selectedSong?.id;
+
+const artistList: Array<Artist> = [
+    {
+        id: 1,
+        name: "Ke$ha",
+    },
+];
 
 export const gameMachine = createMachine<GameContext, GameEvent, GameState>(
     {
@@ -96,9 +112,9 @@ export const gameMachine = createMachine<GameContext, GameEvent, GameState>(
         context: {
             totalGuesses: 0,
             correctGuesses: 0,
-            artistList: undefined,
+            artistList,
             selectedArtist: undefined,
-            selectedSongId: undefined,
+            selectedSong: undefined,
         },
         states: {
             idle: {
@@ -161,7 +177,7 @@ export const gameMachine = createMachine<GameContext, GameEvent, GameState>(
                         on: {
                             CLEAR_SELECTED_SONG: "selectingSong",
                             SUBMIT: {
-                                target: "submittingAnswer",
+                                target: "answer",
                                 actions: assign({
                                     totalGuesses: (context, event) =>
                                         context.totalGuesses + 1,
@@ -169,42 +185,51 @@ export const gameMachine = createMachine<GameContext, GameEvent, GameState>(
                             },
                         },
                     },
-                    submittingAnswer: {
-                        on: {
-                            // remove song id from list of ids
-                            "": [
-                                {
-                                    target: "answerCorrect",
-                                    cond: "isAnswerCorrect",
+                    answer: {
+                        initial: "submitting",
+                        states: {
+                            submitting: {
+                                on: {
+                                    "": [
+                                        {
+                                            target: "correctLast",
+                                            cond: "isCorrectLast",
+                                        },
+                                        {
+                                            target: "incorrectLast",
+                                            cond: "isIncorrectLast",
+                                        },
+                                        {
+                                            target: "correct",
+                                            cond: "isCorrect",
+                                        },
+                                        {
+                                            target: "incorrect",
+                                            cond: "isIncorrect",
+                                        },
+                                    ],
                                 },
-                                {
-                                    target: "answerIncorrect",
+                            },
+                            correct: {
+                                on: {
+                                    NEXT_ROUND: "#playing",
                                 },
-                            ],
-                        },
-                    },
-                    answerCorrect: {
-                        on: {
-                            "": [
-                                {
-                                    target: "#results",
-                                    cond: "allSongsGuessed",
+                            },
+                            incorrect: {
+                                on: {
+                                    NEXT_ROUND: "#playing",
                                 },
-                            ],
-                            // set the next song id in context
-                            NEXT_ROUND: "loading",
-                        },
-                    },
-                    answerIncorrect: {
-                        on: {
-                            "": [
-                                {
-                                    target: "#results",
-                                    cond: "allSongsGuessed",
+                            },
+                            correctLast: {
+                                on: {
+                                    COMPLETE: "#results",
                                 },
-                            ],
-                            // set the next song id in context
-                            NEXT_ROUND: "loading",
+                            },
+                            incorrectLast: {
+                                on: {
+                                    COMPLETE: "#results",
+                                },
+                            },
                         },
                     },
                 },
@@ -224,8 +249,30 @@ export const gameMachine = createMachine<GameContext, GameEvent, GameState>(
     },
     {
         guards: {
-            isAnswerCorrect: () => true,
-            allSongsGuessed: () => true,
+            isCorrectLast: (context, event) => {
+                return (
+                    isLastGuess(context, event) &&
+                    isAnswerCorrect(context, event)
+                );
+            },
+            isIncorrectLast: (context, event) => {
+                return (
+                    isLastGuess(context, event) &&
+                    !isAnswerCorrect(context, event)
+                );
+            },
+            isCorrect: (context, event) => {
+                return (
+                    !isLastGuess(context, event) &&
+                    isAnswerCorrect(context, event)
+                );
+            },
+            isIncorrect: (context, event) => {
+                return (
+                    !isLastGuess(context, event) &&
+                    !isAnswerCorrect(context, event)
+                );
+            },
         },
     }
 );
