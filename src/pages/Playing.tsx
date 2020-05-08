@@ -15,26 +15,26 @@ import {
     LyricsLine,
 } from "./Playing.styles";
 
-type Props = RouteComponentProps & {
+interface PlayingProps extends RouteComponentProps {
     resultId?: number;
 };
 
-type Lyric = {
+interface Lyric {
     text: string;
     referentId: number;
 };
 
-type Lyrics = {
+interface Lyrics {
     warped: Lyric[];
 };
 
-type SongData = {
+interface SongData {
     title: string;
     artistName: string;
     lyrics: Lyrics;
 };
 
-type SearchResult = {
+interface SearchResult {
     name: string,
     artist: string,
     thumbnailURL: string,
@@ -42,12 +42,14 @@ type SearchResult = {
     id: string,
 };
 
-const Playing: React.FC<Props> = ({ resultId = 1675826 }) => {
+const Playing: React.FC<PlayingProps> = ({ resultId = 1675826 }) => {
     const [songData, setSongData] = useState<SongData | null>(null);
 
     const [searchTerm, setSearchTerm] = useState<string>("");
 
     const [searching, setSearching] = useState<boolean>(false);
+
+    const [selectedSearchResult, setSelectedSearchResult] = useState<SearchResult | undefined>();
 
     const [searchResults, setSearchResults] = useState<Array<SearchResult>>([]);
 
@@ -59,18 +61,13 @@ const Playing: React.FC<Props> = ({ resultId = 1675826 }) => {
             });
     }, [resultId]);
 
-    const removeArtistsFromHits = (hits: any) => {
-        return hits.filter((item: any) => item.type === 'song')
-    }
-
     const handleSearchResultData = (searchData: any) => {
         let hits =
             searchData.data && searchData.data.response
                 ? searchData.data.response.hits
                 : [];
 
-        hits = removeArtistsFromHits(hits);
-        console.log(hits);
+        hits = hits.filter((item: any) => item.type === 'song')
 
         const newResults = hits.map((item: any) => {
             const { result } = item;
@@ -128,40 +125,77 @@ const Playing: React.FC<Props> = ({ resultId = 1675826 }) => {
                     </LyricsWrapper>
                 ): null}
             </div>
-            <div style={{
-                height: '40%',
-                width: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                background: 'red',
-                margin: 0,
-            }}>
-                <SearchWrapper>
-                    <SearchForm onSubmit={(event: React.FormEvent<HTMLInputElement>) => event.preventDefault()}>
-                        <SearchBar
-                            type="text"
-                            value={searchTerm}
-                            onChange={handleChange}
-                        />
-                    </SearchForm>
-                    {searchResults.length > 0 &&
-                        searchTerm.length > 0 && (
-                            <ResultsScrollView>
-                                {searchResults.map((item, index) => (
-                                    <ResultsItem
-                                        key={`results-item-${item.name}-${
-                                            item.artist
-                                        }`}
-                                        lastItem={
-                                            index === searchResults.length - 1
-                                        }
-                                        {...item}
-                                    />
-                                ))}
-                            </ResultsScrollView>
-                        )}
-                </SearchWrapper>
-            </div>
+            {selectedSearchResult ? 
+                <>
+                    <ResultsItem
+                        key={`results-item-${selectedSearchResult.name}-${
+                            selectedSearchResult.artist
+                        }`}
+                        lastItem={false}
+                        {...selectedSearchResult}
+                        onClick={undefined}
+                    />
+                    <div
+                        style={{
+                            height: '10%',
+                            width: '100%',
+                            background: 'red',
+                        }}
+                        onClick={() => {
+                            setSelectedSearchResult(undefined);
+                            setSearchTerm("");
+                        }}
+                    >
+                        Deselect
+                    </div>
+                    <div
+                        style={{
+                            height: '10%',
+                            width: '100%',
+                            background: 'green',
+                        }}
+                        onClick={() => console.log('Submitted')}
+                    >
+                        Submit
+                    </div>
+                </>
+                :
+                <div style={{
+                    height: '40%',
+                    width: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    background: 'red',
+                    margin: 0,
+                }}>
+                    <SearchWrapper>
+                        <SearchForm onSubmit={(event: React.FormEvent<HTMLInputElement>) => event.preventDefault()}>
+                            <SearchBar
+                                type="text"
+                                value={searchTerm}
+                                onChange={handleChange}
+                            />
+                        </SearchForm>
+                        {searchResults.length > 0 &&
+                            searchTerm.length > 0 && (
+                                <ResultsScrollView>
+                                    {searchResults.map((item, index) => (
+                                        <ResultsItem
+                                            key={`results-item-${item.name}-${
+                                                item.artist
+                                            }`}
+                                            lastItem={
+                                                index === searchResults.length - 1
+                                            }
+                                            onClick={() => setSelectedSearchResult(item)}
+                                            {...item}
+                                        />
+                                    ))}
+                                </ResultsScrollView>
+                            )}
+                    </SearchWrapper>
+                </div>
+            }
         </Wrapper>
     );
 };
