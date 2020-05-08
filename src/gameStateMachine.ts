@@ -154,20 +154,22 @@ const artistList: Array<Artist> = [
 // after start "round"
 // load translation for the current song
 
+const initialContext: GameContext = {
+    totalGuesses: 0,
+    correctGuesses: 0,
+    artistList,
+    selectedArtist: undefined,
+    selectedSong: undefined,
+    songList: undefined,
+    currentRound: 0,
+    currentLyrics: undefined,
+};
+
 export const gameMachine = createMachine<GameContext, GameEvent, GameState>(
     {
         id: "game",
         initial: "idle",
-        context: {
-            totalGuesses: 0,
-            correctGuesses: 0,
-            artistList,
-            selectedArtist: undefined,
-            selectedSong: undefined,
-            songList: undefined,
-            currentRound: 0,
-            currentLyrics: undefined,
-        },
+        context: initialContext,
         states: {
             idle: {
                 on: {
@@ -355,7 +357,10 @@ export const gameMachine = createMachine<GameContext, GameEvent, GameState>(
                             // TODO: clear out current song
                             // clear out song list
                             // clear out selected artist
-                            RESTART: "#chooseArtist",
+                            RESTART: {
+                                target: "#chooseArtist",
+                                actions: assign(initialContext),
+                            },
                         },
                     },
                 },

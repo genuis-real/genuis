@@ -70,10 +70,6 @@ const Home: React.FC<RouteComponentProps> = () => {
                             id: 3,
                             title: "Fake song 3",
                         },
-                        {
-                            id: 4,
-                            title: "Fake song 4",
-                        },
                     ],
                 });
             },
@@ -170,7 +166,29 @@ const Home: React.FC<RouteComponentProps> = () => {
                     playing: {
                         answer: "correctLast",
                     },
-                })) && <h3>Game is done</h3>}
+                })) && (
+                <>
+                    <h3>Game is done</h3>
+                    <button
+                        onClick={() =>
+                            send({
+                                type: "COMPLETE",
+                            })
+                        }
+                    >
+                        Results
+                    </button>
+                </>
+            )}
+
+            {state.matches("results") && (
+                <>
+                    <h2>Results</h2>
+                    <button onClick={() => send("RESTART")}>
+                        Restart game
+                    </button>
+                </>
+            )}
 
             <pre>
                 <code>{JSON.stringify(state, null, 2)}</code>
