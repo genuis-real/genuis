@@ -74,14 +74,6 @@ const Home: React.FC<RouteComponentProps> = () => {
                             id: 4,
                             title: "Fake song 4",
                         },
-                        {
-                            id: 5,
-                            title: "Fake song 5",
-                        },
-                        {
-                            id: 6,
-                            title: "Fake song 6",
-                        },
                     ],
                 });
             },
@@ -95,6 +87,8 @@ const Home: React.FC<RouteComponentProps> = () => {
                 fontWeight: 700,
             }}
         >
+            <p>Correct guesses: {state.context.correctGuesses}</p>
+            <p>Total guesses: {state.context.totalGuesses}</p>
             {state.matches("idle") && (
                 <button onClick={() => send("START")}>start game</button>
             )}
@@ -140,6 +134,31 @@ const Home: React.FC<RouteComponentProps> = () => {
                         </>
                     )}
                 </div>
+            )}
+            {state.matches({ playing: "answer" }) && (
+                <>
+                    <h2>Answer</h2>
+                    {(state.matches({
+                        playing: {
+                            answer: "correct",
+                        },
+                    }) ||
+                        state.matches({
+                            playing: {
+                                answer: "incorrect",
+                            },
+                        })) && (
+                        <button
+                            onClick={() => {
+                                send({
+                                    type: "NEXT_ROUND",
+                                });
+                            }}
+                        >
+                            Next round
+                        </button>
+                    )}
+                </>
             )}
 
             <pre>

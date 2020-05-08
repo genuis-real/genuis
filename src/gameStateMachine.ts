@@ -120,8 +120,14 @@ export type GameState =
           };
       };
 
-const isLastGuess = (context: GameContext, event: GameEvent) =>
-    context.correctGuesses === artistList.length;
+const isLastGuess = (context: GameContext, event: GameEvent) => {
+    if (context.songList === undefined) {
+        throw new Error(
+            "you've got no song list and that should be impossible"
+        );
+    }
+    return context.totalGuesses === context.songList.length;
+};
 const isAnswerCorrect = (context: GameContext, event: GameEvent) => {
     if (context.songList === undefined) {
         throw new Error(
@@ -274,6 +280,12 @@ export const gameMachine = createMachine<GameContext, GameEvent, GameState>(
                                         {
                                             target: "correctLast",
                                             cond: "isCorrectLast",
+                                            actions: assign({
+                                                correctGuesses: (
+                                                    context,
+                                                    event
+                                                ) => context.correctGuesses + 1,
+                                            }),
                                         },
                                         {
                                             target: "incorrectLast",
@@ -282,6 +294,12 @@ export const gameMachine = createMachine<GameContext, GameEvent, GameState>(
                                         {
                                             target: "correct",
                                             cond: "isCorrect",
+                                            actions: assign({
+                                                correctGuesses: (
+                                                    context,
+                                                    event
+                                                ) => context.correctGuesses + 1,
+                                            }),
                                         },
                                         {
                                             target: "incorrect",
