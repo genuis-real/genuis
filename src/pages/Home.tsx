@@ -1,10 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useMachine, useService } from "@xstate/react";
 import { RouteComponentProps } from "@reach/router";
 import { gameMachine, GameContext, GameEvent } from "gameStateMachine";
 import { Interpreter } from "xstate";
-import axios from "axios";
-import { BASE_URL } from "../constants";
 
 const ChooseArtist: React.FC<{
     gameService: Interpreter<GameContext, any, GameEvent, any>;
@@ -18,10 +16,7 @@ const ChooseArtist: React.FC<{
                 onClick={() =>
                     send({
                         type: "SELECT_ARTIST",
-                        artist: {
-                            id: 1,
-                            name: "Ke$ha",
-                        },
+                        artist: state.context.artistList[0],
                     })
                 }
             >
@@ -30,6 +25,15 @@ const ChooseArtist: React.FC<{
             {state.matches({ chooseArtist: "selectedArtist" }) && (
                 <div>
                     <h3>{state.context.selectedArtist?.name}</h3>
+                    <button
+                        onClick={() =>
+                            send({
+                                type: "START",
+                            })
+                        }
+                    >
+                        ready
+                    </button>
                 </div>
             )}
         </div>
@@ -39,37 +43,103 @@ const ChooseArtist: React.FC<{
 const Home: React.FC<RouteComponentProps> = () => {
     const [state, send, service] = useMachine(gameMachine, {
         actions: {
-            loadSongs: () => [],
+            loadLyrics: async (context, event) => {
+                send({
+                    type: "RESOLVE_LYRICS",
+                    lyrics: [
+                        { text: "First line" },
+                        { text: "Second line" },
+                        { text: "Third line" },
+                    ],
+                });
+            },
+            // TODO: actually load songs please
+            loadSongs: async (context, event) => {
+                send({
+                    type: "RESOLVE_SONGLIST",
+                    songList: [
+                        {
+                            id: 1,
+                            title: "Fake song 1",
+                        },
+                        {
+                            id: 2,
+                            title: "Fake song 2",
+                        },
+                        {
+                            id: 3,
+                            title: "Fake song 3",
+                        },
+                        {
+                            id: 4,
+                            title: "Fake song 4",
+                        },
+                        {
+                            id: 5,
+                            title: "Fake song 5",
+                        },
+                        {
+                            id: 6,
+                            title: "Fake song 6",
+                        },
+                    ],
+                });
+            },
         },
     });
 
-    useEffect(() => {
-        axios
-            .get(`${BASE_URL}proxy/search?q=eminem`)
-            .then((response) => {
-                // handle success
-                console.log(response);
-                const artists = response.data.response.hits.map((hit: any) => {
-                    return hit.result.primary_artist.name;
-                });
-                console.log(new Set(artists));
-            })
-            .catch(function (error) {
-                // handle error
-                console.log(error);
-            })
-            .then(function () {
-                // always executed
-            });
-    });
-
     return (
-        <div>
+        <div
+            style={{
+                color: "white",
+                fontWeight: 700,
+            }}
+        >
             {state.matches("idle") && (
                 <button onClick={() => send("START")}>start game</button>
             )}
             {state.matches("chooseArtist") && (
                 <ChooseArtist gameService={service} />
+            )}
+            {state.matches("playing") && (
+                <div>
+                    <h2>Playing</h2>
+
+                    {state.matches({ playing: "loading" }) && <h3>Loading </h3>}
+                    {(state.matches({ playing: "selectingSong" }) ||
+                        state.matches({ playing: "selectedSong" })) && (
+                        <button
+                            onClick={() => {
+                                send({
+                                    type: "SELECT_SONG",
+                                    song: {
+                                        id: 1,
+                                        title: "Fake song",
+                                    },
+                                });
+                            }}
+                        >
+                            Select song "Fake Song" with ID 1
+                        </button>
+                    )}
+                    {state.matches({ playing: "selectedSong" }) && (
+                        <>
+                            <h3>
+                                {state.context.selectedSong?.title} with ID{" "}
+                                {state.context.selectedSong?.id}
+                            </h3>
+                            <button
+                                onClick={() => {
+                                    send({
+                                        type: "SUBMIT",
+                                    });
+                                }}
+                            >
+                                Submit
+                            </button>
+                        </>
+                    )}
+                </div>
             )}
 
             <pre>

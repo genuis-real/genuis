@@ -7,7 +7,7 @@ interface Artist {
 
 interface Lyric {
     text: string;
-    referentId: number;
+    referentId?: number;
 }
 
 interface Lyrics {
@@ -35,6 +35,7 @@ export interface GameContext {
     selectedSong?: GeniusSongResponse;
     currentRound: number;
     songList?: Array<GeniusSongResponse>;
+    currentLyrics?: Lyric[];
 }
 
 export type GameEvent =
@@ -46,12 +47,16 @@ export type GameEvent =
           artist: Artist;
       }
     | {
-          type: "RESOLVE";
+          type: "RESOLVE_SONGLIST";
           songList: Array<GeniusSongResponse>;
       }
     | {
+          type: "RESOLVE_LYRICS";
+          lyrics: Array<Lyric>;
+      }
+    | {
           type: "SELECT_SONG";
-          song: Song;
+          song: GeniusSongResponse;
       }
     | {
           type: "CLEAR_SELECTED_SONG";
@@ -98,16 +103,39 @@ export type GameState =
               selectedArtist: Artist;
               selectedSong: undefined;
           };
+      }
+    | {
+          value: { playing: "selectingSong" };
+          context: GameContext & {
+              songList: Array<GeniusSongResponse>;
+              selectedArtist: Artist;
+          };
+      }
+    | {
+          value: { playing: "selectedSong" };
+          context: GameContext & {
+              songList: Array<GeniusSongResponse>;
+              selectedArtist: Artist;
+              selectedSong: GeniusSongResponse;
+          };
       };
 
 const isLastGuess = (context: GameContext, event: GameEvent) =>
     context.correctGuesses === artistList.length;
-const isAnswerCorrect = (context: GameContext, event: GameEvent) =>
-    event.type === "SELECT_SONG" && event.song.id === context.selectedSong?.id;
+const isAnswerCorrect = (context: GameContext, event: GameEvent) => {
+    if (context.songList === undefined) {
+        throw new Error(
+            "you've got no song list and that should be impossible"
+        );
+    }
+    return (
+        context.songList[context.currentRound].id === context.selectedSong?.id
+    );
+};
 
 const artistList: Array<Artist> = [
     {
-        id: 1,
+        id: 1519,
         name: "Ke$ha",
     },
 ];
@@ -132,6 +160,7 @@ export const gameMachine = createMachine<GameContext, GameEvent, GameState>(
             selectedSong: undefined,
             songList: undefined,
             currentRound: 0,
+            currentLyrics: undefined,
         },
         states: {
             idle: {
@@ -165,7 +194,6 @@ export const gameMachine = createMachine<GameContext, GameEvent, GameState>(
                                         event.artist,
                                 }),
                             },
-                            // This is where we set selectedArtist in context
                             START: "#playing",
                         },
                     },
@@ -173,26 +201,42 @@ export const gameMachine = createMachine<GameContext, GameEvent, GameState>(
             },
             playing: {
                 id: "playing",
-                initial: "loading",
-                on: {
-                    "": [
-                        {
-                            target: "selectingSong",
-                            cond: "isSongListLoaded",
-                        },
-                        { target: "loading" },
-                    ],
-                },
+                initial: "start",
                 states: {
-                    loading: {
+                    start: {
+                        on: {
+                            "": [
+                                {
+                                    target: "#playing.selectingSong",
+                                    cond: "isSongListLoaded",
+                                },
+                                {
+                                    target: "loadSongs",
+                                },
+                            ],
+                        },
+                    },
+                    loadSongs: {
                         entry: ["loadSongs"],
                         // Need to fire a side effect action based on the selectedArtist id in context
                         on: {
-                            RESOLVE: {
-                                target: "selectingSong",
+                            RESOLVE_SONGLIST: {
+                                target: "loadLyrics",
                                 actions: assign({
                                     songList: (context, event) =>
                                         event.songList,
+                                }),
+                            },
+                        },
+                    },
+                    loadLyrics: {
+                        entry: ["loadLyrics"],
+                        on: {
+                            RESOLVE_LYRICS: {
+                                target: "selectingSong",
+                                actions: assign({
+                                    currentLyrics: (context, event) =>
+                                        event.lyrics,
                                 }),
                             },
                         },
