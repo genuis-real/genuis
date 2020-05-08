@@ -161,6 +161,17 @@ const Home: React.FC<RouteComponentProps> = () => {
                 </>
             )}
 
+            {(state.matches({
+                playing: {
+                    answer: "incorrectLast",
+                },
+            }) ||
+                state.matches({
+                    playing: {
+                        answer: "correctLast",
+                    },
+                })) && <h3>Game is done</h3>}
+
             <pre>
                 <code>{JSON.stringify(state, null, 2)}</code>
             </pre>
