@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { debounce } from "lodash-es";
 import axios from "axios";
 import { BASE_URL } from "constants.js";
 import ResultsItem from "components/PlayingResultsItem";
@@ -10,10 +11,8 @@ import {
     SearchForm,
     SearchWrapper,
     ResultsScrollView,
-    ResultsWrapper,
     LyricsWrapper,
     LyricsLine,
-    SongWrapper,
 } from "./Playing.styles";
 
 type Props = RouteComponentProps & {
@@ -92,23 +91,21 @@ const Playing: React.FC<Props> = ({ resultId = 1675826 }) => {
         setSearchResults(newResults);
     };
 
-    const getResults = (searchTerm: string) => {
-        console.log(searchTerm);
-        axios
-            .get(`${BASE_URL}proxy/search?q=${searchTerm}`)
-            .then(response => {
-                // handle success
-                handleSearchResultData(response);
-            })
-            .catch(function(error) {
-                // handle error
-            })
-            .then(function() {
-                // always executed
-            });
-    };
-
-    const getResultsDebounced = debounce(getResults, 5000);
+    const getResultsDebounced = useCallback(
+        debounce((searchTerm: string) => {
+            console.log('Called');
+            axios
+                .get(`${BASE_URL}proxy/search?q=${searchTerm}`)
+                .then(response => {
+                    // handle success
+                    handleSearchResultData(response);
+                })
+                .catch(function(error) {
+                    // handle error
+                });
+        }, 150),
+        []
+    );
 
     const handleChange = (event: React.FormEvent<HTMLInputElement>) => {
         const newSearchTerm = event.currentTarget.value;
@@ -132,9 +129,12 @@ const Playing: React.FC<Props> = ({ resultId = 1675826 }) => {
                 ): null}
             </div>
             <div style={{
-                backgroundColor: 'green',
                 height: '40%',
                 width: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                background: 'red',
+                margin: 0,
             }}>
                 <SearchWrapper>
                     <SearchForm onSubmit={(event: React.FormEvent<HTMLInputElement>) => event.preventDefault()}>
@@ -164,25 +164,6 @@ const Playing: React.FC<Props> = ({ resultId = 1675826 }) => {
             </div>
         </Wrapper>
     );
-};
-
-// Returns a function, that, as long as it continues to be invoked, will not
-// be triggered. The function will be called after it stops being called for
-// N milliseconds. If `immediate` is passed, trigger the function on the
-// leading edge, instead of the trailing.
-const debounce = (func: Function, wait: number) => {
-    let timeout: NodeJS.Timeout;
-
-    const debounced = (...args: any[]) => {
-        const callNow: boolean = Boolean(timeout);
-        console.log('Timeout 1: ', timeout);
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func(...args), wait)
-        console.log('Timeout 2: ', timeout);
-        if(callNow) func(...args);
-    };
-
-    return debounced;
 };
 
 export default Playing;

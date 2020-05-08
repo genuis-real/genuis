@@ -42,13 +42,6 @@ const SongWrapper = styled.div`
     height: 100%;
 `;
 
-const ResultsScrollView = styled.div`
-    border-width: 0px 1px 1px;
-    border-color: ${({ theme }) => theme.COLOURS.accent};
-    border-style: solid;
-    overflow: auto;
-`;
-
 const SearchBar = styled.input`
     border: 2px solid ${({ theme }) => theme.COLOURS.accent};
     width: 100%;
@@ -63,14 +56,31 @@ const SearchBar = styled.input`
 `;
 
 const SearchForm = styled.form`
+    flex: none;
     width: 100%;
 `;
 
 const SearchWrapper = styled.div`
     display: flex;
+    flex-flow: column nowrap;
+    background-color:blue;
+    /* display: flex;
     flex-direction: column;
     overflow: hidden;
     width: 100%;
+    height: 80%; */
+`;
+
+const ResultsScrollView = styled.div`
+    flex: auto;
+    background-color: yellow;
+    overflow: auto;
+
+    /* border-width: 0px 1px 1px;
+    border-color: ${({ theme }) => theme.COLOURS.accent};
+    border-style: solid;
+    overflow: auto;
+    height: 100%; */
 `;
 
 export {
