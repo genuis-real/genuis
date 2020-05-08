@@ -26,12 +26,13 @@ interface GeniusSongResponse {
     title: string;
 }
 
+// TODO: add song to guess to context
 export interface GameContext {
     totalGuesses: number;
     correctGuesses: number;
     artistList: Array<Artist>;
     selectedArtist?: Artist;
-    selectedSong?: Song;
+    selectedSong?: GeniusSongResponse;
     currentRound: number;
     songList?: Array<GeniusSongResponse>;
 }
@@ -173,6 +174,15 @@ export const gameMachine = createMachine<GameContext, GameEvent, GameState>(
             playing: {
                 id: "playing",
                 initial: "loading",
+                on: {
+                    "": [
+                        {
+                            target: "selectingSong",
+                            cond: "isSongListLoaded",
+                        },
+                        { target: "loading" },
+                    ],
+                },
                 states: {
                     loading: {
                         entry: ["loadSongs"],
@@ -239,13 +249,25 @@ export const gameMachine = createMachine<GameContext, GameEvent, GameState>(
                             correct: {
                                 on: {
                                     // TODO: increment current song by one
-                                    NEXT_ROUND: "#playing",
+                                    NEXT_ROUND: {
+                                        target: "#playing",
+                                        actions: assign({
+                                            currentRound: (context, event) =>
+                                                context.currentRound + 1,
+                                        }),
+                                    },
                                 },
                             },
                             incorrect: {
                                 on: {
                                     // TODO: increment current song by one
-                                    NEXT_ROUND: "#playing",
+                                    NEXT_ROUND: {
+                                        target: "#playing",
+                                        actions: assign({
+                                            currentRound: (context, event) =>
+                                                context.currentRound + 1,
+                                        }),
+                                    },
                                 },
                             },
                             correctLast: {
@@ -304,6 +326,8 @@ export const gameMachine = createMachine<GameContext, GameEvent, GameState>(
                     !isAnswerCorrect(context, event)
                 );
             },
+            isSongListLoaded: (context, event) =>
+                Boolean(context.songList?.length),
         },
     }
 );
