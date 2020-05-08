@@ -23,7 +23,7 @@ const ResultsWrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    padding: 24px;
+    padding: 24px 0px;
     
     @media only screen and (min-width: 700px) {
         flex-direction: row;
@@ -34,6 +34,7 @@ const SongWrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: 100%;
     
     @media only screen and (min-width: 700px) {
         flex: 60%;
@@ -44,6 +45,8 @@ const LyricsWrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    overflow: auto;
+    height: 100%;
     @media only screen and (min-width: 700px) {
         padding: 0px 16px 0px 0px;
     }

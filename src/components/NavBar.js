@@ -2,16 +2,19 @@ import React from "react";
 import styled from "styled-components/macro";
 import { Link as RouterLink } from "@reach/router";
 
-const NavBar = () => (
+const NavBar = ({ beSmall }) => (
     <NavWrapper>
-        <Logo>
+        <Logo beSmall={beSmall}>
             <Link to="/">GENUIS</Link>
         </Logo>
-        <SubHeading>
-            Behind the lyrics.
-            <br />
-            ...like, <i>miles</i> behind them.
-        </SubHeading>
+        {
+            beSmall ? null : 
+            (<SubHeading>
+                Behind the lyrics.
+                <br />
+                ...like, <i>miles</i> behind them.
+            </SubHeading>)
+        }
     </NavWrapper>
 );
 
@@ -25,7 +28,7 @@ const Logo = styled.h1`
     color: ${({theme}) => theme.COLOURS.accent};
     font-weight: 200;
     font-size: 4em;
-    margin: 48px 0px 0px 0px;
+    margin: ${({ beSmall }) => beSmall ? '0px' : '48px 0px 0px 0px'};
 `;
 
 const Link = styled(RouterLink)`
