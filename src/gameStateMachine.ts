@@ -21,12 +21,19 @@ interface Song {
     lyrics: Lyrics;
 }
 
+interface GeniusSongResponse {
+    id: number;
+    title: string;
+}
+
 export interface GameContext {
     totalGuesses: number;
     correctGuesses: number;
     artistList: Array<Artist>;
     selectedArtist?: Artist;
     selectedSong?: Song;
+    currentRound: number;
+    songList?: Array<GeniusSongResponse>;
 }
 
 export type GameEvent =
@@ -38,10 +45,8 @@ export type GameEvent =
           artist: Artist;
       }
     | {
-          type: "CLEAR_SELECTED_ARTIST";
-      }
-    | {
           type: "RESOLVE";
+          songList: Array<GeniusSongResponse>;
       }
     | {
           type: "SELECT_SONG";
@@ -106,6 +111,14 @@ const artistList: Array<Artist> = [
     },
 ];
 
+// after select artist
+// load genuis search results at "random" page.
+// filter by just songs.
+// get 10 of them
+// put them in store
+// after start "round"
+// load translation for the current song
+
 export const gameMachine = createMachine<GameContext, GameEvent, GameState>(
     {
         id: "game",
@@ -116,8 +129,8 @@ export const gameMachine = createMachine<GameContext, GameEvent, GameState>(
             artistList,
             selectedArtist: undefined,
             selectedSong: undefined,
-            // TODO: add current song index
-            // TODO: add song list
+            songList: undefined,
+            currentRound: 0,
         },
         states: {
             idle: {
@@ -167,13 +180,23 @@ export const gameMachine = createMachine<GameContext, GameEvent, GameState>(
                         on: {
                             RESOLVE: {
                                 target: "selectingSong",
+                                actions: assign({
+                                    songList: (context, event) =>
+                                        event.songList,
+                                }),
                             },
                         },
                     },
                     selectingSong: {
                         on: {
                             // add selected song to context
-                            SELECT_SONG: "selectedSong",
+                            SELECT_SONG: {
+                                target: "selectedSong",
+                                actions: assign({
+                                    selectedSong: (context, event) =>
+                                        event.song,
+                                }),
+                            },
                         },
                     },
                     selectedSong: {
