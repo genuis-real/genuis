@@ -94,31 +94,7 @@ const Playing: React.FC<{
 };
 
 const Home: React.FC<RouteComponentProps> = () => {
-    const [state, send, service] = useMachine(gameMachine, {
-        // state: JSON.parse(fakeState),
-        actions: {
-            // TODO: actually load songs please
-            loadSongs: async (context, event) => {
-                send({
-                    type: "RESOLVE_SONGLIST",
-                    songList: [
-                        {
-                            id: 1,
-                            title: "Fake song 1",
-                        },
-                        {
-                            id: 2,
-                            title: "Fake song 2",
-                        },
-                        {
-                            id: 3,
-                            title: "Fake song 3",
-                        },
-                    ],
-                });
-            },
-        },
-    });
+    const [state, send, service] = useMachine(gameMachine);
 
     useEffect(() => {
         const subscription = service.subscribe((state) => {
