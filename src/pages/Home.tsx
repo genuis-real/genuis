@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useMachine, useService } from "@xstate/react";
 import { RouteComponentProps } from "@reach/router";
 import { gameMachine, GameContext, GameEvent } from "gameStateMachine";
 import { Interpreter } from "xstate";
+import { LyricsLine } from "./Results.styles";
 
 const ChooseArtist: React.FC<{
     gameService: Interpreter<GameContext, any, GameEvent, any>;
@@ -40,19 +41,62 @@ const ChooseArtist: React.FC<{
     );
 };
 
+const Playing: React.FC<{
+    service: Interpreter<GameContext, any, GameEvent, any>;
+}> = ({ service }) => {
+    const [state, send] = useService(service);
+    return (
+        <div>
+            <h2>Playing</h2>
+
+            {state.matches({ playing: "loading" }) && <h3>Loading </h3>}
+            {(state.matches({ playing: "selectingSong" }) ||
+                state.matches({ playing: "selectedSong" })) && (
+                <>
+                    {state.context.currentLyrics &&
+                        state.context.currentLyrics.map(({ text }) => (
+                            <LyricsLine>{text}</LyricsLine>
+                        ))}
+                    <button
+                        onClick={() => {
+                            send({
+                                type: "SELECT_SONG",
+                                song: {
+                                    id: 1,
+                                    title: "Fake song",
+                                },
+                            });
+                        }}
+                    >
+                        Select song "Fake Song" with ID 1
+                    </button>
+                </>
+            )}
+            {state.matches({ playing: "selectedSong" }) && (
+                <>
+                    <h3>
+                        {state.context.selectedSong?.title} with ID{" "}
+                        {state.context.selectedSong?.id}
+                    </h3>
+                    <button
+                        onClick={() => {
+                            send({
+                                type: "SUBMIT",
+                            });
+                        }}
+                    >
+                        Submit
+                    </button>
+                </>
+            )}
+        </div>
+    );
+};
+
 const Home: React.FC<RouteComponentProps> = () => {
     const [state, send, service] = useMachine(gameMachine, {
+        // state: JSON.parse(fakeState),
         actions: {
-            loadLyrics: async (context, event) => {
-                send({
-                    type: "RESOLVE_LYRICS",
-                    lyrics: [
-                        { text: "First line" },
-                        { text: "Second line" },
-                        { text: "Third line" },
-                    ],
-                });
-            },
             // TODO: actually load songs please
             loadSongs: async (context, event) => {
                 send({
@@ -76,6 +120,15 @@ const Home: React.FC<RouteComponentProps> = () => {
         },
     });
 
+    useEffect(() => {
+        const subscription = service.subscribe((state) => {
+            // simple state logging
+            console.log(state);
+        });
+
+        return subscription.unsubscribe;
+    }, [service]);
+
     return (
         <div
             style={{
@@ -91,96 +144,7 @@ const Home: React.FC<RouteComponentProps> = () => {
             {state.matches("chooseArtist") && (
                 <ChooseArtist gameService={service} />
             )}
-            {state.matches("playing") && (
-                <div>
-                    <h2>Playing</h2>
-
-                    {state.matches({ playing: "loading" }) && <h3>Loading </h3>}
-                    {(state.matches({ playing: "selectingSong" }) ||
-                        state.matches({ playing: "selectedSong" })) && (
-                        <button
-                            onClick={() => {
-                                send({
-                                    type: "SELECT_SONG",
-                                    song: {
-                                        id: 1,
-                                        title: "Fake song",
-                                    },
-                                });
-                            }}
-                        >
-                            Select song "Fake Song" with ID 1
-                        </button>
-                    )}
-                    {state.matches({ playing: "selectedSong" }) && (
-                        <>
-                            <h3>
-                                {state.context.selectedSong?.title} with ID{" "}
-                                {state.context.selectedSong?.id}
-                            </h3>
-                            <button
-                                onClick={() => {
-                                    send({
-                                        type: "SUBMIT",
-                                    });
-                                }}
-                            >
-                                Submit
-                            </button>
-                        </>
-                    )}
-                </div>
-            )}
-            {state.matches({ playing: "answer" }) && (
-                <>
-                    <h2>Answer</h2>
-                    {(state.matches({
-                        playing: {
-                            answer: "correct",
-                        },
-                    }) ||
-                        state.matches({
-                            playing: {
-                                answer: "incorrect",
-                            },
-                        })) && (
-                        <button
-                            onClick={() => {
-                                send({
-                                    type: "NEXT_ROUND",
-                                });
-                            }}
-                        >
-                            Next round
-                        </button>
-                    )}
-                </>
-            )}
-
-            {(state.matches({
-                playing: {
-                    answer: "incorrectLast",
-                },
-            }) ||
-                state.matches({
-                    playing: {
-                        answer: "correctLast",
-                    },
-                })) && (
-                <>
-                    <h3>Game is done</h3>
-                    <button
-                        onClick={() =>
-                            send({
-                                type: "COMPLETE",
-                            })
-                        }
-                    >
-                        Results
-                    </button>
-                </>
-            )}
-
+            {state.matches("playing") && <Playing service={service} />}
             {state.matches("results") && (
                 <>
                     <h2>Results</h2>
@@ -189,10 +153,6 @@ const Home: React.FC<RouteComponentProps> = () => {
                     </button>
                 </>
             )}
-
-            <pre>
-                <code>{JSON.stringify(state, null, 2)}</code>
-            </pre>
         </div>
     );
 };

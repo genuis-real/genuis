@@ -1,4 +1,6 @@
 import { createMachine, assign } from "xstate";
+import axios from "axios";
+import { BASE_URL } from "./constants";
 
 interface Artist {
     id: number;
@@ -108,6 +110,7 @@ export type GameState =
           value: { playing: "selectingSong" };
           context: GameContext & {
               songList: Array<GeniusSongResponse>;
+              currentLyrics: Array<Lyric>;
               selectedArtist: Artist;
           };
       }
@@ -115,6 +118,7 @@ export type GameState =
           value: { playing: "selectedSong" };
           context: GameContext & {
               songList: Array<GeniusSongResponse>;
+              currentLyrics: Array<Lyric>;
               selectedArtist: Artist;
               selectedSong: GeniusSongResponse;
           };
@@ -163,6 +167,20 @@ const initialContext: GameContext = {
     songList: undefined,
     currentRound: 0,
     currentLyrics: undefined,
+};
+
+const loadLyrics = async (songId?: number): Promise<Lyric[]> => {
+    console.log("loadLyrics");
+
+    try {
+        const res = await axios.get(
+            `${BASE_URL}/getWarpedSong?songId=${songId}`
+        );
+        const warpedLyrics = res.data?.lyrics?.warped;
+        return warpedLyrics;
+    } catch (error) {
+        throw new Error(error);
+    }
 };
 
 export const gameMachine = createMachine<GameContext, GameEvent, GameState>(
@@ -238,13 +256,19 @@ export const gameMachine = createMachine<GameContext, GameEvent, GameState>(
                         },
                     },
                     loadLyrics: {
-                        entry: ["loadLyrics"],
-                        on: {
-                            RESOLVE_LYRICS: {
+                        invoke: {
+                            id: "loadLyrics",
+                            src: (context, event) =>
+                                loadLyrics(
+                                    context.songList &&
+                                        context.songList[context.currentRound]
+                                            .id
+                                ),
+                            onDone: {
                                 target: "selectingSong",
                                 actions: assign({
                                     currentLyrics: (context, event) =>
-                                        event.lyrics,
+                                        event.data,
                                 }),
                             },
                         },
