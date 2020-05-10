@@ -5,7 +5,8 @@ import { Link as RouterLink } from "@reach/router";
 const NavBar = ({ beSmall }) => (
     <NavWrapper>
         <Logo beSmall={beSmall}>
-            <Link to="/">GENUIS</Link>
+            <Link to="/">SONGUAGE</Link>
+
         </Logo>
         {
             beSmall ? null : 
