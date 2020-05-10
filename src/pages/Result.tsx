@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { BASE_URL } from "constants.js";
+import { BASE_URL } from "../constants";
 import NavBar from "components/NavBar";
 import {
     ResultsWrapper,
@@ -37,7 +37,7 @@ const Result: React.FC<Props> = ({ resultId }) => {
     useEffect(() => {
         axios
             .get(`${BASE_URL}getWarpedSong?songId=${resultId}`)
-            .then(result => {
+            .then((result) => {
                 setSongData(result.data);
             });
     }, [resultId]);
@@ -54,10 +54,12 @@ const Result: React.FC<Props> = ({ resultId }) => {
                     <ResultsWrapper>
                         <SongWrapper>
                             <LyricsWrapper>
-                                {songData.lyrics.warped.map(({ text }) => <LyricsLine>{text}</LyricsLine> )}
+                                {songData.lyrics.warped.map(({ text }) => (
+                                    <LyricsLine>{text}</LyricsLine>
+                                ))}
                             </LyricsWrapper>
                         </SongWrapper>
-                        <GalleryWrapper/>
+                        <GalleryWrapper />
                     </ResultsWrapper>
                 </>
             ) : null}
