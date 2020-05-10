@@ -3,6 +3,7 @@ import { useMachine, useService } from "@xstate/react";
 import { RouteComponentProps } from "@reach/router";
 import { gameMachine, GameContext, GameEvent } from "gameStateMachine";
 import { Interpreter } from "xstate";
+import Start from '../components/Start';
 
 const ChooseArtist: React.FC<{
     gameService: Interpreter<GameContext, any, GameEvent, any>;
@@ -86,7 +87,7 @@ const Home: React.FC<RouteComponentProps> = () => {
             <p>Correct guesses: {state.context.correctGuesses}</p>
             <p>Total guesses: {state.context.totalGuesses}</p>
             {state.matches("idle") && (
-                <button onClick={() => send("START")}>start game</button>
+                <Start gameService={service} />
             )}
             {state.matches("chooseArtist") && (
                 <ChooseArtist gameService={service} />
