@@ -4,6 +4,7 @@ import { RouteComponentProps } from "@reach/router";
 import { gameMachine, GameContext, GameEvent } from "gameStateMachine";
 import { Interpreter } from "xstate";
 import Start from '../components/Start';
+import Playing from '../components/Playing';
 
 const ChooseArtist: React.FC<{
     gameService: Interpreter<GameContext, any, GameEvent, any>;
@@ -77,6 +78,8 @@ const Home: React.FC<RouteComponentProps> = () => {
         },
     });
 
+    console.log(state);
+
     return (
         <div
             style={{
@@ -93,44 +96,45 @@ const Home: React.FC<RouteComponentProps> = () => {
                 <ChooseArtist gameService={service} />
             )}
             {state.matches("playing") && (
-                <div>
-                    <h2>Playing</h2>
+                <Playing gameService={service} />
+                // <div>
+                //     <h2>Playing</h2>
 
-                    {state.matches({ playing: "loading" }) && <h3>Loading </h3>}
-                    {(state.matches({ playing: "selectingSong" }) ||
-                        state.matches({ playing: "selectedSong" })) && (
-                        <button
-                            onClick={() => {
-                                send({
-                                    type: "SELECT_SONG",
-                                    song: {
-                                        id: 1,
-                                        title: "Fake song",
-                                    },
-                                });
-                            }}
-                        >
-                            Select song "Fake Song" with ID 1
-                        </button>
-                    )}
-                    {state.matches({ playing: "selectedSong" }) && (
-                        <>
-                            <h3>
-                                {state.context.selectedSong?.title} with ID{" "}
-                                {state.context.selectedSong?.id}
-                            </h3>
-                            <button
-                                onClick={() => {
-                                    send({
-                                        type: "SUBMIT",
-                                    });
-                                }}
-                            >
-                                Submit
-                            </button>
-                        </>
-                    )}
-                </div>
+                //     {state.matches({ playing: "loading" }) && <h3>Loading </h3>}
+                //     {(state.matches({ playing: "selectingSong" }) ||
+                //         state.matches({ playing: "selectedSong" })) && (
+                //         <button
+                //             onClick={() => {
+                //                 send({
+                //                     type: "SELECT_SONG",
+                //                     song: {
+                //                         id: 1,
+                //                         title: "Fake song",
+                //                     },
+                //                 });
+                //             }}
+                //         >
+                //             Select song "Fake Song" with ID 1
+                //         </button>
+                //     )}
+                //     {state.matches({ playing: "selectedSong" }) && (
+                //         <>
+                //             <h3>
+                //                 {state.context.selectedSong?.title} with ID{" "}
+                //                 {state.context.selectedSong?.id}
+                //             </h3>
+                //             <button
+                //                 onClick={() => {
+                //                     send({
+                //                         type: "SUBMIT",
+                //                     });
+                //                 }}
+                //             >
+                //                 Submit
+                //             </button>
+                //         </>
+                //     )}
+                // </div>
             )}
             {state.matches({ playing: "answer" }) && (
                 <>

@@ -2,19 +2,31 @@ import React from "react";
 import styled from "styled-components/macro";
 import { Link } from "@reach/router";
 
-const ResultsItem = ({ name, artist, thumbnailURL, hot, id, lastItem, onClick }) => (
+interface ResultsItemProps {
+    title: string,
+    artist: string,
+    lastItem: boolean,
+    onClick: any,
+};
+
+const ResultsItem: React.FC<ResultsItemProps> = ({
+    title,
+    artist,
+    lastItem,
+    onClick,
+}) => (
     <Wrapper
         lastItem={lastItem}
         onClick={onClick}
     >
         <TitleAndArtist>
-            <SongTitle>{name}</SongTitle>
+            <SongTitle>{title}</SongTitle>
             <ArtistName>{artist}</ArtistName>
         </TitleAndArtist>
     </Wrapper>
 );
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ lastItem: boolean, onClick: any }>`
     width: 100%;
     border-width: ${({ lastItem }) => (lastItem ? "0px" : "0px 0px 1px")};
     border-color: rgba(255, 255, 255, 0.3);

@@ -47,7 +47,7 @@ const Start: React.FC<Props> = ({ gameService }) => {
 
     return (
         <Wrapper data-testid="start-wrapper">
-                <NavBar />
+                <NavBar beSmall={false}/>
                 <HypeWrapper>
                     <HypeSubText>Put yourself to the test by guessing the names of your favourite artist's songs, with lyrics like you've never seen them before.</HypeSubText>
                     <HypeSubText>Are you ready?</HypeSubText>

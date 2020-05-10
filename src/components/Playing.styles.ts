@@ -26,7 +26,7 @@ const LyricsWrapper = styled.div`
     height: 100%;
 `;
 
-const LyricsLine = styled.p`
+const LyricsLine = styled.p<{ children: any }>`
     color: ${({theme}) => theme.COLOURS.accent};
     margin: ${({ children }) => {
     if (children.includes('[')) {
@@ -55,7 +55,7 @@ const SearchBar = styled.input`
     }
 `;
 
-const SearchForm = styled.form`
+const SearchForm = styled.form<{ onSubmit: any }>`
     flex: none;
     width: 100%;
 `;

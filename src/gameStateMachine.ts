@@ -24,6 +24,7 @@ interface Song {
 interface GeniusSongResponse {
     id: number;
     title: string;
+    artist?: string;
 }
 
 // TODO: add song to guess to context
