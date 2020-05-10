@@ -5,7 +5,7 @@ import { Link as RouterLink } from "@reach/router";
 const NavBar = () => (
     <NavWrapper>
         <Logo>
-            <Link to="/">GENUIS</Link>
+            <Link to="/">SONGUAGE</Link>
         </Logo>
         <SubHeading>
             Behind the lyrics.
