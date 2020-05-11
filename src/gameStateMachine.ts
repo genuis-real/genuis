@@ -1,5 +1,5 @@
 import { createMachine, assign } from "xstate";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { BASE_URL } from "./constants";
 
 interface Artist {
@@ -145,6 +145,18 @@ const artistList: Array<Artist> = [
         id: 1519,
         name: "Ke$ha",
     },
+    {
+        id: 660,
+        name: "Prince",
+    },
+    {
+        id: 941,
+        name: "Vince Staples",
+    },
+    {
+        id: 108,
+        name: "50 Cent",
+    },
 ];
 
 const initialContext: GameContext = {
@@ -172,25 +184,25 @@ const loadLyrics = async (songId?: number): Promise<Lyric[]> => {
     }
 };
 
+interface ArtistSongResponse {
+    response: {
+        next_page: number;
+        songs: GeniusSongResponse[];
+    };
+}
 const loadSongs = async (artistId?: number): Promise<GeniusSongResponse[]> => {
     // TODO: load list of songs for this artist
-    return [
-        {
-            id: 1,
-            title: "Fake song 1",
-            artist: "Kesha",
-        },
-        {
-            id: 2,
-            title: "Fake song 2",
-            artist: "Kesha",
-        },
-        {
-            id: 3,
-            title: "Fake song 3",
-            artist: "Kesha",
-        },
-    ];
+    console.log("loadSongs");
+
+    try {
+        const res: AxiosResponse<ArtistSongResponse> = await axios.get(
+            `${BASE_URL}proxy/artists/${artistId}/songs?sort=popularity&per_page=10`
+        );
+        console.log(res.data.response.songs);
+        return res.data.response.songs;
+    } catch (error) {
+        throw new Error(error);
+    }
 };
 
 export const gameMachine = createMachine<GameContext, GameEvent, GameState>(

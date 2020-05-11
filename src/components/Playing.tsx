@@ -19,40 +19,29 @@ import {
 } from "./Playing.styles";
 
 interface PlayingProps extends RouteComponentProps {
-    resultId?: number,
+    resultId?: number;
     gameService: Interpreter<GameContext, any, GameEvent, any>;
-};
+}
 
 interface Lyric {
     text: string;
     referentId: number;
-};
+}
 
 interface Lyrics {
     warped: Lyric[];
-};
-
-interface SongData {
-    title: string;
-    artistName: string;
-    lyrics: Lyrics;
-};
+}
 
 interface SearchResult {
-    title: string,
-    artist: string,
-    thumbnailURL: string,
-    hot: boolean,
-    id: number,
-};
+    title: string;
+    artist: string;
+    thumbnailURL: string;
+    hot: boolean;
+    id: number;
+}
 
-const Playing: React.FC<PlayingProps> = ({
-    resultId = 1675826,
-    gameService,
-}) => {
+const Playing: React.FC<PlayingProps> = ({ gameService }) => {
     const [state, send] = useService(gameService);
-
-    const [songData, setSongData] = useState<SongData | null>(null);
 
     const [searchTerm, setSearchTerm] = useState<string>("");
 
@@ -60,21 +49,13 @@ const Playing: React.FC<PlayingProps> = ({
 
     const [searchResults, setSearchResults] = useState<Array<SearchResult>>([]);
 
-    useEffect(() => {
-        axios
-            .get(`${BASE_URL}getWarpedSong?songId=${resultId}`)
-            .then(result => {
-                setSongData(result.data);
-            });
-    }, [resultId]);
-
     const handleSearchResultData = (searchData: any) => {
         let hits =
             searchData.data && searchData.data.response
                 ? searchData.data.response.hits
                 : [];
 
-        hits = hits.filter((item: any) => item.type === 'song')
+        hits = hits.filter((item: any) => item.type === "song");
 
         const newResults = hits.map((item: any) => {
             const { result } = item;
@@ -85,11 +66,9 @@ const Playing: React.FC<PlayingProps> = ({
                     : "unknown",
                 thumbnailURL: result.header_image_thumbnail_url,
                 hot: result.stats ? result.stats.hot : false,
-                id: result.id
+                id: result.id,
             };
         });
-
-        console.log('newResults: ', newResults);
 
         setSearching(false);
         setSearchResults(newResults);
@@ -99,11 +78,11 @@ const Playing: React.FC<PlayingProps> = ({
         debounce((searchTerm: string) => {
             axios
                 .get(`${BASE_URL}proxy/search?q=${searchTerm}`)
-                .then(response => {
+                .then((response) => {
                     // handle success
                     handleSearchResultData(response);
                 })
-                .catch(function(error) {
+                .catch(function (error) {
                     // handle error
                 });
         }, 150),
@@ -119,78 +98,83 @@ const Playing: React.FC<PlayingProps> = ({
 
     return (
         <Wrapper>
-            <NavBar beSmall={true}/>
+            <NavBar beSmall={true} />
 
             {state.matches({ playing: "loading" }) && <h3>Loading </h3>}
 
             {(state.matches({ playing: "selectingSong" }) ||
                 state.matches({ playing: "selectedSong" })) && (
-                    <div style={{
-                        backgroundColor: 'black',
-                        height: '60%',
-                        width: '100%',
-                    }}>
-                        {songData ? (
-                            <LyricsWrapper>
-                                {songData.lyrics.warped.map(({ text }) => <LyricsLine>{text}</LyricsLine> )}
-                            </LyricsWrapper>
-                        ): null}
-                    </div>
+                <div
+                    style={{
+                        backgroundColor: "black",
+                        height: "50%",
+                        width: "100%",
+                    }}
+                >
+                    {state.context.currentLyrics ? (
+                        <LyricsWrapper>
+                            {state.context.currentLyrics.map(({ text }) => (
+                                <LyricsLine>{text}</LyricsLine>
+                            ))}
+                        </LyricsWrapper>
+                    ) : null}
+                </div>
             )}
 
-            {state.matches({playing: "selectingSong"}) && (
-                <div style={{
-                    height: '40%',
-                    width: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    background: 'red',
-                    margin: 0,
-                }}>
+            {state.matches({ playing: "selectingSong" }) && (
+                <div
+                    style={{
+                        height: "50%",
+                        width: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+                        background: "red",
+                        margin: 0,
+                    }}
+                >
                     <SearchWrapper>
-                        <SearchForm onSubmit={(event: React.FormEvent<HTMLInputElement>) => event.preventDefault()}>
+                        <SearchForm
+                            onSubmit={(
+                                event: React.FormEvent<HTMLInputElement>
+                            ) => event.preventDefault()}
+                        >
                             <SearchBar
                                 type="text"
                                 value={searchTerm}
                                 onChange={handleChange}
                             />
                         </SearchForm>
-                        {searchResults.length > 0 &&
-                            searchTerm.length > 0 && (
-                                <ResultsScrollView>
-                                    {searchResults.map((item, index) => (
-                                        <ResultsItem
-                                            key={`results-item-${item.title}-${
-                                                item.artist
-                                            }`}
-                                            lastItem={
-                                                index === searchResults.length - 1
-                                            }
-                                            onClick={() => {
-                                                send({
-                                                    type: "SELECT_SONG",
-                                                    song: {
-                                                        id: item.id,
-                                                        title: item.title,
-                                                        artist: item.artist,
-                                                    },
-                                                });
-                                            }}
-                                            {...item}
-                                        />
-                                    ))}
-                                </ResultsScrollView>
-                            )}
+                        {searchResults.length > 0 && searchTerm.length > 0 && (
+                            <ResultsScrollView>
+                                {searchResults.map((item, index) => (
+                                    <ResultsItem
+                                        key={`results-item-${item.title}-${item.artist}`}
+                                        lastItem={
+                                            index === searchResults.length - 1
+                                        }
+                                        onClick={() => {
+                                            send({
+                                                type: "SELECT_SONG",
+                                                song: {
+                                                    id: item.id,
+                                                    title: item.title,
+                                                    artist: item.artist,
+                                                },
+                                            });
+                                        }}
+                                        {...item}
+                                    />
+                                ))}
+                            </ResultsScrollView>
+                        )}
                     </SearchWrapper>
                 </div>
             )}
 
-            {state.matches({playing: "selectedSong"}) && (
+            {state.matches({ playing: "selectedSong" }) && (
                 <>
                     <ResultsItem
-                        key={`results-item-${state.context.selectedSong?.title}-${
-                            state.context.selectedSong?.artist
-                        }`}
+                        key={`results-item-${state.context.selectedSong?.title}-${state.context.selectedSong?.artist}`}
                         lastItem={false}
                         title={state.context.selectedSong?.title || ""}
                         artist={state.context.selectedSong?.artist || ""}
@@ -198,26 +182,29 @@ const Playing: React.FC<PlayingProps> = ({
                     />
                     <div
                         style={{
-                            height: '10%',
-                            width: '100%',
-                            background: 'red',
+                            height: "10%",
+                            width: "100%",
+                            background: "red",
                         }}
                         onClick={() => {
+                            setSearchTerm("");
+                            setSearchResults([]);
                             send({
                                 type: "CLEAR_SELECTED_SONG",
                             });
-                            setSearchTerm("");
                         }}
                     >
                         Deselect
                     </div>
                     <div
                         style={{
-                            height: '10%',
-                            width: '100%',
-                            background: 'green',
+                            height: "10%",
+                            width: "100%",
+                            background: "green",
                         }}
-                        onClick={() =>{
+                        onClick={() => {
+                            setSearchTerm("");
+                            setSearchResults([]);
                             send({
                                 type: "SUBMIT",
                             });
@@ -226,6 +213,36 @@ const Playing: React.FC<PlayingProps> = ({
                         Submit
                     </div>
                 </>
+            )}
+
+            {(state.matches({ playing: { answer: "correct" } }) ||
+                state.matches({ playing: { answer: "incorrect" } })) && (
+                <div
+                    style={{
+                        height: "100%",
+                        width: "100%",
+                        background: state.matches({
+                            playing: { answer: "correct" },
+                        })
+                            ? "green"
+                            : "red",
+                    }}
+                >
+                    <div
+                        style={{
+                            height: "10%",
+                            width: "100%",
+                            background: "black",
+                        }}
+                        onClick={() => {
+                            send({
+                                type: "NEXT_ROUND",
+                            });
+                        }}
+                    >
+                        Another please!
+                    </div>
+                </div>
             )}
         </Wrapper>
     );

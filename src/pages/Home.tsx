@@ -119,10 +119,6 @@ const Home: React.FC<RouteComponentProps> = () => {
                     </button>
                 </>
             )}
-
-            <pre>
-                <code>{JSON.stringify(state, null, 2)}</code>
-            </pre>
         </div>
     );
 };

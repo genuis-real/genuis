@@ -27,13 +27,14 @@ const LyricsWrapper = styled.div`
 `;
 
 const LyricsLine = styled.p<{ children: any }>`
-    color: ${({theme}) => theme.COLOURS.accent};
+    color: ${({ theme }) => theme.COLOURS.accent};
     margin: ${({ children }) => {
-    if (children.includes('[')) {
-        return '16px 0px';
-    }
-    return '0px';
-}}`;
+        if (children.includes("[")) {
+            return "16px 0px";
+        }
+        return "0px";
+    }};
+`;
 
 const SongWrapper = styled.div`
     display: flex;
@@ -63,7 +64,7 @@ const SearchForm = styled.form<{ onSubmit: any }>`
 const SearchWrapper = styled.div`
     display: flex;
     flex-flow: column nowrap;
-    background-color:blue;
+    background-color: blue;
     /* display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -72,7 +73,6 @@ const SearchWrapper = styled.div`
 `;
 
 const ResultsScrollView = styled.div`
-    flex: auto;
     background-color: yellow;
     overflow: auto;
 

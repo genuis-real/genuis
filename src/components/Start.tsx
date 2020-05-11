@@ -11,7 +11,7 @@ import { RouteComponentProps } from "@reach/router";
 
 interface Props extends RouteComponentProps {
     gameService: Interpreter<GameContext, any, GameEvent, any>;
-};
+}
 
 const Wrapper = styled.div`
     display: flex;
@@ -31,12 +31,12 @@ const HypeWrapper = styled.div`
 `;
 
 const HypeSubText = styled.p`
-    color: ${({theme}) => theme.COLOURS.accent};
+    color: ${({ theme }) => theme.COLOURS.accent};
     margin: 32px 16px 16px 16px;
 `;
 
 const ReadyButton = styled.button`
-    background-color: ${({theme}) => theme.COLOURS.accent};
+    background-color: ${({ theme }) => theme.COLOURS.accent};
     height: 32px;
     width: 75%;
     margin-top: 32px;
@@ -47,17 +47,19 @@ const Start: React.FC<Props> = ({ gameService }) => {
 
     return (
         <Wrapper data-testid="start-wrapper">
-                <NavBar beSmall={false}/>
-                <HypeWrapper>
-                    <HypeSubText>Put yourself to the test by guessing the names of your favourite artist's songs, with lyrics like you've never seen them before.</HypeSubText>
-                    <HypeSubText>Are you ready?</HypeSubText>
-                    <ReadyButton
-                        onClick={() => send("START")}
-                    >
-                        I'M READY!
-                    </ReadyButton>
-                </HypeWrapper>
-            </Wrapper>
+            <NavBar beSmall={false} />
+            <HypeWrapper>
+                <HypeSubText>
+                    Put yourself to the test by guessing the names of your
+                    favourite artist's songs, with lyrics like you've never seen
+                    them before.
+                </HypeSubText>
+                <HypeSubText>Are you ready?</HypeSubText>
+                <ReadyButton onClick={() => send("START")}>
+                    I'M READY!
+                </ReadyButton>
+            </HypeWrapper>
+        </Wrapper>
     );
 };
 
