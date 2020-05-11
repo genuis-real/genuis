@@ -1,4 +1,6 @@
 import { createMachine, assign } from "xstate";
+import axios from "axios";
+import { BASE_URL } from "./constants";
 
 interface Artist {
     id: number;
@@ -24,7 +26,6 @@ interface Song {
 interface GeniusSongResponse {
     id: number;
     title: string;
-    artist?: string;
 }
 
 // TODO: add song to guess to context
@@ -50,10 +51,6 @@ export type GameEvent =
     | {
           type: "RESOLVE_SONGLIST";
           songList: Array<GeniusSongResponse>;
-      }
-    | {
-          type: "RESOLVE_LYRICS";
-          lyrics: Array<Lyric>;
       }
     | {
           type: "SELECT_SONG";
@@ -109,6 +106,7 @@ export type GameState =
           value: { playing: "selectingSong" };
           context: GameContext & {
               songList: Array<GeniusSongResponse>;
+              currentLyrics: Array<Lyric>;
               selectedArtist: Artist;
           };
       }
@@ -116,6 +114,7 @@ export type GameState =
           value: { playing: "selectedSong" };
           context: GameContext & {
               songList: Array<GeniusSongResponse>;
+              currentLyrics: Array<Lyric>;
               selectedArtist: Artist;
               selectedSong: GeniusSongResponse;
           };
@@ -147,14 +146,6 @@ const artistList: Array<Artist> = [
     },
 ];
 
-// after select artist
-// load genuis search results at "random" page.
-// filter by just songs.
-// get 10 of them
-// put them in store
-// after start "round"
-// load translation for the current song
-
 const initialContext: GameContext = {
     totalGuesses: 0,
     correctGuesses: 0,
@@ -164,6 +155,38 @@ const initialContext: GameContext = {
     songList: undefined,
     currentRound: 0,
     currentLyrics: undefined,
+};
+
+const loadLyrics = async (songId?: number): Promise<Lyric[]> => {
+    console.log("loadLyrics");
+
+    try {
+        const res = await axios.get(
+            `${BASE_URL}/getWarpedSong?songId=${songId}`
+        );
+        const warpedLyrics = res.data?.lyrics?.warped;
+        return warpedLyrics;
+    } catch (error) {
+        throw new Error(error);
+    }
+};
+
+const loadSongs = async (artistId?: number): Promise<GeniusSongResponse[]> => {
+    // TODO: load list of songs for this artist
+    return [
+        {
+            id: 1,
+            title: "Fake song 1",
+        },
+        {
+            id: 2,
+            title: "Fake song 2",
+        },
+        {
+            id: 3,
+            title: "Fake song 3",
+        },
+    ];
 };
 
 export const gameMachine = createMachine<GameContext, GameEvent, GameState>(
@@ -210,45 +233,64 @@ export const gameMachine = createMachine<GameContext, GameEvent, GameState>(
             },
             playing: {
                 id: "playing",
-                initial: "start",
+                initial: "loading",
                 states: {
-                    start: {
-                        on: {
-                            "": [
-                                {
-                                    target: "#playing.selectingSong",
-                                    cond: "isSongListLoaded",
+                    // If this gets more complex consider moving the loading
+                    // logic into its own state machine
+                    loading: {
+                        initial: "start",
+                        states: {
+                            start: {
+                                on: {
+                                    "": [
+                                        {
+                                            target: "loadLyrics",
+                                            cond: "isSongListLoaded",
+                                        },
+                                        {
+                                            target: "loadSongs",
+                                        },
+                                    ],
                                 },
-                                {
-                                    target: "loadSongs",
+                            },
+                            loadSongs: {
+                                invoke: {
+                                    id: "loadSongs",
+                                    src: (context, event) =>
+                                        loadSongs(context.selectedArtist?.id),
+                                    onDone: {
+                                        target: "loadLyrics",
+                                        actions: assign({
+                                            songList: (context, event) =>
+                                                event.data,
+                                        }),
+                                    },
                                 },
-                            ],
-                        },
-                    },
-                    loadSongs: {
-                        entry: ["loadSongs"],
-                        // Need to fire a side effect action based on the selectedArtist id in context
-                        on: {
-                            RESOLVE_SONGLIST: {
-                                target: "loadLyrics",
-                                actions: assign({
-                                    songList: (context, event) =>
-                                        event.songList,
-                                }),
+                            },
+                            loadLyrics: {
+                                invoke: {
+                                    id: "loadLyrics",
+                                    src: (context, event) =>
+                                        loadLyrics(
+                                            context.songList &&
+                                                context.songList[
+                                                    context.currentRound
+                                                ].id
+                                        ),
+                                    onDone: {
+                                        target: "loadingDone",
+                                        actions: assign({
+                                            currentLyrics: (context, event) =>
+                                                event.data,
+                                        }),
+                                    },
+                                },
+                            },
+                            loadingDone: {
+                                type: "final",
                             },
                         },
-                    },
-                    loadLyrics: {
-                        entry: ["loadLyrics"],
-                        on: {
-                            RESOLVE_LYRICS: {
-                                target: "selectingSong",
-                                actions: assign({
-                                    currentLyrics: (context, event) =>
-                                        event.lyrics,
-                                }),
-                            },
-                        },
+                        onDone: "#playing.selectingSong",
                     },
                     selectingSong: {
                         on: {

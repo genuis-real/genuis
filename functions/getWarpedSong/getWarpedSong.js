@@ -40,6 +40,8 @@ async function scrapeContent(path) {
 
     const lyricsData = [];
 
+    // This is not a standard JS map
+    // This is a cheerio map and it doesn't do what you might expect
     children.map((_, element) => {
         const el = $(element);
         if (el[0].name === "br") return null;
