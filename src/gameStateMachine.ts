@@ -238,8 +238,7 @@ export const gameMachine = createMachine<GameContext, GameEvent, GameState>(
                     // If this gets more complex consider moving the loading
                     // logic into its own state machine
                     loading: {
-                        initial: "loadSongs",
-                        onDone: "#playing.selectingSong",
+                        initial: "start",
                         states: {
                             start: {
                                 on: {
@@ -291,6 +290,7 @@ export const gameMachine = createMachine<GameContext, GameEvent, GameState>(
                                 type: "final",
                             },
                         },
+                        onDone: "#playing.selectingSong",
                     },
                     selectingSong: {
                         on: {
