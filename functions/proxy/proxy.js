@@ -10,6 +10,8 @@ exports.handler = async function (event, context) {
     const url = new URL(`https://genius.com/api/${urlString}`);
     url.search = new URLSearchParams(event.queryStringParameters);
 
+    console.log("url", url);
+
     try {
         const response = await fetch(url, {
             headers: {

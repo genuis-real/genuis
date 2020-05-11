@@ -77,7 +77,7 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
     const getResultsDebounced = useCallback(
         debounce((searchTerm: string) => {
             axios
-                .get(`${BASE_URL}proxy/search?q=${searchTerm}`)
+                .get(`${BASE_URL}proxy/search/songs?q=${searchTerm}`)
                 .then((response) => {
                     // handle success
                     handleSearchResultData(response);
