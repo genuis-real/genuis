@@ -26,6 +26,7 @@ interface Song {
 interface GeniusSongResponse {
     id: number;
     title: string;
+    artist: string;
 }
 
 // TODO: add song to guess to context
@@ -177,14 +178,17 @@ const loadSongs = async (artistId?: number): Promise<GeniusSongResponse[]> => {
         {
             id: 1,
             title: "Fake song 1",
+            artist: "Kesha",
         },
         {
             id: 2,
             title: "Fake song 2",
+            artist: "Kesha",
         },
         {
             id: 3,
             title: "Fake song 3",
+            artist: "Kesha",
         },
     ];
 };
