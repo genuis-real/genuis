@@ -2,19 +2,20 @@
 const fetch = require("node-fetch");
 const { URL, URLSearchParams } = require("url");
 
-exports.handler = async function(event, context) {
+exports.handler = async function (event, context) {
     const { GENIUS_AUTH_TOKEN } = process.env;
 
     const urlString = event.path.replace("/.netlify/functions/proxy/", "");
-    const url = new URL(`https://api.genius.com/${urlString}`);
+    // const url = new URL(`https://api.genius.com/${urlString}`);
+    const url = new URL(`https://genius.com/api/${urlString}`);
     url.search = new URLSearchParams(event.queryStringParameters);
 
     try {
         const response = await fetch(url, {
             headers: {
                 Accept: "application/json",
-                Authorization: `Bearer ${GENIUS_AUTH_TOKEN}`
-            }
+                // Authorization: `Bearer ${GENIUS_AUTH_TOKEN}`,
+            },
         });
 
         if (!response.ok) {
@@ -25,13 +26,13 @@ exports.handler = async function(event, context) {
 
         return {
             statusCode: 200,
-            body: JSON.stringify(data)
+            body: JSON.stringify(data),
         };
     } catch (err) {
         console.log(err); // output to netlify function log
         return {
             statusCode: 500,
-            body: JSON.stringify({ msg: err.message }) // Could be a custom message or object i.e. JSON.stringify(err)
+            body: JSON.stringify({ msg: err.message }), // Could be a custom message or object i.e. JSON.stringify(err)
         };
     }
 };
