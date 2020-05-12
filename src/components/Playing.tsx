@@ -50,12 +50,18 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
     const [searchResults, setSearchResults] = useState<Array<SearchResult>>([]);
 
     const handleSearchResultData = (searchData: any) => {
-        let hits =
-            searchData.data && searchData.data.response
-                ? searchData.data.response.hits
-                : [];
+        console.log('searchData: ', searchData);
+
+        const { data = {} } = searchData;
+        const { response = {} } = data;
+        const { sections = [] } = response;
+        let hits = sections.length > 0 ? sections[0].hits : [];
+
+        console.log('hits: ', hits);
 
         hits = hits.filter((item: any) => item.type === "song");
+
+        console.log(hits);
 
         const newResults = hits.map((item: any) => {
             const { result } = item;
