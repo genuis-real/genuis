@@ -14,7 +14,8 @@ const GuessResult: React.FC<GuessResultProps> = ({ gameService }) => {
 
     let resultMessage: string = "";
     let buttonText: string = "";
-    let thumbnailURL: string = "";
+    let song: any;
+    let correct: boolean = false;
 
     if (state.matches({ playing: { answer: "correct" } })) {
         resultMessage = "That's right! You really know your stuff...";
@@ -37,23 +38,63 @@ const GuessResult: React.FC<GuessResultProps> = ({ gameService }) => {
     }
 
     if (state.context.songList) {
-        thumbnailURL =
-            state.context.songList[state.context.currentRound]
-                .song_art_image_thumbnail_url || "";
+        song = state.context.songList[state.context.currentRound] || {};
     }
 
     if (!resultMessage) {
         return null;
     }
 
+    if (
+        state.matches({ playing: { answer: "correct" } }) ||
+        state.matches({ playing: { answer: "correctLast" } })
+    ) {
+        correct = true;
+    }
+
     return (
-        <Wrapper state={state}>
-            <img src={thumbnailURL} alt="Smiley face" height="64" width="64" />
+        <Wrapper correct={correct}>
             <div
                 style={{
-                    height: "10%",
-                    width: "100%",
+                    padding: "24px",
+                    paddingBottom: "0px",
+                }}
+            >
+                {resultMessage}
+            </div>
+            <div
+                style={{
+                    padding: "24px",
+                    paddingBottom: "0px",
+                }}
+            >
+                <p>It was:</p>
+                <p>{song.full_title}</p>
+            </div>
+            <div
+                style={{
+                    padding: "24px",
+                    paddingBottom: "0px",
+                }}
+            >
+                <img
+                    src={song.song_art_image_thumbnail_url}
+                    alt="Smiley face"
+                    height="64"
+                    width="64"
+                />
+            </div>
+
+            <div
+                style={{
+                    margin: "24px 0px",
+                    borderRadius: "24px",
+                    height: "64px",
+                    width: "90%",
                     background: "black",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
                 }}
                 onClick={() => {
                     send({

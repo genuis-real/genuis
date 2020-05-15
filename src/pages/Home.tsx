@@ -54,8 +54,6 @@ const Home: React.FC<RouteComponentProps> = () => {
                 fontWeight: 700,
             }}
         >
-            <p>Correct guesses: {state.context.correctGuesses}</p>
-            <p>Total guesses: {state.context.totalGuesses}</p>
             {state.matches("idle") && <Start gameService={service} />}
             {state.matches("chooseArtist") && (
                 <ChooseArtist gameService={service} />
