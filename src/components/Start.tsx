@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components/macro";
-import { Link as RouterLink } from "@reach/router";
 import { GameContext, GameEvent } from "gameStateMachine";
 import { Interpreter } from "xstate";
 import { useService } from "@xstate/react";
+import Button from "components/shared/Button";
 
 // components
 import NavBar from "components/NavBar";
@@ -19,7 +19,6 @@ const Wrapper = styled.div`
     align-items: center;
     padding: 0 24px 24px;
     max-width: 700px;
-    height: 100vh;
     margin: 0 auto;
 `;
 
@@ -31,15 +30,7 @@ const HypeWrapper = styled.div`
 `;
 
 const HypeSubText = styled.p`
-    color: ${({ theme }) => theme.COLOURS.accent};
     margin: 32px 16px 16px 16px;
-`;
-
-const ReadyButton = styled.button`
-    background-color: ${({ theme }) => theme.COLOURS.accent};
-    height: 32px;
-    width: 75%;
-    margin-top: 32px;
 `;
 
 const Start: React.FC<Props> = ({ gameService }) => {
@@ -55,9 +46,7 @@ const Start: React.FC<Props> = ({ gameService }) => {
                     them before.
                 </HypeSubText>
                 <HypeSubText>Are you ready?</HypeSubText>
-                <ReadyButton onClick={() => send("START")}>
-                    I'M READY!
-                </ReadyButton>
+                <Button onClick={() => send("START")}>I'm ready!</Button>
             </HypeWrapper>
         </Wrapper>
     );
