@@ -3,6 +3,7 @@ import { RouteComponentProps } from "@reach/router";
 import { GameContext, GameEvent } from "gameStateMachine";
 import { Interpreter } from "xstate";
 import { useService } from "@xstate/react";
+import { Wrapper } from "./GuessResult.styles";
 
 interface GuessResultProps extends RouteComponentProps {
     gameService: Interpreter<GameContext, any, GameEvent, any>;
@@ -15,46 +16,39 @@ const GuessResult: React.FC<GuessResultProps> = ({ gameService }) => {
     let buttonText: string = "";
     let thumbnailURL: string = "";
 
-    if(state.matches({ playing: { answer: "correct" } })) {
+    if (state.matches({ playing: { answer: "correct" } })) {
         resultMessage = "That's right! You really know your stuff...";
         buttonText = "Another, please!";
     }
 
-    if(state.matches({ playing: { answer: "incorrect" } })) {
+    if (state.matches({ playing: { answer: "incorrect" } })) {
         resultMessage = "Nope, that's not it - are you sure you're a fan?";
         buttonText = "Another, please!";
     }
 
-    if(state.matches({ playing: { answer: "correctLast" } })) {
+    if (state.matches({ playing: { answer: "correctLast" } })) {
         resultMessage = "That's right! Ready to see your results?";
         buttonText = "Show me!";
     }
 
-    if(state.matches({ playing: { answer: "incorrectLast" } })) {
+    if (state.matches({ playing: { answer: "incorrectLast" } })) {
         resultMessage = "Wrong! Ready to see your results?";
         buttonText = "Show me!";
     }
 
-    if(state.context.songList) {
-        thumbnailURL = state.context.songList[state.context.currentRound].song_art_image_thumbnail_url;
+    if (state.context.songList) {
+        thumbnailURL =
+            state.context.songList[state.context.currentRound]
+                .song_art_image_thumbnail_url || "";
     }
-    
+
     if (!resultMessage) {
         return null;
     }
 
     return (
-        <div
-            style={{
-                height: "100%",
-                width: "100%",
-                background: state.matches({
-                    playing: { answer: "correct" },
-                })
-                    ? "green"
-                    : "red",
-            }}
-        >
+        <Wrapper state={state}>
+            <img src={thumbnailURL} alt="Smiley face" height="64" width="64" />
             <div
                 style={{
                     height: "10%",
@@ -69,8 +63,8 @@ const GuessResult: React.FC<GuessResultProps> = ({ gameService }) => {
             >
                 {buttonText}
             </div>
-        </div>
-    )
-}
+        </Wrapper>
+    );
+};
 
 export default GuessResult;

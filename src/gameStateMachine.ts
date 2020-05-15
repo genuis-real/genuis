@@ -27,7 +27,7 @@ interface GeniusSongResponse {
     id: number;
     title: string;
     artist: string;
-    song_art_image_thumbnail_url: string;
+    song_art_image_thumbnail_url?: string;
 }
 
 // TODO: add song to guess to context
