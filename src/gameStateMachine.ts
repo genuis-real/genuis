@@ -27,6 +27,7 @@ interface GeniusSongResponse {
     id: number;
     title: string;
     artist: string;
+    song_art_image_thumbnail_url: string;
 }
 
 // TODO: add song to guess to context
@@ -127,7 +128,7 @@ const isLastGuess = (context: GameContext, event: GameEvent) => {
             "you've got no song list and that should be impossible"
         );
     }
-    return context.totalGuesses === context.songList.length;
+    return context.totalGuesses === 3; // context.songList.length;
 };
 const isAnswerCorrect = (context: GameContext, event: GameEvent) => {
     if (context.songList === undefined) {

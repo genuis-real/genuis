@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { debounce } from "lodash-es";
 import axios from "axios";
 import { BASE_URL } from "../constants";
@@ -8,6 +8,7 @@ import { RouteComponentProps } from "@reach/router";
 import { GameContext, GameEvent } from "gameStateMachine";
 import { Interpreter } from "xstate";
 import { useService } from "@xstate/react";
+import GuessResult from "components/GuessResult";
 import {
     Wrapper,
     SearchBar,
@@ -19,7 +20,6 @@ import {
 } from "./Playing.styles";
 
 interface PlayingProps extends RouteComponentProps {
-    resultId?: number;
     gameService: Interpreter<GameContext, any, GameEvent, any>;
 }
 
@@ -35,8 +35,6 @@ interface Lyrics {
 interface SearchResult {
     title: string;
     artist: string;
-    thumbnailURL: string;
-    hot: boolean;
     id: number;
 }
 
@@ -57,12 +55,6 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
         const { sections = [] } = response;
         let hits = sections.length > 0 ? sections[0].hits : [];
 
-        console.log('hits: ', hits);
-
-        hits = hits.filter((item: any) => item.type === "song");
-
-        console.log(hits);
-
         const newResults = hits.map((item: any) => {
             const { result } = item;
             return {
@@ -70,8 +62,6 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
                 artist: result.primary_artist
                     ? result.primary_artist.name
                     : "unknown",
-                thumbnailURL: result.header_image_thumbnail_url,
-                hot: result.stats ? result.stats.hot : false,
                 id: result.id,
             };
         });
@@ -220,36 +210,7 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
                     </div>
                 </>
             )}
-
-            {(state.matches({ playing: { answer: "correct" } }) ||
-                state.matches({ playing: { answer: "incorrect" } })) && (
-                <div
-                    style={{
-                        height: "100%",
-                        width: "100%",
-                        background: state.matches({
-                            playing: { answer: "correct" },
-                        })
-                            ? "green"
-                            : "red",
-                    }}
-                >
-                    <div
-                        style={{
-                            height: "10%",
-                            width: "100%",
-                            background: "black",
-                        }}
-                        onClick={() => {
-                            send({
-                                type: "NEXT_ROUND",
-                            });
-                        }}
-                    >
-                        Another please!
-                    </div>
-                </div>
-            )}
+            <GuessResult gameService={gameService}/>
         </Wrapper>
     );
 };
