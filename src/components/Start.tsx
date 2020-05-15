@@ -37,7 +37,7 @@ const Start: React.FC<Props> = ({ gameService }) => {
     const [state, send] = useService(gameService);
 
     return (
-        <Wrapper data-testid="start-wrapper">
+        <>
             <NavBar beSmall={false} />
             <HypeWrapper>
                 <HypeSubText>
@@ -46,9 +46,16 @@ const Start: React.FC<Props> = ({ gameService }) => {
                     them before.
                 </HypeSubText>
                 <HypeSubText>Are you ready?</HypeSubText>
-                <Button onClick={() => send("START")}>I'm ready!</Button>
+                <Button
+                    style={{
+                        marginTop: 16,
+                    }}
+                    onClick={() => send("START")}
+                >
+                    I'm ready!
+                </Button>
             </HypeWrapper>
-        </Wrapper>
+        </>
     );
 };
 

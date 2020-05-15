@@ -6,6 +6,7 @@ import { Interpreter } from "xstate";
 import Start from "../components/Start";
 import Playing from "../components/Playing";
 import Button from "components/shared/Button";
+import { Wrapper } from "components/common";
 
 const ChooseArtist: React.FC<{
     gameService: Interpreter<GameContext, any, GameEvent, any>;
@@ -47,7 +48,7 @@ const Home: React.FC<RouteComponentProps> = () => {
     const [state, send, service] = useMachine(gameMachine);
 
     return (
-        <div>
+        <Wrapper>
             {state.matches("idle") && <Start gameService={service} />}
             {state.matches("chooseArtist") && (
                 <ChooseArtist gameService={service} />
@@ -111,7 +112,7 @@ const Home: React.FC<RouteComponentProps> = () => {
                     </Button>
                 </>
             )}
-        </div>
+        </Wrapper>
     );
 };
 
