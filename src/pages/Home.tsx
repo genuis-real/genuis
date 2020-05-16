@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useMachine, useService } from "@xstate/react";
 import { RouteComponentProps } from "@reach/router";
 import { gameMachine, GameContext, GameEvent } from "gameStateMachine";
 import { Interpreter } from "xstate";
 import Start from "../components/Start";
 import Playing from "../components/Playing";
+import Button from "components/shared/Button";
+import { Wrapper } from "components/common";
 
 const ChooseArtist: React.FC<{
     gameService: Interpreter<GameContext, any, GameEvent, any>;
@@ -14,7 +16,7 @@ const ChooseArtist: React.FC<{
     return (
         <div>
             <h2>Choose Artist</h2>
-            <button
+            <Button
                 onClick={() =>
                     send({
                         type: "SELECT_ARTIST",
@@ -23,11 +25,11 @@ const ChooseArtist: React.FC<{
                 }
             >
                 Pick this artist: Ke$ha
-            </button>
+            </Button>
             {state.matches({ chooseArtist: "selectedArtist" }) && (
                 <div>
                     <h3>{state.context.selectedArtist?.name}</h3>
-                    <button
+                    <Button
                         onClick={() =>
                             send({
                                 type: "START",
@@ -35,7 +37,7 @@ const ChooseArtist: React.FC<{
                         }
                     >
                         ready
-                    </button>
+                    </Button>
                 </div>
             )}
         </div>
@@ -45,17 +47,17 @@ const ChooseArtist: React.FC<{
 const Home: React.FC<RouteComponentProps> = () => {
     const [state, send, service] = useMachine(gameMachine);
 
-    console.log(state);
+    useEffect(() => {
+        const subscription = service.subscribe((state) => {
+            // simple state logging
+            console.log(state);
+        });
+
+        return subscription.unsubscribe;
+    });
 
     return (
-        <div
-            style={{
-                color: "white",
-                fontWeight: 700,
-            }}
-        >
-            <p>Correct guesses: {state.context.correctGuesses}</p>
-            <p>Total guesses: {state.context.totalGuesses}</p>
+        <Wrapper>
             {state.matches("idle") && <Start gameService={service} />}
             {state.matches("chooseArtist") && (
                 <ChooseArtist gameService={service} />
@@ -74,7 +76,7 @@ const Home: React.FC<RouteComponentProps> = () => {
                                 answer: "incorrect",
                             },
                         })) && (
-                        <button
+                        <Button
                             onClick={() => {
                                 send({
                                     type: "NEXT_ROUND",
@@ -82,7 +84,7 @@ const Home: React.FC<RouteComponentProps> = () => {
                             }}
                         >
                             Next round
-                        </button>
+                        </Button>
                     )}
                 </>
             )}
@@ -99,7 +101,7 @@ const Home: React.FC<RouteComponentProps> = () => {
                 })) && (
                 <>
                     <h3>Game is done</h3>
-                    <button
+                    <Button
                         onClick={() =>
                             send({
                                 type: "COMPLETE",
@@ -107,19 +109,19 @@ const Home: React.FC<RouteComponentProps> = () => {
                         }
                     >
                         Results
-                    </button>
+                    </Button>
                 </>
             )}
 
             {state.matches("results") && (
                 <>
                     <h2>Results</h2>
-                    <button onClick={() => send("RESTART")}>
+                    <Button onClick={() => send("RESTART")}>
                         Restart game
-                    </button>
+                    </Button>
                 </>
             )}
-        </div>
+        </Wrapper>
     );
 };
 
