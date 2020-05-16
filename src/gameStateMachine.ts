@@ -128,7 +128,7 @@ const isLastGuess = (context: GameContext, event: GameEvent) => {
             "you've got no song list and that should be impossible"
         );
     }
-    return context.totalGuesses === 3; // context.songList.length;
+    return context.totalGuesses === context.songList.length;
 };
 const isAnswerCorrect = (context: GameContext, event: GameEvent) => {
     if (context.songList === undefined) {

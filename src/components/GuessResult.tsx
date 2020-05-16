@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { RouteComponentProps } from "@reach/router";
 import { GameContext, GameEvent } from "gameStateMachine";
 import { Interpreter } from "xstate";
 import { useService } from "@xstate/react";
-import { Wrapper } from "./GuessResult.styles";
+import { Wrapper, NextButton } from "./GuessResult.styles";
 
 interface GuessResultProps extends RouteComponentProps {
     gameService: Interpreter<GameContext, any, GameEvent, any>;
@@ -12,14 +12,26 @@ interface GuessResultProps extends RouteComponentProps {
 const GuessResult: React.FC<GuessResultProps> = ({ gameService }) => {
     const [state, send] = useService(gameService);
 
+    const handleClick = useCallback(() => {
+        if (
+            state.matches({ playing: { answer: "incorrectLast" } }) ||
+            state.matches({ playing: { answer: "correctLast" } })
+        ) {
+            send({ type: "COMPLETE" });
+        }
+        send({ type: "NEXT_ROUND" });
+    }, [state, send]);
+
     let resultMessage: string = "";
     let buttonText: string = "";
     let song: any;
     let correct: boolean = false;
+    let complete: boolean = false;
 
     if (state.matches({ playing: { answer: "correct" } })) {
         resultMessage = "That's right! You really know your stuff...";
         buttonText = "Another, please!";
+        correct = true;
     }
 
     if (state.matches({ playing: { answer: "incorrect" } })) {
@@ -28,13 +40,16 @@ const GuessResult: React.FC<GuessResultProps> = ({ gameService }) => {
     }
 
     if (state.matches({ playing: { answer: "correctLast" } })) {
-        resultMessage = "That's right! Ready to see your results?";
+        resultMessage = "That's right! You really know your stuff...";
         buttonText = "Show me!";
+        correct = true;
+        complete = true;
     }
 
     if (state.matches({ playing: { answer: "incorrectLast" } })) {
-        resultMessage = "Wrong! Ready to see your results?";
+        resultMessage = "Nope, that's not it - are you sure you're a fan?";
         buttonText = "Show me!";
+        complete = true;
     }
 
     if (state.context.songList) {
@@ -43,13 +58,6 @@ const GuessResult: React.FC<GuessResultProps> = ({ gameService }) => {
 
     if (!resultMessage) {
         return null;
-    }
-
-    if (
-        state.matches({ playing: { answer: "correct" } }) ||
-        state.matches({ playing: { answer: "correctLast" } })
-    ) {
-        correct = true;
     }
 
     return (
@@ -84,26 +92,17 @@ const GuessResult: React.FC<GuessResultProps> = ({ gameService }) => {
                     width="64"
                 />
             </div>
-
-            <div
-                style={{
-                    margin: "24px 0px",
-                    borderRadius: "24px",
-                    height: "64px",
-                    width: "90%",
-                    background: "black",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                }}
-                onClick={() => {
-                    send({
-                        type: "NEXT_ROUND",
-                    });
-                }}
-            >
-                {buttonText}
-            </div>
+            {complete && (
+                <div
+                    style={{
+                        padding: "24px",
+                        paddingBottom: "0px",
+                    }}
+                >
+                    {"Ready to see your results?"}
+                </div>
+            )}
+            <NextButton onClick={handleClick}>{buttonText}</NextButton>
         </Wrapper>
     );
 };

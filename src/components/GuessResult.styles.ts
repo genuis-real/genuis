@@ -8,6 +8,11 @@ const Wrapper = styled.div<{ correct: boolean }>`
     background: ${({ correct }) => (correct ? "green" : "red")};
 `;
 
-const NextButton = styled.button``;
+const NextButton = styled.button`
+    background-color: ${({ theme }) => theme.COLOURS.accent};
+    height: 32px;
+    width: 75%;
+    margin: 32px 0px;
+`;
 
 export { Wrapper, NextButton };
