@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { debounce } from "lodash-es";
 import axios from "axios";
 import { BASE_URL } from "../constants";

@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components/macro";
-import { Link as RouterLink } from "@reach/router";
 
 interface NavBarProps {
     beSmall?: boolean;
