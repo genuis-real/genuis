@@ -22,6 +22,13 @@ const GuessResult: React.FC<GuessResultProps> = ({ gameService }) => {
         send({ type: "NEXT_ROUND" });
     }, [state, send]);
 
+    const correctAnswerMessage = "That's right! You really know your stuff...";
+    const incorrectAnswerMessage =
+        "Nope, that's not it - are you sure you're a fan?";
+
+    const incompleteButtonText = "Another, please!";
+    const completeButtonText = "Show me!";
+
     let resultMessage: string = "";
     let buttonText: string = "";
     let song: any;
@@ -29,26 +36,26 @@ const GuessResult: React.FC<GuessResultProps> = ({ gameService }) => {
     let complete: boolean = false;
 
     if (state.matches({ playing: { answer: "correct" } })) {
-        resultMessage = "That's right! You really know your stuff...";
-        buttonText = "Another, please!";
+        resultMessage = correctAnswerMessage;
+        buttonText = incompleteButtonText;
         correct = true;
     }
 
     if (state.matches({ playing: { answer: "incorrect" } })) {
-        resultMessage = "Nope, that's not it - are you sure you're a fan?";
-        buttonText = "Another, please!";
+        resultMessage = incorrectAnswerMessage;
+        buttonText = incompleteButtonText;
     }
 
     if (state.matches({ playing: { answer: "correctLast" } })) {
-        resultMessage = "That's right! You really know your stuff...";
-        buttonText = "Show me!";
+        resultMessage = correctAnswerMessage;
+        buttonText = completeButtonText;
         correct = true;
         complete = true;
     }
 
     if (state.matches({ playing: { answer: "incorrectLast" } })) {
-        resultMessage = "Nope, that's not it - are you sure you're a fan?";
-        buttonText = "Show me!";
+        resultMessage = incorrectAnswerMessage;
+        buttonText = completeButtonText;
         complete = true;
     }
 

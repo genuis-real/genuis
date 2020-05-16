@@ -48,7 +48,7 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
     const [searchResults, setSearchResults] = useState<Array<SearchResult>>([]);
 
     const handleSearchResultData = (searchData: any) => {
-        console.log('searchData: ', searchData);
+        console.log("searchData: ", searchData);
 
         const { data = {} } = searchData;
         const { response = {} } = data;
@@ -210,7 +210,7 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
                     </div>
                 </>
             )}
-            <GuessResult gameService={gameService}/>
+            <GuessResult gameService={gameService} />
         </Wrapper>
     );
 };
