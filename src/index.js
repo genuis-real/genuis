@@ -13,7 +13,6 @@ const GlobalStyle = createGlobalStyle(
             font-family: "Cutive Mono", -apple-system, BlinkMacSystemFont,
                 "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
                 "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-            font-family: "Cutive Mono";
             background-color: ${theme.COLOURS.primary};
             color: ${theme.COLOURS.text};
             line-height: 1.2;

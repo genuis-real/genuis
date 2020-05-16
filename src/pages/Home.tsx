@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useMachine, useService } from "@xstate/react";
 import { RouteComponentProps } from "@reach/router";
 import { gameMachine, GameContext, GameEvent } from "gameStateMachine";
@@ -46,6 +46,15 @@ const ChooseArtist: React.FC<{
 
 const Home: React.FC<RouteComponentProps> = () => {
     const [state, send, service] = useMachine(gameMachine);
+
+    useEffect(() => {
+        const subscription = service.subscribe((state) => {
+            // simple state logging
+            console.log(state);
+        });
+
+        return subscription.unsubscribe;
+    });
 
     return (
         <Wrapper>

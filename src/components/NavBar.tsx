@@ -19,15 +19,6 @@ const Logo = styled.h1<{ beSmall?: boolean }>`
     margin: ${({ beSmall }) => (beSmall ? "0px" : "48px 0px 0px 0px")};
 `;
 
-const Link = styled(RouterLink)`
-    text-decoration: none;
-    color: ${({ theme }) => theme.COLOURS.accent};
-
-    &:visited {
-        color: ${({ theme }) => theme.COLOURS.accent};
-    }
-`;
-
 const SubHeading = styled.h5`
     color: ${({ theme }) => theme.COLOURS.accent};
     font-weight: 100;
@@ -37,16 +28,12 @@ const SubHeading = styled.h5`
 const NavBar: React.FC<NavBarProps> = ({ beSmall }) => {
     return (
         <NavWrapper>
-            <Logo beSmall={beSmall}>
-                <Link to="/">SONGUAGE</Link>
-            </Logo>
-            {beSmall ? null : (
-                <SubHeading>
-                    Behind the lyrics.
-                    <br />
-                    ...like, <i>miles</i> behind them.
-                </SubHeading>
-            )}
+            <Logo>SONGUAGE</Logo>
+            <SubHeading>
+                Behind the lyrics.
+                <br />
+                ...like, <i>miles</i> behind them.
+            </SubHeading>
         </NavWrapper>
     );
 };

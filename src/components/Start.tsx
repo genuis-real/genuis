@@ -6,21 +6,11 @@ import { useService } from "@xstate/react";
 import Button from "components/shared/Button";
 
 // components
-import NavBar from "components/NavBar";
 import { RouteComponentProps } from "@reach/router";
 
 interface Props extends RouteComponentProps {
     gameService: Interpreter<GameContext, any, GameEvent, any>;
 }
-
-const Wrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 0 24px 24px;
-    max-width: 700px;
-    margin: 0 auto;
-`;
 
 const HypeWrapper = styled.div`
     display: flex;
@@ -33,12 +23,30 @@ const HypeSubText = styled.p`
     margin: 32px 16px 16px 16px;
 `;
 
+const Heading = styled.h1<{ beSmall?: boolean }>`
+    color: ${({ theme }) => theme.COLOURS.accent};
+    /* font-weight: 200; */
+    font-size: 3.7rem;
+    margin: ${({ beSmall }) => (beSmall ? "0px" : "48px 0px 0px 0px")};
+`;
+
+const SubHeading = styled.h5`
+    color: ${({ theme }) => theme.COLOURS.accent};
+    font-weight: 100;
+    margin: 0px 0px 24px 0px;
+`;
+
 const Start: React.FC<Props> = ({ gameService }) => {
     const [state, send] = useService(gameService);
 
     return (
         <>
-            <NavBar beSmall={false} />
+            <Heading>SONGUAGE</Heading>
+            <SubHeading>
+                Behind the lyrics.
+                <br />
+                ...like, <i>miles</i> behind them.
+            </SubHeading>
             <HypeWrapper>
                 <HypeSubText>
                     Put yourself to the test by guessing the names of your
@@ -48,7 +56,7 @@ const Start: React.FC<Props> = ({ gameService }) => {
                 <HypeSubText>Are you ready?</HypeSubText>
                 <Button
                     style={{
-                        marginTop: 16,
+                        marginTop: 24,
                     }}
                     onClick={() => send("START")}
                 >
