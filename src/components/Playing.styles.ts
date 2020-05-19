@@ -55,13 +55,15 @@ const ResultsWrapper = styled.div`
     padding: 24px 0px;
 `;
 
-const LyricsWrapper = styled.div`
-    max-width: 80ch;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin-bottom: 64px;
-`;
+const LyricsWrapper = styled.div<{ showingSearchItems: boolean }>(
+    ({ showingSearchItems }) => css`
+        max-width: 80ch;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: ${showingSearchItems ? "300px" : "74px"};
+    `
+);
 
 const LyricsLine = styled.p<{ children: any }>`
     color: ${({ theme }) => theme.COLOURS.accent};
@@ -88,6 +90,7 @@ const SearchBar = styled.input(
         color: ${theme.COLOURS.accent};
         background-color: ${theme.COLOURS.secondary};
         padding: 12px 16px;
+        height: 74px;
 
         &:focus {
             outline-width: 0px;

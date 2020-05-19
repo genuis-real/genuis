@@ -58,6 +58,11 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
 
     const [searchResults, setSearchResults] = useState<Array<SearchResult>>([]);
 
+    const shouldShowSearchItems: boolean =
+        searchResults.length > 0 &&
+        searchTerm.length > 0 &&
+        !state.matches({ playing: "selectedSong" });
+
     const handleSearchResultData = (searchData: any) => {
         console.log("searchData: ", searchData);
 
@@ -114,7 +119,7 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
                 {(state.matches({ playing: "selectingSong" }) ||
                     state.matches({ playing: "selectedSong" })) &&
                 state.context.currentLyrics ? (
-                    <LyricsWrapper>
+                    <LyricsWrapper showingSearchItems={shouldShowSearchItems}>
                         {state.context.currentLyrics.map(({ text }) => (
                             <LyricsLine>{text}</LyricsLine>
                         ))}
