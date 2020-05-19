@@ -1,5 +1,6 @@
 import styled, { css } from "styled-components/macro";
 import ResultsItem from "components/PlayingResultsItem";
+import { Combobox } from "@reach/combobox";
 
 const Heading = styled.h1(
     ({ theme }) => css`
@@ -94,6 +95,49 @@ const SearchBar = styled.input(
     `
 );
 
+const SearchCombobox = styled(Combobox)(
+    ({ theme }) => css`
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        [data-reach-combobox] {
+        }
+        [data-reach-combobox-input] {
+            border-radius: 3px;
+            border: 1px solid ${theme.COLOURS.accent};
+            width: 100%;
+            font-size: 1.5rem;
+            color: ${theme.COLOURS.accent};
+            background-color: ${theme.COLOURS.secondary};
+            padding: 12px 16px;
+        }
+        [data-reach-combobox-popover] {
+            border: 0;
+            overflow: auto;
+        }
+        [data-reach-combobox-list] {
+            background-color: ${theme.COLOURS.secondary};
+        }
+        [data-reach-combobox-option] {
+            display: flex;
+            flex-direction: column;
+            padding: 12px 16px;
+        }
+        [data-reach-combobox-option][data-highlighted] {
+            background-color: ${theme.COLOURS.accent};
+            color: ${theme.COLOURS.primary};
+        }
+        [data-reach-combobox-button] {
+        }
+    `
+);
+
+const ArtistName = styled.span`
+    font-weight: 300;
+    font-size: 0.9rem;
+    margin-top: 2px;
+`;
+
 const SelectedSongItem = styled(ResultsItem)`
     flex-grow: 3;
     width: auto;
@@ -141,4 +185,6 @@ export {
     LyricsLine,
     SongWrapper,
     IconButton,
+    SearchCombobox,
+    ArtistName,
 };

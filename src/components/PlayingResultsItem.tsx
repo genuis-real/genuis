@@ -4,7 +4,6 @@ import styled from "styled-components/macro";
 interface ResultsItemProps {
     title: string;
     artist: string;
-    lastItem: boolean;
     onClick: any;
     className?: string;
 }
@@ -12,11 +11,10 @@ interface ResultsItemProps {
 const ResultsItem: React.FC<ResultsItemProps> = ({
     title,
     artist,
-    lastItem,
     onClick,
     className,
 }) => (
-    <Wrapper className={className} lastItem={lastItem} onClick={onClick}>
+    <Wrapper className={className} onClick={onClick}>
         <TitleAndArtist>
             <SongTitle>{title}</SongTitle>
             <ArtistName>{artist}</ArtistName>
@@ -24,7 +22,7 @@ const ResultsItem: React.FC<ResultsItemProps> = ({
     </Wrapper>
 );
 
-const Wrapper = styled.div<{ lastItem: boolean; onClick: any }>`
+const Wrapper = styled.div`
     width: 100%;
     padding: 16px;
     display: flex;

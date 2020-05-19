@@ -2,13 +2,20 @@ import React, { useState, useCallback } from "react";
 import { debounce } from "lodash-es";
 import axios from "axios";
 import { BASE_URL } from "../constants";
-import ResultsItem from "components/PlayingResultsItem";
 import { RouteComponentProps } from "@reach/router";
 import { GameContext, GameEvent } from "gameStateMachine";
 import { Interpreter } from "xstate";
 import { useService } from "@xstate/react";
 import GuessResult from "components/GuessResult";
 import {
+    ComboboxInput,
+    ComboboxPopover,
+    ComboboxList,
+    ComboboxOption,
+    ComboboxOptionText,
+} from "@reach/combobox";
+import {
+    ArtistName,
     FloatingWrapper,
     SelectedSongItem,
     SelectedResultWrapper,
@@ -20,6 +27,7 @@ import {
     LyricsWrapper,
     LyricsLine,
     IconButton,
+    SearchCombobox,
 } from "./Playing.styles";
 
 interface PlayingProps extends RouteComponentProps {
@@ -114,50 +122,70 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
                 ) : null}
                 <FloatingWrapper>
                     {state.matches({ playing: "selectingSong" }) && (
-                        <SearchWrapper>
-                            <SearchForm
-                                onSubmit={(
-                                    event: React.FormEvent<HTMLInputElement>
-                                ) => event.preventDefault()}
-                            >
-                                <SearchBar
-                                    type="text"
-                                    value={searchTerm}
-                                    onChange={handleChange}
-                                    placeholder="Guess the title..."
-                                />
-                            </SearchForm>
-                            {searchResults.length > 0 && searchTerm.length > 0 && (
-                                <ResultsScrollView>
-                                    {searchResults.map((item, index) => (
-                                        <ResultsItem
-                                            key={`results-item-${item.title}-${item.artist}`}
-                                            lastItem={
-                                                index ===
-                                                searchResults.length - 1
-                                            }
-                                            onClick={() => {
-                                                send({
-                                                    type: "SELECT_SONG",
-                                                    song: {
-                                                        id: item.id,
-                                                        title: item.title,
-                                                        artist: item.artist,
-                                                    },
-                                                });
-                                            }}
-                                            {...item}
-                                        />
-                                    ))}
-                                </ResultsScrollView>
+                        <SearchCombobox
+                            onSelect={(item) => console.log(item)}
+                            aria-label="choose a fruit"
+                        >
+                            <ComboboxInput onChange={handleChange} />
+
+                            {searchResults && (
+                                <ComboboxPopover portal={false}>
+                                    <ComboboxList>
+                                        {searchResults.map((result) => (
+                                            <ComboboxOption
+                                                value={`${result.title}`}
+                                            >
+                                                <span>
+                                                    <ComboboxOptionText />
+                                                </span>
+                                                <ArtistName>
+                                                    {result.artist}
+                                                </ArtistName>
+                                            </ComboboxOption>
+                                        ))}
+                                    </ComboboxList>
+                                </ComboboxPopover>
                             )}
-                        </SearchWrapper>
+                        </SearchCombobox>
+                        // <SearchWrapper>
+                        //     <SearchForm
+                        //         onSubmit={(
+                        //             event: React.FormEvent<HTMLInputElement>
+                        //         ) => event.preventDefault()}
+                        //     >
+                        //         <SearchBar
+                        //             type="text"
+                        //             value={searchTerm}
+                        //             onChange={handleChange}
+                        //             placeholder="Guess the title..."
+                        //         />
+                        //     </SearchForm>
+                        //     {searchResults.length > 0 && searchTerm.length > 0 && (
+                        //         <ResultsScrollView>
+                        //             {searchResults.map((item, index) => (
+                        //                 <ResultsItem
+                        //                     key={`results-item-${item.title}-${item.artist}`}
+                        //                     onClick={() => {
+                        //                         send({
+                        //                             type: "SELECT_SONG",
+                        //                             song: {
+                        //                                 id: item.id,
+                        //                                 title: item.title,
+                        //                                 artist: item.artist,
+                        //                             },
+                        //                         });
+                        //                     }}
+                        //                     {...item}
+                        //                 />
+                        //             ))}
+                        //         </ResultsScrollView>
+                        //     )}
+                        // </SearchWrapper>
                     )}
                     {state.matches({ playing: "selectedSong" }) && (
                         <SelectedResultWrapper>
                             <SelectedSongItem
                                 key={state.context.selectedSong?.id}
-                                lastItem={false}
                                 title={state.context.selectedSong?.title || ""}
                                 artist={
                                     state.context.selectedSong?.artist || ""
