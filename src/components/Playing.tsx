@@ -47,11 +47,7 @@ interface SearchResult {
 
 const Playing: React.FC<PlayingProps> = ({ gameService }) => {
     const [state, send] = useService(gameService);
-
     const [searchTerm, setSearchTerm] = useState<string>("");
-
-    const [searching, setSearching] = useState<boolean>(false);
-
     const [searchResults, setSearchResults] = useState<Array<SearchResult>>([]);
 
     const shouldShowSearchItems: boolean =
@@ -60,8 +56,6 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
         !state.matches({ playing: "selectedSong" });
 
     const handleSearchResultData = (searchData: any) => {
-        console.log("searchData: ", searchData);
-
         const { data = {} } = searchData;
         const { response = {} } = data;
         const { sections = [] } = response;
@@ -78,23 +72,15 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
             };
         });
 
-        setSearching(false);
         setSearchResults(newResults);
     };
 
     const getResultsDebounced = useCallback(
-        debounce((searchTerm: string) => {
-            axios
-                .get(
-                    `${BASE_URL}proxy/search/songs?q=${state.context.selectedArtist?.name} ${searchTerm}`
-                )
-                .then((response) => {
-                    // handle success
-                    handleSearchResultData(response);
-                })
-                .catch(function (error) {
-                    // handle error
-                });
+        debounce(async (searchTerm: string) => {
+            const response = await axios.get(
+                `${BASE_URL}proxy/search/songs?q=${state.context.selectedArtist?.name} ${searchTerm}`
+            );
+            handleSearchResultData(response);
         }, 150),
         []
     );
@@ -102,8 +88,25 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
     const handleChange = (event: React.FormEvent<HTMLInputElement>) => {
         const newSearchTerm = event.currentTarget.value;
         setSearchTerm(newSearchTerm);
-        setSearching(true);
         getResultsDebounced(searchTerm);
+    };
+
+    const selectResult = (title: string) => {
+        const selectedSong = searchResults.find((song) => song.title === title);
+
+        if (!selectedSong) {
+            throw new Error(
+                "somehow you've selected a song that doesn't exist"
+            );
+        }
+        send({
+            type: "SELECT_SONG",
+            song: {
+                id: selectedSong.id,
+                title: selectedSong.title,
+                artist: selectedSong.artist,
+            },
+        });
     };
 
     return (
@@ -124,26 +127,9 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
                 <FloatingWrapper>
                     {state.matches({ playing: "selectingSong" }) && (
                         <SearchCombobox
-                            onSelect={(title) => {
-                                const selectedSong = searchResults.find(
-                                    (song) => song.title === title
-                                );
-
-                                if (!selectedSong) {
-                                    throw new Error(
-                                        "somehow you've selected a song that doesn't exist"
-                                    );
-                                }
-                                send({
-                                    type: "SELECT_SONG",
-                                    song: {
-                                        id: selectedSong.id,
-                                        title: selectedSong.title,
-                                        artist: selectedSong.artist,
-                                    },
-                                });
-                            }}
+                            onSelect={selectResult}
                             aria-label="choose a song"
+                            openOnFocus
                         >
                             <ComboboxInput
                                 onChange={handleChange}
