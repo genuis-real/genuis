@@ -50,6 +50,11 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
 
     const [searchResults, setSearchResults] = useState<Array<SearchResult>>([]);
 
+    const shouldShowSearchItems: boolean =
+        searchResults.length > 0 &&
+        searchTerm.length > 0 &&
+        !state.matches({ playing: "selectedSong" });
+
     const handleSearchResultData = (searchData: any) => {
         console.log("searchData: ", searchData);
 
@@ -106,7 +111,7 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
             {(state.matches({ playing: "selectingSong" }) ||
                 state.matches({ playing: "selectedSong" })) &&
             state.context.currentLyrics ? (
-                <LyricsWrapper>
+                <LyricsWrapper showingSearchItems={shouldShowSearchItems}>
                     {state.context.currentLyrics.map(({ text }) => (
                         <LyricsLine>{text}</LyricsLine>
                     ))}
@@ -127,7 +132,7 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
                                 placeholder="Guess the title..."
                             />
                         </SearchForm>
-                        {searchResults.length > 0 && searchTerm.length > 0 && (
+                        {shouldShowSearchItems && (
                             <ResultsScrollView>
                                 {searchResults.map((item, index) => (
                                     <ResultsItem
@@ -179,7 +184,15 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
                                 clear
                             </i>
                         </IconButton>
-                        <IconButton>
+                        <IconButton
+                            onClick={() => {
+                                setSearchTerm("");
+                                setSearchResults([]);
+                                send({
+                                    type: "SUBMIT",
+                                });
+                            }}
+                        >
                             <i
                                 className="material-icons"
                                 style={{

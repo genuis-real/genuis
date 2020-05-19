@@ -50,11 +50,12 @@ const ResultsWrapper = styled.div`
     padding: 24px 0px;
 `;
 
-const LyricsWrapper = styled.div`
+const LyricsWrapper = styled.div<{ showingSearchItems: boolean }>`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    margin-bottom: 64px;
+    margin-bottom: ${({ showingSearchItems }) =>
+        showingSearchItems ? "300px" : "74px"};
 `;
 
 const LyricsLine = styled.p<{ children: any }>`
@@ -82,6 +83,7 @@ const SearchBar = styled.input(
         color: ${theme.COLOURS.accent};
         background-color: ${theme.COLOURS.secondary};
         padding: 12px 16px;
+        height: 74px;
 
         &:focus {
             outline-width: 0px;
