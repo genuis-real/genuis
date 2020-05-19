@@ -13,6 +13,7 @@ interface Props extends RouteComponentProps {
 }
 
 const HypeWrapper = styled.div`
+    max-width: 80ch;
     display: flex;
     flex-direction: column;
     align-items: center;

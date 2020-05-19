@@ -102,96 +102,100 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
             <h1>SONGUAGE</h1>
 
             {state.matches({ playing: "loading" }) && <h3>Loading </h3>}
-
-            {(state.matches({ playing: "selectingSong" }) ||
-                state.matches({ playing: "selectedSong" })) &&
-            state.context.currentLyrics ? (
-                <LyricsWrapper>
-                    {state.context.currentLyrics.map(({ text }) => (
-                        <LyricsLine>{text}</LyricsLine>
-                    ))}
-                </LyricsWrapper>
-            ) : null}
-            <FloatingWrapper>
-                {state.matches({ playing: "selectingSong" }) && (
-                    <SearchWrapper>
-                        <SearchForm
-                            onSubmit={(
-                                event: React.FormEvent<HTMLInputElement>
-                            ) => event.preventDefault()}
-                        >
-                            <SearchBar
-                                type="text"
-                                value={searchTerm}
-                                onChange={handleChange}
-                                placeholder="Guess the title..."
+            <div>
+                {(state.matches({ playing: "selectingSong" }) ||
+                    state.matches({ playing: "selectedSong" })) &&
+                state.context.currentLyrics ? (
+                    <LyricsWrapper>
+                        {state.context.currentLyrics.map(({ text }) => (
+                            <LyricsLine>{text}</LyricsLine>
+                        ))}
+                    </LyricsWrapper>
+                ) : null}
+                <FloatingWrapper>
+                    {state.matches({ playing: "selectingSong" }) && (
+                        <SearchWrapper>
+                            <SearchForm
+                                onSubmit={(
+                                    event: React.FormEvent<HTMLInputElement>
+                                ) => event.preventDefault()}
+                            >
+                                <SearchBar
+                                    type="text"
+                                    value={searchTerm}
+                                    onChange={handleChange}
+                                    placeholder="Guess the title..."
+                                />
+                            </SearchForm>
+                            {searchResults.length > 0 && searchTerm.length > 0 && (
+                                <ResultsScrollView>
+                                    {searchResults.map((item, index) => (
+                                        <ResultsItem
+                                            key={`results-item-${item.title}-${item.artist}`}
+                                            lastItem={
+                                                index ===
+                                                searchResults.length - 1
+                                            }
+                                            onClick={() => {
+                                                send({
+                                                    type: "SELECT_SONG",
+                                                    song: {
+                                                        id: item.id,
+                                                        title: item.title,
+                                                        artist: item.artist,
+                                                    },
+                                                });
+                                            }}
+                                            {...item}
+                                        />
+                                    ))}
+                                </ResultsScrollView>
+                            )}
+                        </SearchWrapper>
+                    )}
+                    {state.matches({ playing: "selectedSong" }) && (
+                        <SelectedResultWrapper>
+                            <SelectedSongItem
+                                key={state.context.selectedSong?.id}
+                                lastItem={false}
+                                title={state.context.selectedSong?.title || ""}
+                                artist={
+                                    state.context.selectedSong?.artist || ""
+                                }
+                                onClick={undefined}
                             />
-                        </SearchForm>
-                        {searchResults.length > 0 && searchTerm.length > 0 && (
-                            <ResultsScrollView>
-                                {searchResults.map((item, index) => (
-                                    <ResultsItem
-                                        key={`results-item-${item.title}-${item.artist}`}
-                                        lastItem={
-                                            index === searchResults.length - 1
-                                        }
-                                        onClick={() => {
-                                            send({
-                                                type: "SELECT_SONG",
-                                                song: {
-                                                    id: item.id,
-                                                    title: item.title,
-                                                    artist: item.artist,
-                                                },
-                                            });
-                                        }}
-                                        {...item}
-                                    />
-                                ))}
-                            </ResultsScrollView>
-                        )}
-                    </SearchWrapper>
-                )}
-                {state.matches({ playing: "selectedSong" }) && (
-                    <SelectedResultWrapper>
-                        <SelectedSongItem
-                            key={state.context.selectedSong?.id}
-                            lastItem={false}
-                            title={state.context.selectedSong?.title || ""}
-                            artist={state.context.selectedSong?.artist || ""}
-                            onClick={undefined}
-                        />
-                        <IconButton
-                            onClick={() => {
-                                setSearchTerm("");
-                                setSearchResults([]);
-                                send({
-                                    type: "CLEAR_SELECTED_SONG",
-                                });
-                            }}
-                        >
-                            <i
-                                className={"material-icons"}
-                                style={{
-                                    fontSize: "32px",
+                            <IconButton
+                                onClick={() => {
+                                    setSearchTerm("");
+                                    setSearchResults([]);
+                                    send({
+                                        type: "CLEAR_SELECTED_SONG",
+                                    });
                                 }}
                             >
-                                clear
-                            </i>
-                        </IconButton>
-                        <IconButton>
-                            <i
-                                className="material-icons"
-                                style={{
-                                    fontSize: "32px",
-                                }}
-                            >
-                                done
-                            </i>
-                        </IconButton>
-                    </SelectedResultWrapper>
-                )}
-            </FloatingWrapper>
+                                <i
+                                    className={"material-icons"}
+                                    style={{
+                                        fontSize: "32px",
+                                    }}
+                                >
+                                    clear
+                                </i>
+                            </IconButton>
+                            <IconButton>
+                                <i
+                                    className="material-icons"
+                                    style={{
+                                        fontSize: "32px",
+                                    }}
+                                >
+                                    done
+                                </i>
+                            </IconButton>
+                        </SelectedResultWrapper>
+                    )}
+                </FloatingWrapper>
+            </div>
             <GuessResult gameService={gameService} />
         </Wrapper>
     );

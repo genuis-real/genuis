@@ -20,6 +20,10 @@ const FloatingWrapper = styled.div(
         flex-direction: column;
         transition: height 200ms ease-in-out;
         box-shadow: 0 0 6px rgba(0, 0, 0, 0.2), 1px 1px 8px rgba(0, 0, 0, 0.08);
+
+        @media screen and (min-width: 720px) {
+            position: static;
+        }
     `
 );
 
@@ -51,6 +55,7 @@ const ResultsWrapper = styled.div`
 `;
 
 const LyricsWrapper = styled.div`
+    max-width: 80ch;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
