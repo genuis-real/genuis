@@ -10,6 +10,7 @@ import { useService } from "@xstate/react";
 import GuessResult from "components/GuessResult";
 import {
     FloatingWrapper,
+    SelectedSongItem,
     Wrapper,
     SearchBar,
     SearchForm,
@@ -17,6 +18,7 @@ import {
     ResultsScrollView,
     LyricsWrapper,
     LyricsLine,
+    IconButton,
 } from "./Playing.styles";
 
 interface PlayingProps extends RouteComponentProps {
@@ -158,45 +160,14 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
                             width: "100%",
                         }}
                     >
-                        <div
-                            style={{
-                                flexGrow: 3,
-                            }}
-                        >
-                            <ResultsItem
-                                key={`results-item-${state.context.selectedSong?.title}-${state.context.selectedSong?.artist}`}
-                                lastItem={false}
-                                title={state.context.selectedSong?.title || ""}
-                                artist={
-                                    state.context.selectedSong?.artist || ""
-                                }
-                                onClick={undefined}
-                            />
-                        </div>
-                        <div
-                            style={{
-                                flexGrow: 1,
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                            }}
-                        >
-                            <i
-                                className="material-icons"
-                                style={{
-                                    fontSize: "32px",
-                                }}
-                            >
-                                done
-                            </i>
-                        </div>
-                        <div
-                            style={{
-                                flexGrow: 1,
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                            }}
+                        <SelectedSongItem
+                            key={state.context.selectedSong?.id}
+                            lastItem={false}
+                            title={state.context.selectedSong?.title || ""}
+                            artist={state.context.selectedSong?.artist || ""}
+                            onClick={undefined}
+                        />
+                        <IconButton
                             onClick={() => {
                                 setSearchTerm("");
                                 setSearchResults([]);
@@ -213,7 +184,17 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
                             >
                                 clear
                             </i>
-                        </div>
+                        </IconButton>
+                        <IconButton>
+                            <i
+                                className="material-icons"
+                                style={{
+                                    fontSize: "32px",
+                                }}
+                            >
+                                done
+                            </i>
+                        </IconButton>
                     </div>
                 )}
             </FloatingWrapper>

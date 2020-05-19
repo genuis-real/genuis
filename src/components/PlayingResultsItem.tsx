@@ -6,6 +6,7 @@ interface ResultsItemProps {
     artist: string;
     lastItem: boolean;
     onClick: any;
+    className?: string;
 }
 
 const ResultsItem: React.FC<ResultsItemProps> = ({
@@ -13,8 +14,9 @@ const ResultsItem: React.FC<ResultsItemProps> = ({
     artist,
     lastItem,
     onClick,
+    className,
 }) => (
-    <Wrapper lastItem={lastItem} onClick={onClick}>
+    <Wrapper className={className} lastItem={lastItem} onClick={onClick}>
         <TitleAndArtist>
             <SongTitle>{title}</SongTitle>
             <ArtistName>{artist}</ArtistName>

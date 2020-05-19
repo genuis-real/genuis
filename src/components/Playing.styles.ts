@@ -1,4 +1,5 @@
 import styled, { css } from "styled-components/macro";
+import ResultsItem from "components/PlayingResultsItem";
 
 const Heading = styled.h1(
     ({ theme }) => css`
@@ -7,16 +8,34 @@ const Heading = styled.h1(
     `
 );
 
-const FloatingWrapper = styled.div`
-    position: fixed;
-    bottom: -1px;
-    right: 0;
-    left: 0;
-    max-height: 300px;
-    display: flex;
-    flex-direction: column;
-    transition: height 200ms ease-in-out;
-`;
+const FloatingWrapper = styled.div(
+    ({ theme }) => css`
+        background: ${theme.COLOURS.secondary};
+        position: fixed;
+        bottom: 12px;
+        right: 12px;
+        left: 12px;
+        max-height: 300px;
+        display: flex;
+        flex-direction: column;
+        transition: height 200ms ease-in-out;
+        box-shadow: 0 0 6px rgba(0, 0, 0, 0.2), 1px 1px 8px rgba(0, 0, 0, 0.08);
+    `
+);
+
+const IconButton = styled.button(
+    ({ theme }) => css`
+        color: ${theme.COLOURS.accent};
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border: none;
+        outline: none;
+        flex-grow: 1;
+        padding: 16px;
+    `
+);
 
 const Wrapper = styled.div`
     display: flex;
@@ -52,14 +71,14 @@ const SongWrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 100%;
 `;
 
 const SearchBar = styled.input(
     ({ theme }) => css`
-        border: 2px solid ${theme.COLOURS.accent};
+        border-radius: 3px;
+        border: 1px solid ${theme.COLOURS.accent};
         width: 100%;
-        font-size: 1.6rem;
+        font-size: 1.5rem;
         color: ${theme.COLOURS.accent};
         background-color: ${theme.COLOURS.secondary};
         padding: 12px 16px;
@@ -70,6 +89,13 @@ const SearchBar = styled.input(
     `
 );
 
+const SelectedSongItem = styled(ResultsItem)(
+    () => css`
+        flex-grow: 3;
+        width: auto;
+    `
+);
+
 const SearchForm = styled.form<{ onSubmit: any }>`
     flex: none;
     width: 100%;
@@ -77,8 +103,7 @@ const SearchForm = styled.form<{ onSubmit: any }>`
 
 const SearchWrapper = styled.div`
     display: flex;
-    flex-flow: column nowrap;
-    background-color: blue;
+    flex-direction: column;
 `;
 
 const ResultsScrollView = styled.div(
@@ -96,8 +121,10 @@ export {
     SearchBar,
     SearchForm,
     SearchWrapper,
+    SelectedSongItem,
     ResultsWrapper,
     LyricsWrapper,
     LyricsLine,
     SongWrapper,
+    IconButton,
 };
