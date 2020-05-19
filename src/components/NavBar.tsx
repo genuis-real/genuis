@@ -28,12 +28,14 @@ const SubHeading = styled.h5`
 const NavBar: React.FC<NavBarProps> = ({ beSmall }) => {
     return (
         <NavWrapper>
-            <Logo>SONGUAGE</Logo>
-            <SubHeading>
-                Behind the lyrics.
-                <br />
-                ...like, <i>miles</i> behind them.
-            </SubHeading>
+            <Logo beSmall={beSmall}>SONGUAGE</Logo>
+            {!beSmall && (
+                <SubHeading>
+                    Behind the lyrics.
+                    <br />
+                    ...like, <i>miles</i> behind them.
+                </SubHeading>
+            )}
         </NavWrapper>
     );
 };

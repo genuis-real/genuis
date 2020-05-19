@@ -44,7 +44,7 @@ const Result: React.FC<Props> = ({ resultId }) => {
 
     return (
         <>
-            <NavBar beSmall={false}/>
+            <NavBar />
             {songData ? (
                 <>
                     <HeaderWrapper>

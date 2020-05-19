@@ -3,11 +3,11 @@ import styled from "styled-components/macro";
 import { Link } from "@reach/router";
 
 interface ResultsItemProps {
-    title: string,
-    artist: string,
-    lastItem: boolean,
-    onClick: any,
-};
+    title: string;
+    artist: string;
+    lastItem: boolean;
+    onClick: any;
+}
 
 const ResultsItem: React.FC<ResultsItemProps> = ({
     title,
@@ -15,10 +15,7 @@ const ResultsItem: React.FC<ResultsItemProps> = ({
     lastItem,
     onClick,
 }) => (
-    <Wrapper
-        lastItem={lastItem}
-        onClick={onClick}
-    >
+    <Wrapper lastItem={lastItem} onClick={onClick}>
         <TitleAndArtist>
             <SongTitle>{title}</SongTitle>
             <ArtistName>{artist}</ArtistName>
@@ -26,9 +23,9 @@ const ResultsItem: React.FC<ResultsItemProps> = ({
     </Wrapper>
 );
 
-const Wrapper = styled.div<{ lastItem: boolean, onClick: any }>`
+const Wrapper = styled.div<{ lastItem: boolean; onClick: any }>`
     width: 100%;
-    border-width: ${({ lastItem }) => (lastItem ? "0px" : "0px 0px 1px")};
+    border-width: "0px";
     border-color: rgba(255, 255, 255, 0.3);
     border-style: solid;
     padding: 8px 4px;

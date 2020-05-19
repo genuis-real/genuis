@@ -3,13 +3,13 @@ import { debounce } from "lodash-es";
 import axios from "axios";
 import { BASE_URL } from "../constants";
 import ResultsItem from "components/PlayingResultsItem";
-import NavBar from "components/NavBar";
 import { RouteComponentProps } from "@reach/router";
 import { GameContext, GameEvent } from "gameStateMachine";
 import { Interpreter } from "xstate";
 import { useService } from "@xstate/react";
 import GuessResult from "components/GuessResult";
 import {
+    FloatingWrapper,
     Wrapper,
     SearchBar,
     SearchForm,
@@ -94,41 +94,26 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
 
     return (
         <Wrapper>
-            <NavBar beSmall={true} />
+            <h1>SONGUAGE</h1>
 
             {state.matches({ playing: "loading" }) && <h3>Loading </h3>}
 
             {(state.matches({ playing: "selectingSong" }) ||
-                state.matches({ playing: "selectedSong" })) && (
-                <div
-                    style={{
-                        backgroundColor: "black",
-                        height: "50%",
-                        width: "100%",
-                    }}
-                >
-                    {state.context.currentLyrics ? (
-                        <LyricsWrapper>
-                            {state.context.currentLyrics.map(({ text }) => (
-                                <LyricsLine>{text}</LyricsLine>
-                            ))}
-                        </LyricsWrapper>
-                    ) : null}
-                </div>
-            )}
-
-            {state.matches({ playing: "selectingSong" }) && (
-                <div
-                    style={{
-                        height: "50%",
-                        width: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                        background: "red",
-                        margin: 0,
-                    }}
-                >
-                    <SearchWrapper>
+                state.matches({ playing: "selectedSong" })) &&
+            state.context.currentLyrics ? (
+                <LyricsWrapper>
+                    {state.context.currentLyrics.map(({ text }) => (
+                        <LyricsLine>{text}</LyricsLine>
+                    ))}
+                </LyricsWrapper>
+            ) : null}
+            <FloatingWrapper>
+                {state.matches({ playing: "selectingSong" }) && (
+                    <SearchWrapper
+                        style={{
+                            minHeight: 0,
+                        }}
+                    >
                         <SearchForm
                             onSubmit={(
                                 event: React.FormEvent<HTMLInputElement>
@@ -138,6 +123,7 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
                                 type="text"
                                 value={searchTerm}
                                 onChange={handleChange}
+                                placeholder={"Guess the title..."}
                             />
                         </SearchForm>
                         {searchResults.length > 0 && searchTerm.length > 0 && (
@@ -164,52 +150,73 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
                             </ResultsScrollView>
                         )}
                     </SearchWrapper>
-                </div>
-            )}
-
-            {state.matches({ playing: "selectedSong" }) && (
-                <>
-                    <ResultsItem
-                        key={`results-item-${state.context.selectedSong?.title}-${state.context.selectedSong?.artist}`}
-                        lastItem={false}
-                        title={state.context.selectedSong?.title || ""}
-                        artist={state.context.selectedSong?.artist || ""}
-                        onClick={undefined}
-                    />
+                )}
+                {state.matches({ playing: "selectedSong" }) && (
                     <div
                         style={{
-                            height: "10%",
+                            display: "flex",
                             width: "100%",
-                            background: "red",
-                        }}
-                        onClick={() => {
-                            setSearchTerm("");
-                            setSearchResults([]);
-                            send({
-                                type: "CLEAR_SELECTED_SONG",
-                            });
                         }}
                     >
-                        Deselect
+                        <div
+                            style={{
+                                flexGrow: 3,
+                            }}
+                        >
+                            <ResultsItem
+                                key={`results-item-${state.context.selectedSong?.title}-${state.context.selectedSong?.artist}`}
+                                lastItem={false}
+                                title={state.context.selectedSong?.title || ""}
+                                artist={
+                                    state.context.selectedSong?.artist || ""
+                                }
+                                onClick={undefined}
+                            />
+                        </div>
+                        <div
+                            style={{
+                                flexGrow: 1,
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                            }}
+                        >
+                            <i
+                                className="material-icons"
+                                style={{
+                                    fontSize: "32px",
+                                }}
+                            >
+                                done
+                            </i>
+                        </div>
+                        <div
+                            style={{
+                                flexGrow: 1,
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                            }}
+                            onClick={() => {
+                                setSearchTerm("");
+                                setSearchResults([]);
+                                send({
+                                    type: "CLEAR_SELECTED_SONG",
+                                });
+                            }}
+                        >
+                            <i
+                                className={"material-icons"}
+                                style={{
+                                    fontSize: "32px",
+                                }}
+                            >
+                                clear
+                            </i>
+                        </div>
                     </div>
-                    <div
-                        style={{
-                            height: "10%",
-                            width: "100%",
-                            background: "green",
-                        }}
-                        onClick={() => {
-                            setSearchTerm("");
-                            setSearchResults([]);
-                            send({
-                                type: "SUBMIT",
-                            });
-                        }}
-                    >
-                        Submit
-                    </div>
-                </>
-            )}
+                )}
+            </FloatingWrapper>
             <GuessResult gameService={gameService} />
         </Wrapper>
     );

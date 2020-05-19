@@ -1,10 +1,26 @@
-import styled from "styled-components/macro";
+import styled, { css } from "styled-components/macro";
+
+const Heading = styled.h1(
+    ({ theme }) => css`
+        color: ${theme.COLOURS.accent};
+        font-size: 3.7rem;
+    `
+);
+
+const FloatingWrapper = styled.div`
+    position: fixed;
+    bottom: -1;
+    right: 0;
+    left: 0;
+    max-height: 300;
+    display: flex;
+    flex-direction: column;
+    transition: height 0.2 ease-in-out;
+`;
 
 const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
-    align-items: center;
-    max-width: 700px;
 `;
 
 const ResultsWrapper = styled.div`
@@ -19,8 +35,7 @@ const LyricsWrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    overflow: auto;
-    height: 100%;
+    margin-bottom: 64px;
 `;
 
 const LyricsLine = styled.p<{ children: any }>`
@@ -81,6 +96,8 @@ const ResultsScrollView = styled.div`
 `;
 
 export {
+    Heading,
+    FloatingWrapper,
     ResultsScrollView,
     Wrapper,
     SearchBar,
