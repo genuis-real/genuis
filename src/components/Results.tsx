@@ -10,8 +10,10 @@ const Score = styled.div`
 `;
 
 const ResultsScreen: React.FC<RouteComponentProps> = () => {
+    // TODO: get these from FSM
     const score = 7;
     const total = 10;
+
     return (
         <Wrapper>
             <h2>Results</h2>
