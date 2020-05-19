@@ -25,6 +25,7 @@ import {
     IconButton,
     SearchCombobox,
 } from "./Playing.styles";
+import { GeniusSongResponse } from "types";
 
 interface PlayingProps extends RouteComponentProps {
     gameService: Interpreter<GameContext, any, GameEvent, any>;
@@ -39,16 +40,22 @@ interface Lyrics {
     warped: Lyric[];
 }
 
-interface SearchResult {
-    title: string;
-    artist: string;
-    id: number;
-}
-
 const Playing: React.FC<PlayingProps> = ({ gameService }) => {
     const [state, send] = useService(gameService);
     const [searchTerm, setSearchTerm] = useState<string>("");
-    const [searchResults, setSearchResults] = useState<Array<SearchResult>>([]);
+    const [searchResults, setSearchResults] = useState<
+        Array<GeniusSongResponse>
+    >([]);
+
+    const currentSong: GeniusSongResponse = state.context.songList
+        ? state.context.songList[state.context.currentRound]
+        : {
+              id: 0,
+              title: "",
+              primary_artist: {
+                  name: "",
+              },
+          };
 
     const shouldShowSearchItems: boolean =
         searchResults.length > 0 &&
@@ -63,13 +70,7 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
 
         const newResults = hits.map((item: any) => {
             const { result } = item;
-            return {
-                title: result.title,
-                artist: result.primary_artist
-                    ? result.primary_artist.name
-                    : "unknown",
-                id: result.id,
-            };
+            return result;
         });
 
         setSearchResults(newResults);
@@ -78,7 +79,7 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
     const getResultsDebounced = useCallback(
         debounce(async (searchTerm: string) => {
             const response = await axios.get(
-                `${BASE_URL}proxy/search/songs?q=${state.context.selectedArtist?.name} ${searchTerm}`
+                `${BASE_URL}proxy/search/songs?q=${searchTerm}`
             );
             handleSearchResultData(response);
         }, 150),
@@ -101,11 +102,7 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
         }
         send({
             type: "SELECT_SONG",
-            song: {
-                id: selectedSong.id,
-                title: selectedSong.title,
-                artist: selectedSong.artist,
-            },
+            song: selectedSong,
         });
     };
 
@@ -148,7 +145,10 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
                                                     <ComboboxOptionText />
                                                 </span>
                                                 <ArtistName>
-                                                    {result.artist}
+                                                    {
+                                                        result?.primary_artist
+                                                            ?.name
+                                                    }
                                                 </ArtistName>
                                             </ComboboxOption>
                                         ))}
@@ -163,7 +163,8 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
                                 key={state.context.selectedSong?.id}
                                 title={state.context.selectedSong?.title || ""}
                                 artist={
-                                    state.context.selectedSong?.artist || ""
+                                    state.context.selectedSong?.primary_artist
+                                        ?.name || ""
                                 }
                                 onClick={undefined}
                             />

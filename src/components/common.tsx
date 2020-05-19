@@ -5,7 +5,6 @@ const Wrapper = styled.div`
     flex-direction: column;
     align-items: center;
     padding: 0 24px 24px;
-    /* max-width: 700px; */
     margin: 0 auto;
 `;
 
