@@ -1,5 +1,6 @@
 import React, { Suspense } from "react";
 import { Router } from "@reach/router";
+import Results from "./components/Results";
 
 const Home = React.lazy(() => import("pages/Home"));
 const Result = React.lazy(() => import("pages/Result"));
@@ -12,6 +13,7 @@ const App: React.FC = () => {
                 <Home path="/" />
                 <Result path="/result/:resultId" />
                 <Select path="/artist-select" />
+                <Results path="/results" />
             </Router>
         </Suspense>
     );
