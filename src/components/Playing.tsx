@@ -124,7 +124,25 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
                 <FloatingWrapper>
                     {state.matches({ playing: "selectingSong" }) && (
                         <SearchCombobox
-                            onSelect={(item) => console.log(item)}
+                            onSelect={(title) => {
+                                const selectedSong = searchResults.find(
+                                    (song) => song.title === title
+                                );
+
+                                if (!selectedSong) {
+                                    throw new Error(
+                                        "somehow you've selected a song that doesn't exist"
+                                    );
+                                }
+                                send({
+                                    type: "SELECT_SONG",
+                                    song: {
+                                        id: selectedSong.id,
+                                        title: selectedSong.title,
+                                        artist: selectedSong.artist,
+                                    },
+                                });
+                            }}
                             aria-label="choose a fruit"
                         >
                             <ComboboxInput onChange={handleChange} />
@@ -134,6 +152,7 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
                                     <ComboboxList>
                                         {searchResults.map((result) => (
                                             <ComboboxOption
+                                                key={result.id}
                                                 value={`${result.title}`}
                                             >
                                                 <span>
