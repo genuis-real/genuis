@@ -24,7 +24,7 @@ const ResultsItem: React.FC<ResultsItemProps> = ({
 
 const Wrapper = styled.div<{ lastItem: boolean; onClick: any }>`
     width: 100%;
-    padding: 8px 4px;
+    padding: 16px;
     display: flex;
     flex-direction: row;
     align-items: center;

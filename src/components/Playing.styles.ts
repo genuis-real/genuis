@@ -55,18 +55,20 @@ const SongWrapper = styled.div`
     height: 100%;
 `;
 
-const SearchBar = styled.input`
-    border: 2px solid ${({ theme }) => theme.COLOURS.accent};
-    width: 100%;
-    font-size: 2rem;
-    color: ${({ theme }) => theme.COLOURS.accent};
-    background-color: ${({ theme }) => theme.COLOURS.secondary};
-    padding: 4px 12px;
+const SearchBar = styled.input(
+    ({ theme }) => css`
+        border: 2px solid ${theme.COLOURS.accent};
+        width: 100%;
+        font-size: 1.6rem;
+        color: ${theme.COLOURS.accent};
+        background-color: ${theme.COLOURS.secondary};
+        padding: 12px 16px;
 
-    &:focus {
-        outline-width: 0px;
-    }
-`;
+        &:focus {
+            outline-width: 0px;
+        }
+    `
+);
 
 const SearchForm = styled.form<{ onSubmit: any }>`
     flex: none;

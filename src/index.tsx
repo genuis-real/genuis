@@ -18,7 +18,8 @@ const GlobalStyle = createGlobalStyle(
             line-height: 1.2;
             letter-spacing: 0.05rem;
         }
-        button {
+        button,
+        input {
             font-family: inherit;
         }
         p,
