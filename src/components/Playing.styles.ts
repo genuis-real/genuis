@@ -89,10 +89,17 @@ const SearchBar = styled.input(
     `
 );
 
-const SelectedSongItem = styled(ResultsItem)(
-    () => css`
-        flex-grow: 3;
-        width: auto;
+const SelectedSongItem = styled(ResultsItem)`
+    flex-grow: 3;
+    width: auto;
+`;
+
+const SelectedResultWrapper = styled.div(
+    ({ theme }) => css`
+        display: flex;
+        width: 100%;
+        border: 1px solid ${theme.COLOURS.accent};
+        border-radius: 3px;
     `
 );
 
@@ -104,6 +111,7 @@ const SearchForm = styled.form<{ onSubmit: any }>`
 const SearchWrapper = styled.div`
     display: flex;
     flex-direction: column;
+    min-height: 0;
 `;
 
 const ResultsScrollView = styled.div(
@@ -122,6 +130,7 @@ export {
     SearchForm,
     SearchWrapper,
     SelectedSongItem,
+    SelectedResultWrapper,
     ResultsWrapper,
     LyricsWrapper,
     LyricsLine,

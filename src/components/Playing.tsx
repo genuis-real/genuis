@@ -11,6 +11,7 @@ import GuessResult from "components/GuessResult";
 import {
     FloatingWrapper,
     SelectedSongItem,
+    SelectedResultWrapper,
     Wrapper,
     SearchBar,
     SearchForm,
@@ -75,7 +76,9 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
     const getResultsDebounced = useCallback(
         debounce((searchTerm: string) => {
             axios
-                .get(`${BASE_URL}proxy/search/songs?q=${searchTerm}`)
+                .get(
+                    `${BASE_URL}proxy/search/songs?q=${state.context.selectedArtist?.name} ${searchTerm}`
+                )
                 .then((response) => {
                     // handle success
                     handleSearchResultData(response);
@@ -111,11 +114,7 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
             ) : null}
             <FloatingWrapper>
                 {state.matches({ playing: "selectingSong" }) && (
-                    <SearchWrapper
-                        style={{
-                            minHeight: 0,
-                        }}
-                    >
+                    <SearchWrapper>
                         <SearchForm
                             onSubmit={(
                                 event: React.FormEvent<HTMLInputElement>
@@ -125,7 +124,7 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
                                 type="text"
                                 value={searchTerm}
                                 onChange={handleChange}
-                                placeholder={"Guess the title..."}
+                                placeholder="Guess the title..."
                             />
                         </SearchForm>
                         {searchResults.length > 0 && searchTerm.length > 0 && (
@@ -154,12 +153,7 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
                     </SearchWrapper>
                 )}
                 {state.matches({ playing: "selectedSong" }) && (
-                    <div
-                        style={{
-                            display: "flex",
-                            width: "100%",
-                        }}
-                    >
+                    <SelectedResultWrapper>
                         <SelectedSongItem
                             key={state.context.selectedSong?.id}
                             lastItem={false}
@@ -195,7 +189,7 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
                                 done
                             </i>
                         </IconButton>
-                    </div>
+                    </SelectedResultWrapper>
                 )}
             </FloatingWrapper>
             <GuessResult gameService={gameService} />
