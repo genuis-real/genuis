@@ -4,6 +4,7 @@ import { GameContext, GameEvent } from "gameStateMachine";
 import { Interpreter } from "xstate";
 import { useService } from "@xstate/react";
 import { Wrapper, NextButton } from "./GuessResult.styles";
+import Button from "components/shared/Button";
 
 interface GuessResultProps extends RouteComponentProps {
     gameService: Interpreter<GameContext, any, GameEvent, any>;
@@ -22,6 +23,10 @@ const GuessResult: React.FC<GuessResultProps> = ({ gameService }) => {
         send({ type: "NEXT_ROUND" });
     }, [state, send]);
 
+    if (!state.matches({ playing: "answer" })) {
+        return null;
+    }
+
     const correctAnswerMessage = "That's right! You really know your stuff...";
     const incorrectAnswerMessage =
         "Nope, that's not it - are you sure you're a fan?";
@@ -32,13 +37,11 @@ const GuessResult: React.FC<GuessResultProps> = ({ gameService }) => {
     let resultMessage: string = "";
     let buttonText: string = "";
     let song: any;
-    let correct: boolean = false;
     let complete: boolean = false;
 
     if (state.matches({ playing: { answer: "correct" } })) {
         resultMessage = correctAnswerMessage;
         buttonText = incompleteButtonText;
-        correct = true;
     }
 
     if (state.matches({ playing: { answer: "incorrect" } })) {
@@ -49,7 +52,6 @@ const GuessResult: React.FC<GuessResultProps> = ({ gameService }) => {
     if (state.matches({ playing: { answer: "correctLast" } })) {
         resultMessage = correctAnswerMessage;
         buttonText = completeButtonText;
-        correct = true;
         complete = true;
     }
 
@@ -63,42 +65,18 @@ const GuessResult: React.FC<GuessResultProps> = ({ gameService }) => {
         song = state.context.songList[state.context.currentRound] || {};
     }
 
-    if (!resultMessage) {
-        return null;
-    }
-
     return (
-        <Wrapper correct={correct}>
-            <div
-                style={{
-                    padding: "24px",
-                    paddingBottom: "0px",
-                }}
-            >
-                {resultMessage}
+        <Wrapper>
+            <div>
+                <h3>{resultMessage}</h3>
             </div>
-            <div
-                style={{
-                    padding: "24px",
-                    paddingBottom: "0px",
-                }}
-            >
-                <p>It was:</p>
-                <p>{song.full_title}</p>
-            </div>
-            <div
-                style={{
-                    padding: "24px",
-                    paddingBottom: "0px",
-                }}
-            >
-                <img
-                    src={song.song_art_image_thumbnail_url}
-                    alt="Smiley face"
-                    height="64"
-                    width="64"
-                />
-            </div>
+            <img
+                src={song.song_art_image_url}
+                alt="Smiley face"
+                height="256"
+                width="256"
+            />
+            <h3>{song.full_title}</h3>
             {complete && (
                 <div
                     style={{
@@ -109,7 +87,14 @@ const GuessResult: React.FC<GuessResultProps> = ({ gameService }) => {
                     {"Ready to see your results?"}
                 </div>
             )}
-            <NextButton onClick={handleClick}>{buttonText}</NextButton>
+            <Button
+                style={{
+                    marginTop: "32px",
+                }}
+                onClick={handleClick}
+            >
+                {buttonText}
+            </Button>
         </Wrapper>
     );
 };

@@ -188,7 +188,15 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
                                     clear
                                 </i>
                             </IconButton>
-                            <IconButton>
+                            <IconButton
+                                onClick={() => {
+                                    setSearchTerm("");
+                                    setSearchResults([]);
+                                    send({
+                                        type: "SUBMIT",
+                                    });
+                                }}
+                            >
                                 <i
                                     className="material-icons"
                                     style={{
