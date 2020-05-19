@@ -25,6 +25,7 @@ import {
     IconButton,
     SearchCombobox,
 } from "./Playing.styles";
+import { GeniusSongResponse } from "types";
 
 interface PlayingProps extends RouteComponentProps {
     gameService: Interpreter<GameContext, any, GameEvent, any>;
@@ -39,20 +40,22 @@ interface Lyrics {
     warped: Lyric[];
 }
 
-interface SearchResult {
-    title: string;
-    artist: string;
-    id: number;
-}
-
 const Playing: React.FC<PlayingProps> = ({ gameService }) => {
     const [state, send] = useService(gameService);
-
     const [searchTerm, setSearchTerm] = useState<string>("");
+    const [searchResults, setSearchResults] = useState<
+        Array<GeniusSongResponse>
+    >([]);
 
-    const [searching, setSearching] = useState<boolean>(false);
-
-    const [searchResults, setSearchResults] = useState<Array<SearchResult>>([]);
+    const currentSong: GeniusSongResponse = state.context.songList
+        ? state.context.songList[state.context.currentRound]
+        : {
+              id: 0,
+              title: "",
+              primary_artist: {
+                  name: "",
+              },
+          };
 
     const shouldShowSearchItems: boolean =
         searchResults.length > 0 &&
@@ -60,8 +63,6 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
         !state.matches({ playing: "selectedSong" });
 
     const handleSearchResultData = (searchData: any) => {
-        console.log("searchData: ", searchData);
-
         const { data = {} } = searchData;
         const { response = {} } = data;
         const { sections = [] } = response;
@@ -69,32 +70,18 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
 
         const newResults = hits.map((item: any) => {
             const { result } = item;
-            return {
-                title: result.title,
-                artist: result.primary_artist
-                    ? result.primary_artist.name
-                    : "unknown",
-                id: result.id,
-            };
+            return result;
         });
 
-        setSearching(false);
         setSearchResults(newResults);
     };
 
     const getResultsDebounced = useCallback(
-        debounce((searchTerm: string) => {
-            axios
-                .get(
-                    `${BASE_URL}proxy/search/songs?q=${state.context.selectedArtist?.name} ${searchTerm}`
-                )
-                .then((response) => {
-                    // handle success
-                    handleSearchResultData(response);
-                })
-                .catch(function (error) {
-                    // handle error
-                });
+        debounce(async (searchTerm: string) => {
+            const response = await axios.get(
+                `${BASE_URL}proxy/search/songs?q=${searchTerm}`
+            );
+            handleSearchResultData(response);
         }, 150),
         []
     );
@@ -102,8 +89,21 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
     const handleChange = (event: React.FormEvent<HTMLInputElement>) => {
         const newSearchTerm = event.currentTarget.value;
         setSearchTerm(newSearchTerm);
-        setSearching(true);
         getResultsDebounced(searchTerm);
+    };
+
+    const selectResult = (title: string) => {
+        const selectedSong = searchResults.find((song) => song.title === title);
+
+        if (!selectedSong) {
+            throw new Error(
+                "somehow you've selected a song that doesn't exist"
+            );
+        }
+        send({
+            type: "SELECT_SONG",
+            song: selectedSong,
+        });
     };
 
     return (
@@ -124,28 +124,14 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
                 <FloatingWrapper>
                     {state.matches({ playing: "selectingSong" }) && (
                         <SearchCombobox
-                            onSelect={(title) => {
-                                const selectedSong = searchResults.find(
-                                    (song) => song.title === title
-                                );
-
-                                if (!selectedSong) {
-                                    throw new Error(
-                                        "somehow you've selected a song that doesn't exist"
-                                    );
-                                }
-                                send({
-                                    type: "SELECT_SONG",
-                                    song: {
-                                        id: selectedSong.id,
-                                        title: selectedSong.title,
-                                        artist: selectedSong.artist,
-                                    },
-                                });
-                            }}
-                            aria-label="choose a fruit"
+                            onSelect={selectResult}
+                            aria-label="choose a song"
+                            openOnFocus
                         >
-                            <ComboboxInput onChange={handleChange} />
+                            <ComboboxInput
+                                onChange={handleChange}
+                                placeholder="Guess the title"
+                            />
 
                             {searchResults && (
                                 <ComboboxPopover portal={false}>
@@ -159,7 +145,10 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
                                                     <ComboboxOptionText />
                                                 </span>
                                                 <ArtistName>
-                                                    {result.artist}
+                                                    {
+                                                        result?.primary_artist
+                                                            ?.name
+                                                    }
                                                 </ArtistName>
                                             </ComboboxOption>
                                         ))}
@@ -167,40 +156,6 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
                                 </ComboboxPopover>
                             )}
                         </SearchCombobox>
-                        // <SearchWrapper>
-                        //     <SearchForm
-                        //         onSubmit={(
-                        //             event: React.FormEvent<HTMLInputElement>
-                        //         ) => event.preventDefault()}
-                        //     >
-                        //         <SearchBar
-                        //             type="text"
-                        //             value={searchTerm}
-                        //             onChange={handleChange}
-                        //             placeholder="Guess the title..."
-                        //         />
-                        //     </SearchForm>
-                        //     {searchResults.length > 0 && searchTerm.length > 0 && (
-                        //         <ResultsScrollView>
-                        //             {searchResults.map((item, index) => (
-                        //                 <ResultsItem
-                        //                     key={`results-item-${item.title}-${item.artist}`}
-                        //                     onClick={() => {
-                        //                         send({
-                        //                             type: "SELECT_SONG",
-                        //                             song: {
-                        //                                 id: item.id,
-                        //                                 title: item.title,
-                        //                                 artist: item.artist,
-                        //                             },
-                        //                         });
-                        //                     }}
-                        //                     {...item}
-                        //                 />
-                        //             ))}
-                        //         </ResultsScrollView>
-                        //     )}
-                        // </SearchWrapper>
                     )}
                     {state.matches({ playing: "selectedSong" }) && (
                         <SelectedResultWrapper>
@@ -208,7 +163,8 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
                                 key={state.context.selectedSong?.id}
                                 title={state.context.selectedSong?.title || ""}
                                 artist={
-                                    state.context.selectedSong?.artist || ""
+                                    state.context.selectedSong?.primary_artist
+                                        ?.name || ""
                                 }
                                 onClick={undefined}
                             />

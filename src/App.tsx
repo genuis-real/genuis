@@ -5,7 +5,6 @@ import "@reach/combobox/styles.css";
 
 const Home = React.lazy(() => import("pages/Home"));
 const Result = React.lazy(() => import("pages/Result"));
-const Select = React.lazy(() => import("pages/Select"));
 
 const App: React.FC = () => {
     return (
@@ -13,7 +12,6 @@ const App: React.FC = () => {
             <Router>
                 <Home path="/" />
                 <Result path="/result/:resultId" />
-                <Select path="/artist-select" />
                 <Results path="/results" />
             </Router>
         </Suspense>

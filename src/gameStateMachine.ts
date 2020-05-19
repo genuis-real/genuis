@@ -1,6 +1,7 @@
 import { createMachine, assign } from "xstate";
 import axios, { AxiosResponse } from "axios";
 import { BASE_URL } from "./constants";
+import { GeniusSongResponse } from "types";
 
 interface Artist {
     id: number;
@@ -21,13 +22,6 @@ interface Song {
     title: string;
     artistName: string;
     lyrics: Lyrics;
-}
-
-interface GeniusSongResponse {
-    id: number;
-    title: string;
-    artist: string;
-    song_art_image_thumbnail_url?: string;
 }
 
 // TODO: add song to guess to context
