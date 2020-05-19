@@ -108,8 +108,6 @@ async function translateSongLyrics(lyricsData) {
 }
 
 const getSongObj = async (geniusJson) => {
-    console.log(geniusJson);
-
     const song = geniusJson.response.song;
 
     const originalLyrics = await scrapeContent(song.path);
