@@ -81,23 +81,6 @@ const SongWrapper = styled.div`
     align-items: center;
 `;
 
-const SearchBar = styled.input(
-    ({ theme }) => css`
-        border-radius: 3px;
-        border: 1px solid ${theme.COLOURS.accent};
-        width: 100%;
-        font-size: 1.5rem;
-        color: ${theme.COLOURS.accent};
-        background-color: ${theme.COLOURS.secondary};
-        padding: 12px 16px;
-        height: 74px;
-
-        &:focus {
-            outline-width: 0px;
-        }
-    `
-);
-
 const SearchCombobox = styled(Combobox)(
     ({ theme }) => css`
         min-height: 0;
@@ -155,32 +138,10 @@ const SelectedResultWrapper = styled.div(
     `
 );
 
-const SearchForm = styled.form<{ onSubmit: any }>`
-    flex: none;
-    width: 100%;
-`;
-
-const SearchWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-`;
-
-const ResultsScrollView = styled.div(
-    ({ theme }) => css`
-        background-color: ${theme.COLOURS.primary};
-        overflow: auto;
-    `
-);
-
 export {
     Heading,
     FloatingWrapper,
-    ResultsScrollView,
     Wrapper,
-    SearchBar,
-    SearchForm,
-    SearchWrapper,
     SelectedSongItem,
     SelectedResultWrapper,
     ResultsWrapper,
