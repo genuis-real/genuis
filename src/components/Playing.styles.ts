@@ -9,13 +9,13 @@ const Heading = styled.h1(
 
 const FloatingWrapper = styled.div`
     position: fixed;
-    bottom: -1;
+    bottom: -1px;
     right: 0;
     left: 0;
-    max-height: 300;
+    max-height: 300px;
     display: flex;
     flex-direction: column;
-    transition: height 0.2 ease-in-out;
+    transition: height 200ms ease-in-out;
 `;
 
 const Wrapper = styled.div`
@@ -77,23 +77,14 @@ const SearchWrapper = styled.div`
     display: flex;
     flex-flow: column nowrap;
     background-color: blue;
-    /* display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    width: 100%;
-    height: 80%; */
 `;
 
-const ResultsScrollView = styled.div`
-    background-color: yellow;
-    overflow: auto;
-
-    /* border-width: 0px 1px 1px;
-    border-color: ${({ theme }) => theme.COLOURS.accent};
-    border-style: solid;
-    overflow: auto;
-    height: 100%; */
-`;
+const ResultsScrollView = styled.div(
+    ({ theme }) => css`
+        background-color: ${theme.COLOURS.primary};
+        overflow: auto;
+    `
+);
 
 export {
     Heading,

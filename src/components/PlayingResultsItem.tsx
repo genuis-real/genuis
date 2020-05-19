@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components/macro";
-import { Link } from "@reach/router";
 
 interface ResultsItemProps {
     title: string;
@@ -25,9 +24,6 @@ const ResultsItem: React.FC<ResultsItemProps> = ({
 
 const Wrapper = styled.div<{ lastItem: boolean; onClick: any }>`
     width: 100%;
-    border-width: "0px";
-    border-color: rgba(255, 255, 255, 0.3);
-    border-style: solid;
     padding: 8px 4px;
     display: flex;
     flex-direction: row;
