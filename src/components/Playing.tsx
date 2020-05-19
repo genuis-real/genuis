@@ -47,15 +47,17 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
         Array<GeniusSongResponse>
     >([]);
 
-    const currentSong: GeniusSongResponse = state.context.songList
-        ? state.context.songList[state.context.currentRound]
-        : {
-              id: 0,
-              title: "",
-              primary_artist: {
-                  name: "",
-              },
-          };
+    const currentSong: GeniusSongResponse =
+        state.context.songList &&
+        state.context.songList[state.context.currentRound]
+            ? state.context.songList[state.context.currentRound]
+            : {
+                  id: 0,
+                  title: "",
+                  primary_artist: {
+                      name: "test",
+                  },
+              };
 
     const shouldShowSearchItems: boolean =
         searchResults.length > 0 &&
@@ -79,11 +81,11 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
     const getResultsDebounced = useCallback(
         debounce(async (searchTerm: string) => {
             const response = await axios.get(
-                `${BASE_URL}proxy/search/songs?q=${searchTerm}`
+                `${BASE_URL}proxy/search/songs?q=${currentSong.primary_artist.name} ${searchTerm}`
             );
             handleSearchResultData(response);
         }, 150),
-        []
+        [currentSong]
     );
 
     const handleChange = (event: React.FormEvent<HTMLInputElement>) => {
@@ -147,7 +149,7 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
                                                 <ArtistName>
                                                     {
                                                         result?.primary_artist
-                                                            ?.name
+                                                            .name
                                                     }
                                                 </ArtistName>
                                             </ComboboxOption>
@@ -164,7 +166,7 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
                                 title={state.context.selectedSong?.title || ""}
                                 artist={
                                     state.context.selectedSong?.primary_artist
-                                        ?.name || ""
+                                        .name || ""
                                 }
                                 onClick={undefined}
                             />
