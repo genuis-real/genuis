@@ -143,9 +143,12 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
                                     },
                                 });
                             }}
-                            aria-label="choose a fruit"
+                            aria-label="choose a song"
                         >
-                            <ComboboxInput onChange={handleChange} />
+                            <ComboboxInput
+                                onChange={handleChange}
+                                placeholder="Guess the title"
+                            />
 
                             {searchResults && (
                                 <ComboboxPopover portal={false}>
@@ -167,40 +170,6 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
                                 </ComboboxPopover>
                             )}
                         </SearchCombobox>
-                        // <SearchWrapper>
-                        //     <SearchForm
-                        //         onSubmit={(
-                        //             event: React.FormEvent<HTMLInputElement>
-                        //         ) => event.preventDefault()}
-                        //     >
-                        //         <SearchBar
-                        //             type="text"
-                        //             value={searchTerm}
-                        //             onChange={handleChange}
-                        //             placeholder="Guess the title..."
-                        //         />
-                        //     </SearchForm>
-                        //     {searchResults.length > 0 && searchTerm.length > 0 && (
-                        //         <ResultsScrollView>
-                        //             {searchResults.map((item, index) => (
-                        //                 <ResultsItem
-                        //                     key={`results-item-${item.title}-${item.artist}`}
-                        //                     onClick={() => {
-                        //                         send({
-                        //                             type: "SELECT_SONG",
-                        //                             song: {
-                        //                                 id: item.id,
-                        //                                 title: item.title,
-                        //                                 artist: item.artist,
-                        //                             },
-                        //                         });
-                        //                     }}
-                        //                     {...item}
-                        //                 />
-                        //             ))}
-                        //         </ResultsScrollView>
-                        //     )}
-                        // </SearchWrapper>
                     )}
                     {state.matches({ playing: "selectedSong" }) && (
                         <SelectedResultWrapper>
