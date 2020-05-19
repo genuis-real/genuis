@@ -63,56 +63,6 @@ const Home: React.FC<RouteComponentProps> = () => {
                 <ChooseArtist gameService={service} />
             )}
             {state.matches("playing") && <Playing gameService={service} />}
-            {state.matches({ playing: "answer" }) && (
-                <>
-                    <h2>Answer</h2>
-                    {(state.matches({
-                        playing: {
-                            answer: "correct",
-                        },
-                    }) ||
-                        state.matches({
-                            playing: {
-                                answer: "incorrect",
-                            },
-                        })) && (
-                        <Button
-                            onClick={() => {
-                                send({
-                                    type: "NEXT_ROUND",
-                                });
-                            }}
-                        >
-                            Next round
-                        </Button>
-                    )}
-                </>
-            )}
-
-            {(state.matches({
-                playing: {
-                    answer: "incorrectLast",
-                },
-            }) ||
-                state.matches({
-                    playing: {
-                        answer: "correctLast",
-                    },
-                })) && (
-                <>
-                    <h3>Game is done</h3>
-                    <Button
-                        onClick={() =>
-                            send({
-                                type: "COMPLETE",
-                            })
-                        }
-                    >
-                        Results
-                    </Button>
-                </>
-            )}
-
             {state.matches("results") && (
                 <>
                     <h2>Results</h2>
