@@ -1,16 +1,34 @@
 import React from "react";
 import { RouteComponentProps } from "@reach/router";
+import { GameContext, GameEvent } from "gameStateMachine";
+import { Interpreter } from "xstate";
+import { useService } from "@xstate/react";
 import Button from "components/shared/Button";
 import { Wrapper } from "./common";
 
-const ResultsScreen: React.FC<RouteComponentProps> = () => {
-    const score = 10;
+interface ResultsProps extends RouteComponentProps {
+    gameService: Interpreter<GameContext, any, GameEvent, any>;
+}
+
+const ResultsScreen: React.FC<ResultsProps> = ({ gameService }) => {
+    const [state, send] = useService(gameService);
+
+    const scoreString: string = `Score: ${state.context.correctGuesses} / ${state.context.totalGuesses}`;
+
     return (
         <Wrapper>
             <h2>Results</h2>
-            <div>Score: {score}</div>
+            <h3>{scoreString}</h3>
             <div>Links</div>
-            <Button>Done/Restart</Button>
+            <Button
+                onClick={() => {
+                    send({
+                        type: "RESTART",
+                    });
+                }}
+            >
+                Done/Restart
+            </Button>
         </Wrapper>
     );
 };

@@ -12,7 +12,6 @@ const App: React.FC = () => {
             <Router>
                 <Home path="/" />
                 <Result path="/result/:resultId" />
-                <Results path="/results" />
             </Router>
         </Suspense>
     );
