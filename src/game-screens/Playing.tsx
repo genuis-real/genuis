@@ -31,11 +31,6 @@ interface PlayingProps extends RouteComponentProps {
     gameService: Interpreter<GameContext, any, GameEvent, any>;
 }
 
-interface Lyric {
-    text: string;
-    referentId: number;
-}
-
 const Playing: React.FC<PlayingProps> = ({ gameService }) => {
     const [state, send] = useService(gameService);
     const [searchTerm, setSearchTerm] = useState<string>("");
