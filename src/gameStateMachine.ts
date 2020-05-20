@@ -123,7 +123,7 @@ const isLastGuess = (context: GameContext, event: GameEvent) => {
         );
     }
     // TODO: reset this once we're happy with the "results" page
-    return context.totalGuesses === 2; // context.songList.length;
+    return context.totalGuesses === context.songList.length;
 };
 const isAnswerCorrect = (context: GameContext, event: GameEvent) => {
     if (context.songList === undefined) {
