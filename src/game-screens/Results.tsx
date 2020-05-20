@@ -5,7 +5,6 @@ import { Interpreter } from "xstate";
 import { useService } from "@xstate/react";
 import Button from "components/shared/Button";
 import { FacebookIcon, TwitterIcon } from "./Results.styles";
-import { Wrapper } from "./common";
 
 interface ResultsProps extends RouteComponentProps {
     gameService: Interpreter<GameContext, any, GameEvent, any>;

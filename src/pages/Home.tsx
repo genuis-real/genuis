@@ -1,25 +1,15 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useMachine } from "@xstate/react";
 import { RouteComponentProps } from "@reach/router";
 import { gameMachine } from "gameStateMachine";
-import Start from "../components/Start";
-import Playing from "../components/Playing";
-import Results from "../components/Results";
-import Button from "components/shared/Button";
+import Start from "../game-screens/Start";
+import Playing from "../game-screens/Playing";
+import Results from "../game-screens/Results";
 import { Wrapper } from "components/common";
-import ChooseArtist from "components/ChooseArtist";
+import ChooseArtist from "game-screens/ChooseArtist";
 
 const Home: React.FC<RouteComponentProps> = () => {
-    const [state, send, service] = useMachine(gameMachine);
-
-    useEffect(() => {
-        const subscription = service.subscribe((state) => {
-            // simple state logging
-            console.log(state);
-        });
-
-        return subscription.unsubscribe;
-    });
+    const [state, , service] = useMachine(gameMachine);
 
     return (
         <Wrapper>

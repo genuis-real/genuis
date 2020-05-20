@@ -26,7 +26,6 @@ const HypeSubText = styled.p`
 
 const Heading = styled.h1<{ beSmall?: boolean }>`
     color: ${({ theme }) => theme.COLOURS.accent};
-    /* font-weight: 200; */
     font-size: 3.7rem;
     margin: ${({ beSmall }) => (beSmall ? "0px" : "48px 0px 0px 0px")};
 `;
@@ -38,7 +37,7 @@ const SubHeading = styled.h5`
 `;
 
 const Start: React.FC<Props> = ({ gameService }) => {
-    const [state, send] = useService(gameService);
+    const [, send] = useService(gameService);
 
     return (
         <>
