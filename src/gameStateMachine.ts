@@ -137,8 +137,12 @@ const isAnswerCorrect = (context: GameContext, event: GameEvent) => {
 
 const artistList: Array<Artist> = [
     {
-        id: 1519,
-        name: "Ke$ha",
+        id: 498,
+        name: "Beyonce",
+    },
+    {
+        id: 586,
+        name: "The Beatles",
     },
     {
         id: 660,
@@ -149,8 +153,8 @@ const artistList: Array<Artist> = [
         name: "Vince Staples",
     },
     {
-        id: 108,
-        name: "50 Cent",
+        id: 563,
+        name: "Queen",
     },
 ];
 

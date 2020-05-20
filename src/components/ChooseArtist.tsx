@@ -11,13 +11,13 @@ import { Interpreter } from "xstate";
 const ArtistButton = styled.button<{
     isSelected: boolean;
 }>(
-    ({ isSelected }) => css`
+    ({ isSelected, theme }) => css`
     min-width: 65%;
-    color: ${isSelected ? "#ddcad9" : "#4B2142"};
-    background-color: ${isSelected ? "#4B2142" : "#ddcad9"};
-    font-size: 1em;
+    color: ${isSelected ? "#ddcad9" : theme.COLOURS.secondary};
+    background-color: ${isSelected ? theme.COLOURS.secondary : "#ddcad9"};
+    font-size: 1.1rem;
     margin: 1em 0;
-    padding: 0.5em 1em;
+    padding: 1em 2em;
     border: 1px solid ${isSelected ? "#ddcad9" : "#4B2142"};
     border-radius: 24px;
     box-shadow: 4px 6px 16px 2px ${({ theme }) => theme.COLOURS.secondary};
@@ -49,12 +49,6 @@ const ArtistBlock: React.FC<{
         >
             {artist.name}
         </ArtistButton>
-        {isSelected && (
-            <div>
-                So you think you know {artist.name}, huh? What's his fav cereal
-                then, poser?
-            </div>
-        )}
     </div>
 );
 
@@ -86,11 +80,14 @@ const ChooseArtist: React.FC<{
                 ))}
             </SelectorWrapper>
             {state.matches({ chooseArtist: "selectedArtist" }) && (
-                <div>
-                    <StartGameCTA onClick={() => send("START")}>
-                        Translate that bitchin artist, bruh
-                    </StartGameCTA>
-                </div>
+                <StartGameCTA
+                    style={{
+                        marginTop: 32,
+                    }}
+                    onClick={() => send("START")}
+                >
+                    Let's go!
+                </StartGameCTA>
             )}
         </Wrapper>
     );
