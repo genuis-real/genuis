@@ -9,6 +9,13 @@ const Heading = styled.h1(
     `
 );
 
+const PageWrapper = styled.div`
+    @media screen and (min-width: 720px) {
+        display: flex;
+        flex-direction: row;
+    }
+`;
+
 const FloatingWrapper = styled.div(
     ({ theme }) => css`
         background: ${theme.COLOURS.secondary};
@@ -23,7 +30,11 @@ const FloatingWrapper = styled.div(
         box-shadow: 0 0 6px rgba(0, 0, 0, 0.2), 1px 1px 8px rgba(0, 0, 0, 0.08);
 
         @media screen and (min-width: 720px) {
-            position: static;
+            position: sticky;
+            top: 32px;
+            max-height: 100%;
+            height: 100%;
+            flex: 1;
         }
     `
 );
@@ -62,6 +73,11 @@ const LyricsWrapper = styled.div<{ showingSearchItems: boolean }>(
         flex-direction: column;
         align-items: flex-start;
         margin-bottom: ${showingSearchItems ? "300px" : "74px"};
+
+        @media screen and (min-width: 720px) {
+            margin-right: 64px;
+            flex: 2;
+        }
     `
 );
 
@@ -140,6 +156,7 @@ const SelectedResultWrapper = styled.div(
 
 export {
     Heading,
+    PageWrapper,
     FloatingWrapper,
     Wrapper,
     SelectedSongItem,

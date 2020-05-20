@@ -24,6 +24,7 @@ import {
     LyricsLine,
     IconButton,
     SearchCombobox,
+    PageWrapper,
 } from "./Playing.styles";
 import { GeniusSongResponse } from "types";
 
@@ -104,7 +105,7 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
             <h1>SONGUAGE</h1>
 
             {state.matches({ playing: "loading" }) && <h3>Loading </h3>}
-            <div>
+            <PageWrapper>
                 {(state.matches({ playing: "selectingSong" }) ||
                     state.matches({ playing: "selectedSong" })) &&
                 state.context.currentLyrics ? (
@@ -200,7 +201,7 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
                         </SelectedResultWrapper>
                     )}
                 </FloatingWrapper>
-            </div>
+            </PageWrapper>
             <GuessResult gameService={gameService} />
         </Wrapper>
     );
