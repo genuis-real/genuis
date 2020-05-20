@@ -76,7 +76,7 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
             );
             handleSearchResultData(response);
         }, 150),
-        []
+        [currentSong]
     );
 
     const handleChange = (event: React.FormEvent<HTMLInputElement>) => {

@@ -3,7 +3,7 @@ import { RouteComponentProps } from "@reach/router";
 import { GameContext, GameEvent } from "gameStateMachine";
 import { Interpreter } from "xstate";
 import { useService } from "@xstate/react";
-import { Wrapper, NextButton } from "./GuessResult.styles";
+import { Wrapper } from "./GuessResult.styles";
 import Button from "components/shared/Button";
 
 interface GuessResultProps extends RouteComponentProps {
