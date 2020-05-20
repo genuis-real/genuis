@@ -174,7 +174,7 @@ const loadLyrics = async (songId?: number): Promise<Lyric[]> => {
 
     try {
         const res = await axios.get(
-            `${BASE_URL}/getWarpedSong?songId=${songId}`
+            `${BASE_URL}getWarpedSong?songId=${songId}`
         );
         const warpedLyrics = res.data?.lyrics?.warped;
         return warpedLyrics;
