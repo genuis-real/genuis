@@ -10,6 +10,8 @@ const Heading = styled.h1(
 );
 
 const PageWrapper = styled.div`
+    max-width: 1024px;
+
     @media screen and (min-width: 720px) {
         display: flex;
         flex-direction: row;
