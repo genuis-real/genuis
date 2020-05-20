@@ -29,13 +29,34 @@ const translate = new Translate({
     projectId,
 });
 
+function getReactReferentId(el) {
+    const href = el.attr("href");
+
+    if (!href) return null;
+
+    const urlParts = href.split("/");
+
+    return urlParts[1];
+}
+
 async function scrapeContent(path) {
+    // Genuis has two pages, their original one
+    // and a react version that's currently being tested
+    let isReact = false;
+
     const pageHtml = await fetch(`https://genius.com${path}`)
         .then((response) => response.text())
         .then((body) => body);
 
     const $ = cheerio.load(pageHtml);
-    const lyrics = $(".lyrics p");
+    let lyrics = $(".lyrics p");
+
+    if (!lyrics.html()) {
+        console.log("Using react scraper");
+        lyrics = $('[class^="Lyrics__Container"]');
+        if (lyrics.html()) isReact = true;
+    }
+
     const children = lyrics.contents();
 
     const lyricsData = [];
@@ -52,9 +73,11 @@ async function scrapeContent(path) {
             if (newData === "") return null;
         }
 
+        const referentId = isReact ? getReactReferentId(el) : el.data("id");
+
         const lyric = {
             text: el.text().trim(),
-            referentId: el.data("id") || null,
+            referentId: referentId || null,
         };
 
         lyricsData.push(lyric);

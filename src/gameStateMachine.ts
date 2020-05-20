@@ -122,6 +122,7 @@ const isLastGuess = (context: GameContext, event: GameEvent) => {
             "you've got no song list and that should be impossible"
         );
     }
+    // TODO: reset this once we're happy with the "results" page
     return context.totalGuesses === 2; // context.songList.length;
 };
 const isAnswerCorrect = (context: GameContext, event: GameEvent) => {
