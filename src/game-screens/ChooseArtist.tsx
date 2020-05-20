@@ -65,7 +65,7 @@ const ChooseArtist: React.FC<{
     };
 
     return (
-        <Wrapper>
+        <>
             <NavBar />
             <div>Select your artist...</div>
             <SelectorWrapper>
@@ -89,7 +89,7 @@ const ChooseArtist: React.FC<{
                     Let's go!
                 </StartGameCTA>
             )}
-        </Wrapper>
+        </>
     );
 };
 
