@@ -6,7 +6,7 @@ import { RouteComponentProps } from "@reach/router";
 import { GameContext, GameEvent } from "gameStateMachine";
 import { Interpreter } from "xstate";
 import { useService } from "@xstate/react";
-import GuessResult from "components/GuessResult";
+import GuessResult from "game-screens/GuessResult";
 import {
     ComboboxInput,
     ComboboxPopover,
@@ -29,15 +29,6 @@ import { GeniusSongResponse } from "types";
 
 interface PlayingProps extends RouteComponentProps {
     gameService: Interpreter<GameContext, any, GameEvent, any>;
-}
-
-interface Lyric {
-    text: string;
-    referentId: number;
-}
-
-interface Lyrics {
-    warped: Lyric[];
 }
 
 const Playing: React.FC<PlayingProps> = ({ gameService }) => {
@@ -85,7 +76,7 @@ const Playing: React.FC<PlayingProps> = ({ gameService }) => {
             );
             handleSearchResultData(response);
         }, 150),
-        [currentSong]
+        []
     );
 
     const handleChange = (event: React.FormEvent<HTMLInputElement>) => {

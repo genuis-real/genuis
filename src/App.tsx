@@ -1,6 +1,5 @@
 import React, { Suspense } from "react";
 import { Router } from "@reach/router";
-import Results from "./components/Results";
 import "@reach/combobox/styles.css";
 
 const Home = React.lazy(() => import("pages/Home"));

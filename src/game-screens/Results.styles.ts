@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components/macro";
+import styled from "styled-components/macro";
 import { ReactComponent as FacebookIconOriginal } from "../img/facebook-square.svg";
 import { ReactComponent as TwitterIconOriginal } from "../img/twitter.svg";
 
