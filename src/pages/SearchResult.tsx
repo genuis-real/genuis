@@ -1,21 +1,19 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { BASE_URL } from "../constants";
-import NavBar from "components/NavBar";
+
 import {
-    ResultsWrapper,
     LyricsWrapper,
     LyricsLine,
     SongTitle,
     SongArtist,
     SongWrapper,
-    GalleryWrapper,
     HeaderWrapper,
 } from "./Results.styles";
 import { RouteComponentProps } from "@reach/router";
 
 type Props = RouteComponentProps & {
-    resultId?: number;
+    songId?: number;
 };
 
 type Lyric = {
@@ -27,7 +25,7 @@ type Lyrics = {
     warped: Lyric[];
 };
 
-const Result: React.FC<Props> = ({ resultId }) => {
+const SearchResult: React.FC<Props> = ({ songId }) => {
     const [songData, setSongData] = useState<{
         title: string;
         artistName: string;
@@ -36,35 +34,31 @@ const Result: React.FC<Props> = ({ resultId }) => {
 
     useEffect(() => {
         axios
-            .get(`${BASE_URL}getWarpedSong?songId=${resultId}`)
+            .get(`${BASE_URL}getWarpedSong?songId=${songId}`)
             .then((result) => {
                 setSongData(result.data);
             });
-    }, [resultId]);
+    }, [songId]);
 
     return (
         <>
-            <NavBar />
             {songData ? (
                 <>
                     <HeaderWrapper>
                         <SongTitle>{songData.title}</SongTitle>
                         <SongArtist>{songData.artistName}</SongArtist>
                     </HeaderWrapper>
-                    <ResultsWrapper>
-                        <SongWrapper>
-                            <LyricsWrapper>
-                                {songData.lyrics.warped.map(({ text }) => (
-                                    <LyricsLine>{text}</LyricsLine>
-                                ))}
-                            </LyricsWrapper>
-                        </SongWrapper>
-                        <GalleryWrapper />
-                    </ResultsWrapper>
+                    <SongWrapper>
+                        <LyricsWrapper>
+                            {songData.lyrics.warped.map(({ text }) => (
+                                <LyricsLine>{text}</LyricsLine>
+                            ))}
+                        </LyricsWrapper>
+                    </SongWrapper>
                 </>
             ) : null}
         </>
     );
 };
 
-export default Result;
+export default SearchResult;

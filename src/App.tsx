@@ -3,14 +3,17 @@ import { Router } from "@reach/router";
 import "@reach/combobox/styles.css";
 
 const Home = React.lazy(() => import("pages/Home"));
-const Result = React.lazy(() => import("pages/Result"));
+const SearchResult = React.lazy(() => import("pages/SearchResult"));
+const Search = React.lazy(() => import("pages/Search"));
 
 const App: React.FC = () => {
     return (
         <Suspense fallback={<p data-testid="loading">Loading....</p>}>
             <Router>
                 <Home path="/" />
-                <Result path="/result/:resultId" />
+                <Search path="/search">
+                    <SearchResult path=":songId" />
+                </Search>
             </Router>
         </Suspense>
     );
