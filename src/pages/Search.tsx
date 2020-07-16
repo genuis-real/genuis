@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { RouteComponentProps, Link } from "@reach/router";
 import { Wrapper } from "components/common";
+import styled, { css } from "styled-components";
 import {
     Combobox,
     ComboboxInput,
@@ -13,15 +14,67 @@ import { debounce } from "lodash-es";
 import axios from "axios";
 import { BASE_URL } from "../constants";
 
+interface PrimaryArtist {
+    name: string;
+}
 interface SearchResult {
     full_title: string;
     title: string;
     title_with_featured: string;
     id: number;
-    primary_artist: {};
+    primary_artist: PrimaryArtist;
     song_art_image_thumbnail_url: string;
     song_art_image_url: string;
 }
+
+const SearchCombobox = styled(Combobox)(
+    ({ theme }) => css`
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        [data-reach-combobox] {
+        }
+        [data-reach-combobox-input] {
+            border-radius: 3px;
+            border: 1px solid ${theme.COLOURS.accent};
+            width: 100%;
+            font-size: 1.5rem;
+            color: ${theme.COLOURS.accent};
+            background-color: ${theme.COLOURS.secondary};
+            padding: 12px 16px;
+        }
+        [data-reach-combobox-popover] {
+            border: 0;
+            overflow: auto;
+        }
+        [data-reach-combobox-list] {
+            background-color: ${theme.COLOURS.secondary};
+        }
+        [data-reach-combobox-option] {
+            display: flex;
+            flex-direction: column;
+            padding: 12px 16px;
+        }
+        [data-reach-combobox-option][data-highlighted] {
+            background-color: ${theme.COLOURS.accent};
+            color: ${theme.COLOURS.primary};
+        }
+        [data-reach-combobox-button] {
+        }
+    `
+);
+
+const ArtistName = styled.span`
+    font-weight: 300;
+    font-size: 0.9rem;
+    margin-top: 2px;
+`;
+
+const ResultLink = styled(Link)(
+    ({ theme }) => css`
+        color: ${theme.COLOURS.text};
+    `
+);
 
 const Search: React.FC<RouteComponentProps> = ({ children }) => {
     const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
@@ -47,7 +100,7 @@ const Search: React.FC<RouteComponentProps> = ({ children }) => {
 
     return (
         <Wrapper>
-            <Combobox
+            <SearchCombobox
                 aria-label="search for a song"
                 style={{ width: "100%", margin: "32px 0" }}
             >
@@ -55,19 +108,26 @@ const Search: React.FC<RouteComponentProps> = ({ children }) => {
                     onChange={onSearch}
                     style={{ width: "100%", padding: 8, fontSize: 24 }}
                 />
-                <ComboboxPopover>
+                <ComboboxPopover portal={false}>
                     <ComboboxList>
                         {searchResults.length > 0 &&
                             searchResults.map((result) => (
                                 <ComboboxOption value={result.title}>
-                                    <Link to={`${result.id}`}>
-                                        <ComboboxOptionText />
-                                    </Link>
+                                    <ResultLink to={`${result.id}`}>
+                                        <span>
+                                            <ComboboxOptionText />
+                                        </span>
+                                        <ArtistName>
+                                            <pre>
+                                                {result.primary_artist.name}
+                                            </pre>
+                                        </ArtistName>
+                                    </ResultLink>
                                 </ComboboxOption>
                             ))}
                     </ComboboxList>
                 </ComboboxPopover>
-            </Combobox>
+            </SearchCombobox>
             {children}
         </Wrapper>
     );

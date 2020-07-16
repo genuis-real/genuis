@@ -1,21 +1,23 @@
 import React, { Suspense } from "react";
 import { Router, Link } from "@reach/router";
 import "@reach/combobox/styles.css";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 const Home = React.lazy(() => import("pages/Home"));
 const SearchResult = React.lazy(() => import("pages/SearchResult"));
 const Search = React.lazy(() => import("pages/Search"));
 
-const Nav = styled.nav`
-    display: flex;
-    padding: 0;
+const Nav = styled.nav(
+    ({ theme }) => css`
+        display: flex;
+        padding: 0;
 
-    a {
-        color: white;
-        padding: 16px;
-    }
-`;
+        a {
+            color: ${theme.COLOURS.text};
+            padding: 16px;
+        }
+    `
+);
 
 const App: React.FC = () => {
     return (
